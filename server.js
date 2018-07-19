@@ -14,7 +14,7 @@ app.use("/api/users", router);
 router.get("/", function (req, res, next) {
   db.data.connect(function (err) {
       if (err) console.log(err);
-      db.data.query("SELECT * FROM users", function (err, result, fields) {
+      db.data.query("SELECT * FROM localuser", function (err, result, fields) {
           if (err) console.log(err);//throw err;
           res.send(JSON.stringify({
               "status": 200,
