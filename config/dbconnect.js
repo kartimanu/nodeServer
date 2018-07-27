@@ -1,10 +1,18 @@
 const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-   host     : 'mylocalsql.mysql.database.azure.com',
-   user     : 'Tony@mylocalsql',
-   password : 'Butterfly1',
-   database : 'odk_prod'
+const connection1 = mysql.createConnection({
+   host     : 'testodk.mysql.database.azure.com',
+   user     : 'testodk@testodk',
+   password : 'Super@123',
+   database : 'testimportdata'
  });
  
-exports.data = connection;
+ const connection2 = mysql.createConnection({
+  host     : 'testodk.mysql.database.azure.com',
+  user     : 'testodk@testodk',
+  password : 'Super@123',
+  database : 'odk'
+});
+
+exports.con2 = connection2;
+exports.data = connection1;
