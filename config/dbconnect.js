@@ -1,31 +1,33 @@
 const mysql = require('mysql');
-const MySQLEvents = require('mysql-events');
 
 const hostname = 'testodk.mysql.database.azure.com';
 const username = 'testodk@testodk';
 const password = 'Super@123';
 
-const connection1 = mysql.createConnection({
-  host: hostname,
-  user: username,
-  password: password,
-  database: 'testimportdata'
+const connections = {};
+
+connections.vmdb = mysql.createPool({
+  connectionLimit: 100,
+  host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+  user: 'odkuser',
+  password: 'Wildlife@123',
+  database: 'odk_prod'
 });
 
-const connection2 = mysql.createConnection({
+connections.rawdb = mysql.createPool({
+  connectionLimit: 100,
+  host: hostname,//'newodkubuntu.centralindia.cloudapp.azure.com',//hostname,
+  user: username, //'odkuser',
+  password: password, //'Wildlife@123',
+  database: 'testimportdata' //'odk_prod'
+});
+
+connections.moddb = mysql.createPool({
+  connectionLimit: 200,
   host: hostname,
   user: username,
   password: password,
   database: 'odk'
 });
 
-const dsn = {
-  host: hostname,
-  user: username,
-  password: password
-};
-
-exports.myCon = MySQLEvents(dsn);
-
-exports.con2 = connection2;
-exports.con1 = connection1;
+exports.conn = connections;

@@ -1,4 +1,0 @@
-const data;
-const getusers = "SELECT * from users";
-
-exports.request = data;
