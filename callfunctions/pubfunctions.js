@@ -1,55 +1,24 @@
-var prom = require('../config/sshdbconn');
-var query = require('../utils/query_model');
-var qmodel_set = require('../utils/query_model');
+const dbconn = require('../config/sshdbconn');
+const pquery = require('../utils/query_model');
+const util = require('../utils/helper');
 
 var demo = {};
-demo.getformdata = function (req, res) {
+demo.getpubdata = function (req, res) {
     // async connection to database
-    prom.then(function (conn) {
-        // query database 
-        conn.query('SELECT * FROM `DAILY_COUNT_Y3_M10_CORE`', function (error, results, fields) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(pquery.sqlquery.getpublicitydata, function (error, results, fields) {
             if (error) {
                 console.log(error);
+                res.send(util.methods.seterror(error));
                 return;
-            }
-            res.send(results);
-            sortform2dcdata(results);
-            // prom.close(conn);
+            } else
+                res.send(util.methods.setresponse(results));
         });
     }).catch(err => {
-        console.log(err)
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
     });
 };
 
-demo.getdcdata = function (req, res) {
-    // async connection to database
-    prom.then(function (conn) {
-        // query database 
-        conn.query('SELECT * FROM `DAILY_COUNT_Y3_M10_CORE`', function (error, results, fields) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            res.send(results);
-        });
-    }).catch(err => {
-        console.log(err)
-    });
-};
-
-function sortform2dcdata(result) {
-    result.forEach(data => {
-        console.log("MYDATA" + qmodel_set.datamodels.get_do(data));
-
-        // prom.then(function (con) {
-        //     con.query(query.sqlquery.insertintowsDC_table, qmodel_set.datamodels.get_do, function () {
-
-        //     });
-        // }).catch(err => {
-        //     console.log(err);
-        // });
-
-    });
-
-}
-module.exports.caller = demo;
+exports.caller = demo;

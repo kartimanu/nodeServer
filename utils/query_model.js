@@ -3,20 +3,24 @@ const helper = require('./helper');
 const qmodels = {};
 const queryscript = {};
 
-//RDB QUERY 
-queryscript.selectallWSusers = "SELECT * FROM odk.wls_users";
-queryscript.insertuser = "INSERT INTO odk.wls_users set ? ";
-queryscript.updateuser = "UPDATE odk.wls_users SET ? WHERE user_name = ?";
-queryscript.deleteuser = "DELETE FROM odk.wls_users WHERE user_name = ?";
-queryscript.selectallDC = "SELECT * FROM odk.daily_count";
-queryscript.selectDCuser = "SELECT * FROM odk.daily_count WHERE DC_CASE_ID = ?";
-queryscript.getallFA = "SELECT * FROM odk.dc_cases WHERE DC_CASE_ID = ?";
-queryscript.insertintoDC_table = "INSERT IGNORE INTO odk.daily_count set ? ";
-queryscript.insertintoDC_FAusers = "INSERT IGNORE INTO odk.dc_cases set ? ";
+//RDB QUERY : USERS
+queryscript.selectallWSusers = "SELECT * FROM wls_users";
+queryscript.insertuser = "INSERT INTO wls_users set ? ";
+queryscript.updateuser = "UPDATE wls_users SET ? WHERE user_name = ?";
+queryscript.deleteuser = "DELETE FROM wls_users WHERE user_name = ?";
+
+//RDB QUERY : PUBLICITY
+queryscript.getpublicitydata = "SELECT PB_METAINSTANCE_ID, PB_FILLIN_DATE, PB_DEVICE_ID, PB_SIMCARD_ID, PB_PHONE_NUMBER, PB_USER_NAME, PB_V_DATE, PB_PARK, PB_TALUK, PB_VILLAGE_1, PB_VILLAGE_2, PB_LAT, PB_LONG, PB_ALT, PB_ACC, PB_C_VILLAGE FROM publicity";
+
+//RDB QUERY : DAILY COUNT
+queryscript.selectallDAO = "SELECT * FROM DAILY_COUNT";
+queryscript.selectDCuser = "SELECT * FROM dc_cases WHERE DC_CASE_ID = ?";
+queryscript.getallDC = "SELECT * FROM DAILY_COUNT DC JOIN dc_cases FA ON DC.DC_CASE_ID=FA.DC_CASE_ID";
+queryscript.insertintoDC_table = "INSERT IGNORE INTO daily_count set ? ";
+queryscript.insertintoDC_FAusers = "INSERT IGNORE INTO dc_cases set ? ";
 
 //PROD RDB QUERY
-queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.daily_count set ? ";
-
+queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.DAILY_COUNT set ? ";
 
 //FORM QUERY 
 queryscript.selectallFormDC = "SELECT * FROM wsodk_dailycount_apr_18_results";
@@ -58,44 +62,5 @@ qmodels.createuser = function (data) {
     return insertquery;
 }
 
-qmodels.get_dcusers = function (data, i) {
-    var MIN_ID = data['meta:instanceID'].split(":");
-    var insertcasesquery = {
-        DC_CROP: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_cr'],
-        DC_CROP_PROPERTY: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_crpd'],
-        DC_PROPERTY: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_pd'],
-        DC_LIVESTOCK: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_lp'],
-        DC_HUMAN_INJURY: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_hi'],
-        DC_HUMAN_DEATH: data['fa_mck:fa_hwc_' + i + ':fa_' + i + '_hd'],
-        DC_TOTAL_ATTENDED_CASE: data['fa_mck:fa_' + i + '_casetally'],
-        DC_CASE_ID: MIN_ID[1] + "_" + data.username,
-        DC_FA_ID: MIN_ID[1] + "_FA" + i
-    }
-    console.log(insertcasesquery.DC_CASE_ID);
-    return insertcasesquery;
-}
-
-qmodels.get_do = function (data) {
-    var MIN_ID = data._URI.split(":");
-
-    var insertquery = {
-
-        DC_METAINSTANCE_ID: MIN_ID[1],
-        DC_FILLIN_DATE: data.TODAY,
-        DC_DEVICE_ID: data.DEVICEID,
-        DC_SIMCARD_ID: data.SIMSERIAL,
-        DC_PHONE_NUMBER: data.PHONENUMBER,
-        DC_USER_NAME: data.USERNAME,
-        DC_CASE_DATE: helper.methods.GetFormattedDate(data.DETAILS_DC_DATE),
-        DC_NH_CASES: data.DETAILS_NH_CASES,
-        DC_BP_CASES: data.DETAILS_BP_CASES,
-        DC_TOTAL_CASES: data.DETAILS_WS_CASES,
-        DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME
-
-    };
-
-    console.log("inserting" + insertquery.DC_CASE_DATE);
-    return insertquery;
-}
 exports.sqlquery = queryscript;
 exports.datamodels = qmodels;
