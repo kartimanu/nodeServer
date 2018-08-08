@@ -5,6 +5,7 @@ var db = require('./config/db');
 var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
+var reportDCfunc = require('./reports/dailycount');
 
 var bodyParser = require("body-parser");
 var express = require("express");
@@ -17,7 +18,7 @@ app.use(cors());
 var port = process.env.port || 2000;
 // var router = express.Router();
 
-app.get("/", comSyncfunc.func.syncallcompensationdetails);
+app.get("/", reportDCfunc.report.getdailycountbypark);
 // function(req,res){res.send("[ Home - Page of API's ]")});
 
 app.get("/users", userfunctions.caller.getusers);
@@ -35,5 +36,6 @@ app.get("/getpublicity", pubfunctions.caller.getpubdata);
 //observer
 setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 90);
 setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 120);
 
 app.listen(port, () => console.log("Server running on port %d", port));

@@ -2,7 +2,26 @@ const utils = {};
 
 utils.GetFormattedDate = function (convertdate) {
     var todayTime = new Date(convertdate);
-    return (todayTime.getFullYear() + "-" + (todayTime.getMonth() + 1) + "-" + (todayTime.getDate()) + " " + (todayTime.getHours()) + ":" + (todayTime.getMinutes()) + ":" + (todayTime.getSeconds()));
+    return ((todayTime.getDate()) + "-" + (todayTime.getMonth() + 1) + "-" + todayTime.getFullYear() + " " + (todayTime.getHours()) + ":" + (todayTime.getMinutes()) + ":" + (todayTime.getSeconds()));
+}
+
+utils.GetDAY = function (convertdate) {
+    var todayTime = new Date(convertdate);
+    return todayTime.getDate();
+}
+
+utils.GetMONTH = function (convertdate) {
+    var todayTime = new Date(convertdate);
+    return todayTime.getMonth() + 1;
+}
+
+utils.GetYEAR = function (convertdate) {
+    var todayTime = new Date(convertdate);
+    return todayTime.getFullYear();
+}
+
+utils.GetRandomId = function () {
+    return Math.floor((Math.random() * 100000) + 100);
 }
 
 utils.seterror = function (msg) {

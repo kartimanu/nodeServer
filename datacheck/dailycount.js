@@ -59,7 +59,6 @@ function setDAO(data) {
     var MIN_ID = data._URI.split(":");
 
     var insertquery = {
-
         DC_METAINSTANCE_ID: MIN_ID[1],
         DC_FILLIN_DATE: data.TODAY,
         DC_DEVICE_ID: data.DEVICEID,
@@ -70,8 +69,10 @@ function setDAO(data) {
         DC_NH_CASES: data.DETAILS_NH_CASES,
         DC_BP_CASES: data.DETAILS_BP_CASES,
         DC_TOTAL_CASES: data.DETAILS_NH_CASES + data.DETAILS_BP_CASES,
-        DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME
-
+        DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME,
+        DC_DAY: helper.methods.GetDAY(data.DETAILS_DC_DATE),
+        DC_MONTH: helper.methods.GetMONTH(data.DETAILS_DC_DATE),
+        DC_YEAR: helper.methods.GetYEAR(data.DETAILS_DC_DATE)
     };
 
     // console.log("inserting" + JSON.stringify(insertquery));
@@ -99,7 +100,8 @@ function setFA(data, i) {
         DC_HUMAN_DEATH: data[FA_HD],
         DC_TOTAL_ATTENDED_CASE: data[FA_CT],
         DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME,
-        DC_FA_ID: MIN_ID[1] + "_" + FA_USERS[i]
+        DC_FA_ID: MIN_ID[1] + "_" + FA_USERS[i],
+        DC_FA_UN: FA_USERS[i]
     }
     console.log(JSON.stringify(insertcasesquery));
     return insertcasesquery;
