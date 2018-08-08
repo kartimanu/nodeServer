@@ -11,7 +11,7 @@ reports.getdailycountbypark = function (req, res, next) {
                 console.log(error);
                 return;
             } else {
-                result_data.push(JSON.stringify(data));
+                result_data.push(data);
             }
         });
         con_mdb.query(procedure.func.byFA(), function (error, data, fields) {
@@ -19,7 +19,7 @@ reports.getdailycountbypark = function (req, res, next) {
                 console.log(error);
                 return;
             } else {
-                result_data.push(JSON.stringify(data));
+                result_data.push(data);
             }
         });
         con_mdb.query(procedure.func.byEffectType(), function (error, data, fields) {
@@ -27,8 +27,9 @@ reports.getdailycountbypark = function (req, res, next) {
                 console.log(error);
                 return;
             } else {
-                // result_data.push( JSON.stringify(data[0]));
-                res.send(JSON.stringify(result_data)+JSON.stringify(data));
+                result_data.push(data);
+                res.send(JSON.stringify(result_data));
+                result_data.length = 0;
             }
         });
     }).catch(err => {

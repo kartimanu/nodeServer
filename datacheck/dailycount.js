@@ -65,7 +65,7 @@ function setDAO(data) {
         DC_SIMCARD_ID: data.SIMSERIAL,
         DC_PHONE_NUMBER: data.PHONENUMBER,
         DC_USER_NAME: data.USERNAME,
-        DC_CASE_DATE: helper.methods.GetFormattedDate(data.DETAILS_DC_DATE),
+        DC_CASE_DATE: data.DETAILS_DC_DATE,
         DC_NH_CASES: data.DETAILS_NH_CASES,
         DC_BP_CASES: data.DETAILS_BP_CASES,
         DC_TOTAL_CASES: data.DETAILS_NH_CASES + data.DETAILS_BP_CASES,
