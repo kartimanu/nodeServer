@@ -33,7 +33,7 @@ function sortdata(res) {
                     for (i = 1; i < 9; i++) {
                         insertFAdata(data, i);
                     }
-                    console.log(JSON.stringify(dao_result));
+                    // console.log(JSON.stringify(dao_result));
                 }
             });
         }).catch(err => {
@@ -49,7 +49,7 @@ function insertFAdata(res, pos) {
                 console.log(error);
                 return;
             } else {
-                console.log(JSON.stringify(pos + "-" + fa_result));
+                // console.log(JSON.stringify(pos + "-" + fa_result));
             }
         });
     });
@@ -75,7 +75,6 @@ function setDAO(data) {
         DC_YEAR: helper.methods.GetYEAR(data.DETAILS_DC_DATE)
     };
 
-    // console.log("inserting" + JSON.stringify(insertquery));
     return insertquery;
 }
 
@@ -101,17 +100,11 @@ function setFA(data, i) {
         DC_TOTAL_ATTENDED_CASE: data[FA_CT],
         DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME,
         DC_FA_ID: MIN_ID[1] + "_" + FA_USERS[i],
-        DC_FA_UN: FA_USERS[i]
+        DC_FA_UN: FA_USERS[i],
+        DC_CASE_DATE:data.DETAILS_DC_DATE
     }
-    console.log(JSON.stringify(insertcasesquery));
+    // console.log(JSON.stringify(insertcasesquery));
     return insertcasesquery;
 }
 
-// FA_NHN_FA_HWC_6_FA_6_CRPD int(9)
-// FA_SK_FA_HWC_4_FA_4_HD int(9)
-// FA_MCK_FA_HWC_1_FA_1_LP int(9)
-// FA_MCK_FA_HWC_1_FA_1_HI int(9)
-// FA_MS_FA_HWC_5_FA_5_CR int(9)
-// FA_RK_FA_HWC_3_FA_3_PD int(9)
-// FA_RM_FA_2_CASETALLY varchar(255)
 exports.func = dc;

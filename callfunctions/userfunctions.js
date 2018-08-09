@@ -83,4 +83,24 @@ myfunctions.deleteUser = function (req, res, next) {
     });
 }
 
+myfunctions.authUser = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.deleteuser, req.body.username, req.body.password, function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.setHeader("Content-Type", "application/json");
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
+                res.setHeader("Content-Type", "application/json");
+                res.send(util.methods.setresponse(results));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
 exports.caller = myfunctions;

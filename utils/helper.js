@@ -2,7 +2,7 @@ const utils = {};
 
 utils.GetFormattedDate = function (convertdate) {
     var todayTime = new Date(convertdate);
-    return ((todayTime.getDate()) + "-" + (todayTime.getMonth() + 1) + "-" + todayTime.getFullYear() + " " + (todayTime.getHours()) + ":" + (todayTime.getMinutes()) + ":" + (todayTime.getSeconds()));
+    return ((todayTime.getFullYear()) + "-" + (todayTime.getMonth() + 1) + "-" + todayTime.getDate() + " " + (todayTime.getHours()) + ":" + (todayTime.getMinutes()) + ":" + (todayTime.getSeconds()));
 }
 
 utils.GetDAY = function (convertdate) {
@@ -12,7 +12,7 @@ utils.GetDAY = function (convertdate) {
 
 utils.GetMONTH = function (convertdate) {
     var todayTime = new Date(convertdate);
-    return todayTime.getMonth() + 1;
+    return (todayTime.getMonth() + 1);
 }
 
 utils.GetYEAR = function (convertdate) {

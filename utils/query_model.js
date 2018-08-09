@@ -19,6 +19,11 @@ queryscript.getallDC = "SELECT * FROM DAILY_COUNT DC JOIN dc_cases FA ON DC.DC_C
 queryscript.insertintoDC_table = "INSERT IGNORE INTO daily_count set ? ";
 queryscript.insertintoDC_FAusers = "INSERT IGNORE INTO dc_cases set ? ";
 
+//RDB QUERY : COMPENSATION
+queryscript.selectOM_data = "SELECT * FROM compensation_details";
+queryscript.selectOM_casedata = "SELECT * FROM com_cases_details WHERE COM_WSID_FORM_DATE = ?";
+
+
 //PROD RDB QUERY
 queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.DAILY_COUNT set ? ";
 

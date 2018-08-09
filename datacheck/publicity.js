@@ -1,4 +1,5 @@
 const dbconn = require('../config/sshdbconn');
+const helper = require('../utils/helper');
 
 const qselect = "SELECT R._URI, R._MODEL_VERSION, R._UI_VERSION, R._SUBMISSION_DATE, R.TODAY, R.DEVICEID, R.SIMSERIAL, R.PHONENUMBER, R.USERNAME, R.PUB_VILL_PUB_DATE, R.PUB_VILL_PUB_PARK, R.PUB_VILL_PUB_TALUK, R.PUB_VILL_PUB_VILLAGE, R.PUB_VILL_PUB_OTHERVILLAGE, R.PUB_VILL_GPS_POINT_LAT, R.PUB_VILL_GPS_POINT_LNG, R.PUB_VILL_GPS_POINT_ALT, R.PUB_VILL_GPS_POINT_ACC, R.PUB_VILL_CONCAT_PUB_VILLAGE, I.VALUE AS IMG1, J.VALUE AS IMG2";
 const qfrom = " FROM PUBLICITY_WILD_SEVE_CORE R  LEFT JOIN PUBLICITY_WILD_SEVE_PUB_VILL_PUB_IMG_1_BLB I ON R._URI = I._TOP_LEVEL_AURI LEFT JOIN PUBLICITY_WILD_SEVE_PUB_VILL_PUB_IMG_2_BLB J ON R._URI = J._TOP_LEVEL_AURI";
@@ -67,9 +68,12 @@ function qModel(resData) {
         "PB_LONG": resData.PUB_VILL_GPS_POINT_LNG,
         "PB_ALT": resData.PUB_VILL_GPS_POINT_ALT,
         "PB_ACC": resData.PUB_VILL_GPS_POINT_ACC,
-        "PB_IMAGE_1": img1_buf,
-        "PB_IMAGE_2": img2_buf,
-        "PB_C_VILLAGE": resData.PUB_VILL_CONCAT_PUB_VILLAGE
+        // "PB_IMAGE_1": img1_buf,
+        // "PB_IMAGE_2": img2_buf,
+        "PB_C_VILLAGE": resData.PUB_VILL_CONCAT_PUB_VILLAGE,        
+        "PB_DAY": helper.methods.GetDAY(resData.PUB_VILL_PUB_DATE),
+        "PB_MONTH": helper.methods.GetMONTH(resData.PUB_VILL_PUB_DATE),
+        "PB_YEAR": helper.methods.GetYEAR(resData.PUB_VILL_PUB_DATE)
     }
     console.log('query ready');
     return insertQuery;

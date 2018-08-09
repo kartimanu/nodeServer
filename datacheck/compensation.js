@@ -144,7 +144,10 @@ function setOM(data) {
         COM_OM_FORM_DATE: helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE),
         COM_OM_TOTAL_CASES: data.OMDETAILS_OM_TOTNO,
         COM_OM_WS_CASES: data.OMDETAILS_OM_WSNO,
-        COM_WSID_FORM_DATE: MIN_ID[1] + ":" + helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE)
+        COM_WSID_FORM_DATE: MIN_ID[1] + ":" + helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE),        
+        COM_DAY: helper.methods.GetDAY(data.OMDETAILS_OM_DATE),
+        COM_MONTH: helper.methods.GetMONTH(data.OMDETAILS_OM_DATE),
+        COM_YEAR: helper.methods.GetYEAR(data.OMDETAILS_OM_DATE)
 
     };
     // console.log(JSON.stringify(insertOMdata));
