@@ -23,7 +23,15 @@ queryscript.insertintoDC_FAusers = "INSERT IGNORE INTO dc_cases set ? ";
 queryscript.selectOM_data = "SELECT * FROM compensation_details";
 queryscript.selectOM_casedata = "SELECT * FROM com_cases_details WHERE COM_WSID_FORM_DATE = ?";
 
+//RDB QUERY : HWC
+const line1 = "SELECT * FROM hwc_details HD LEFT JOIN hwc_case_crop HC ";
+const line2 = "ON (HD.HWC_WSID = HC.HWC_WSID && HD.HWC_CASE_DATE=HC.HWC_CASE_DATE) ";
+const line3 = "LEFT JOIN hwc_case_property HP ";
+const line4 = "ON (HD.HWC_WSID = HP.HWC_WSID && HD.HWC_CASE_DATE=HP.HWC_CASE_DATE) ";
+const line5 = "LEFT JOIN hwc_case_livestock HL ";
+const line6 = "ON (HD.HWC_WSID = HL.HWC_WSID && HD.HWC_CASE_DATE=HL.HWC_CASE_DATE)";
 
+queryscript.selectall_hwc = line1+line2+line3+line4+line5+line6;
 //PROD RDB QUERY
 queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.DAILY_COUNT set ? ";
 

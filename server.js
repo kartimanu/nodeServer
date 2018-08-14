@@ -1,10 +1,11 @@
 const userfunctions = require('./callfunctions/userfunctions');
 const dcfunctions = require('./callfunctions/dcfunctions');
 const pubfunctions = require('./callfunctions/pubfunctions');
-var db = require('./config/db');
+const hwcfunctions = require('./callfunctions/hwcfunctions');
 var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
+var hwcSyncfunc = require('./datacheck/hwc');
 var reportDCfunc = require('./reports/dailycount');
 
 var bodyParser = require("body-parser");
@@ -38,9 +39,12 @@ app.get("/getOM_cases/:id", dcfunctions.caller.getFAusers);
 
 app.get("/getpublicity", pubfunctions.caller.getpubdata);
 
+app.get("/gethwc", hwcfunctions.caller.get_hwcall);
+
 //observer
 setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 90);
 setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60);
 setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 120);
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 30);
 
 app.listen(port, () => console.log("Server running on port %d", port));
