@@ -6,16 +6,17 @@ const queryscript = {};
 //RDB QUERY : USERS
 queryscript.selectallWSusers = "SELECT * FROM wls_users";
 queryscript.insertuser = "INSERT INTO wls_users set ? ";
-queryscript.updateuser = "UPDATE wls_users SET ? WHERE user_name = ?";
-queryscript.deleteuser = "DELETE FROM wls_users WHERE user_name = ?";
+queryscript.updateuser = "UPDATE wls_users SET ? WHERE User_name = ?";
+queryscript.deleteuser = "DELETE FROM wls_users WHERE User_name = ?";
+queryscript.checkuser = "SELECT * FROM wls_users WHERE User_name = ?";
 
 //RDB QUERY : PUBLICITY
 queryscript.getpublicitydata = "SELECT PB_METAINSTANCE_ID, PB_FILLIN_DATE, PB_DEVICE_ID, PB_SIMCARD_ID, PB_PHONE_NUMBER, PB_USER_NAME, PB_V_DATE, PB_PARK, PB_TALUK, PB_VILLAGE_1, PB_VILLAGE_2, PB_LAT, PB_LONG, PB_ALT, PB_ACC, PB_C_VILLAGE FROM publicity";
 
 //RDB QUERY : DAILY COUNT
-queryscript.selectallDAO = "SELECT * FROM DAILY_COUNT";
+queryscript.selectallDAO = "SELECT * FROM daily_count";
 queryscript.selectDCuser = "SELECT * FROM dc_cases WHERE DC_CASE_ID = ?";
-queryscript.getallDC = "SELECT * FROM DAILY_COUNT DC JOIN dc_cases FA ON DC.DC_CASE_ID=FA.DC_CASE_ID";
+queryscript.getallDC = "SELECT * FROM daily_count DC JOIN dc_cases FA ON DC.DC_CASE_ID=FA.DC_CASE_ID";
 queryscript.insertintoDC_table = "INSERT IGNORE INTO daily_count set ? ";
 queryscript.insertintoDC_FAusers = "INSERT IGNORE INTO dc_cases set ? ";
 
@@ -39,7 +40,7 @@ queryscript.selecthwc_user_byid = line1+line2+line3+line4+line5+line6+line7;
 queryscript.get_case_users = "SELECT * FROM wildseve_users";
 
 //PROD RDB QUERY
-queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.DAILY_COUNT set ? ";
+queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.daily_count set ? ";
 
 //FORM QUERY 
 queryscript.selectallFormDC = "SELECT * FROM wsodk_dailycount_apr_18_results";

@@ -12,20 +12,43 @@ var reportDCfunc = require('./reports/dailycount');
 var bodyParser = require("body-parser");
 var express = require("express");
 var cors = require("cors");
+var jwt = require("jsonwebtoken");
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+// app.use(function (req, res, next) {
+//     if (req.url !== '/authUser' && req.url !== "/") {
+//         var token = req.headers['authorization'];
+//         if (token) {
+//             try {
+//                 var decoded = jwt.verify(token, 'sysarks');
+//                 if (decoded) {
+//                     req.decoded = decoded;
+//                     next();
+//                 }
+//             } catch (err) {
+//                 return res.status(403).send({ success: false, message: 'Invalid token' })
+//             }
+//         }
+//         else {
+//             return res.status(403).send({ success: false, message: 'no token provided' })
+//         }
+//     } else {
+//         next();
+//     }
+// })
 var port = process.env.port || 2000;
 // var router = express.Router();
 
-app.get("/", function(req,res){res.send("[ Home - Page of API's ]")});
+app.get("/", function (req, res) { res.send("[ Home - Page of API's ]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
 app.post("/getDCreportbyrange", reportDCfunc.report.getdailycountbyrange);
 
+app.post("/authUser", userfunctions.caller.authUser);
 app.get("/users", userfunctions.caller.getusers);
 app.post("/createuser", userfunctions.caller.createUser);
 app.get("/deleteuser/:id", userfunctions.caller.deleteUser);

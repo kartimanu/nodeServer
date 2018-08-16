@@ -37,6 +37,13 @@ utils.setresponse = function (result) {
         "response": result
     })
 }
+utils.setAuthResponse = function (result, token) {
+    return JSON.stringify({
+        "status": 200,
+        "response": result,
+        "token": token
+    })
+}
 
 
 exports.methods = utils;

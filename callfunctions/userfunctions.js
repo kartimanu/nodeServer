@@ -1,6 +1,7 @@
 const db_model = require('../utils/query_model');
 const dbconn = require('../config/sshdbconn');
 const util = require('../utils/helper');
+const jwt = require('jsonwebtoken')
 const myfunctions = {};
 
 myfunctions.getusers = function (req, res, next) {
@@ -85,15 +86,17 @@ myfunctions.deleteUser = function (req, res, next) {
 
 myfunctions.authUser = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(db_model.sqlquery.deleteuser, req.body.username, req.body.password, function (error, results, fields) {
+        con_mdb.query(db_model.sqlquery.checkuser, req.body.username, function (error, results, fields) {
             if (error) {
                 console.log(error);
                 res.setHeader("Content-Type", "application/json");
                 res.send(util.methods.seterror(error));
                 return;
             } else {
-                res.setHeader("Content-Type", "application/json");
-                res.send(util.methods.setresponse(results));
+                console.log(results);
+                // var token = jwt.sign({username:req.body.username}, "sysarks");
+                // res.setHeader("Content-Type", "application/json");
+                // res.send(util.methods.setAuthResponse(results,token));
             }
         });
     }).catch(err => {
