@@ -29,9 +29,15 @@ const line2 = "ON (HD.HWC_WSID = HC.HWC_WSID && HD.HWC_CASE_DATE=HC.HWC_CASE_DAT
 const line3 = "LEFT JOIN hwc_case_property HP ";
 const line4 = "ON (HD.HWC_WSID = HP.HWC_WSID && HD.HWC_CASE_DATE=HP.HWC_CASE_DATE) ";
 const line5 = "LEFT JOIN hwc_case_livestock HL ";
-const line6 = "ON (HD.HWC_WSID = HL.HWC_WSID && HD.HWC_CASE_DATE=HL.HWC_CASE_DATE)";
+const line6 = "ON (HD.HWC_WSID = HL.HWC_WSID && HD.HWC_CASE_DATE=HL.HWC_CASE_DATE) ";
+const line7 = "WHERE HWC_METAINSTANCE_ID = ?";
 
+queryscript.select_hwc = "SELECT * FROM hwc_details";
 queryscript.selectall_hwc = line1+line2+line3+line4+line5+line6;
+queryscript.selecthwc_user_byid = line1+line2+line3+line4+line5+line6+line7;
+
+queryscript.get_case_users = "SELECT * FROM wildseve_users";
+
 //PROD RDB QUERY
 queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.DAILY_COUNT set ? ";
 

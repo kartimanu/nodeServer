@@ -2,6 +2,7 @@ const userfunctions = require('./callfunctions/userfunctions');
 const dcfunctions = require('./callfunctions/dcfunctions');
 const pubfunctions = require('./callfunctions/pubfunctions');
 const hwcfunctions = require('./callfunctions/hwcfunctions');
+const csfunctions = require('./callfunctions/csfunctions');
 var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
@@ -39,12 +40,16 @@ app.get("/getOM_cases/:id", dcfunctions.caller.getFAusers);
 
 app.get("/getpublicity", pubfunctions.caller.getpubdata);
 
-app.get("/gethwc", hwcfunctions.caller.get_hwcall);
+app.get("/getallhwc", hwcfunctions.caller.get_all_hwc);
+app.get("/gethwc", hwcfunctions.caller.get_hwc);
+app.get("/gethwc/:id", hwcfunctions.caller.get_hwcall_byid);
+
+app.get("/getcase_users", csfunctions.caller.get_case_users);
 
 //observer
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 90);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 120);
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 30);
+setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 4);
+setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 3);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 2);
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
 
 app.listen(port, () => console.log("Server running on port %d", port));
