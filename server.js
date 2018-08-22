@@ -8,6 +8,7 @@ var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
 var hwcSyncfunc = require('./datacheck/hwc');
 var reportDCfunc = require('./reports/dailycountReports');
+var reportHWCfunc = require('./reports/hwcReports');
 
 var bodyParser = require("body-parser");
 var express = require("express");
@@ -44,6 +45,8 @@ var port = process.env.port || 2000;
 
 app.get("/", function (req, res) { res.send("[ Home - Page of API's ]") });
 
+app.get("/getHWCreport", reportDCfunc.report.getHWCbyrange);
+
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
 app.post("/getDCreportbyrange", reportDCfunc.report.getdailycountbyrange);
@@ -71,9 +74,9 @@ app.get("/getcase_users", csfunctions.caller.get_case_users);
 app.get("/img", pubfunctions.caller.getpubImg);
 
 //observer
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
+// setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
+// setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
+// setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
+// setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
 
 app.listen(port, () => console.log("Server running on port %d", port));

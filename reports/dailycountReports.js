@@ -37,6 +37,22 @@ reports.getdailycount = function (req, res, next) {
     });
 }
 
+reports.getHWCbyrange = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.gethwcbyrange(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                // result_data.push(data);
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 reports.getdailycountbyday = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.bypark_day(), function (error, data, fields) {

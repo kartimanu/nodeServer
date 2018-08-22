@@ -36,4 +36,8 @@ procedure.byFA_range = function (fromdate, todate) {
     return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, DC_FA_UN AS FA_NAME,  sum(DC_CROP + DC_CROP_PROPERTY + DC_PROPERTY + DC_LIVESTOCK + DC_HUMAN_DEATH + DC_HUMAN_INJURY) AS TOTAL_CASES_FA  FROM  dc_cases WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY concat(DC_CASE_DATE,'_',DC_FA_UN) ORDER BY DC_CASE_DATE DESC";
 };
 
+procedure.gethwcbyrange = function () {
+    return "SELECT  DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  HWC_PARK_NAME FROM  hwc_details ";
+}
+
 exports.func = procedure;
