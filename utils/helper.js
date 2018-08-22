@@ -44,6 +44,18 @@ utils.setAuthResponse = function (result, token) {
         "token": token
     })
 }
+utils.passwordError = function (msg) {
+    return JSON.stringify({
+        "status": 201,
+        "response": msg
+    })
+}
+utils.setImgData = function (result) {    
+    return JSON.stringify({
+        "status": 200,
+        "response": result
+    })
+}
 
 
 exports.methods = utils;

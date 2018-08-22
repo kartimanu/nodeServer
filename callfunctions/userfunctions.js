@@ -93,10 +93,20 @@ myfunctions.authUser = function (req, res, next) {
                 res.send(util.methods.seterror(error));
                 return;
             } else {
-                console.log(results);
-                // var token = jwt.sign({username:req.body.username}, "sysarks");
-                // res.setHeader("Content-Type", "application/json");
-                // res.send(util.methods.setAuthResponse(results,token));
+                if (JSON.stringify(results).length > 2) {
+                    if (req.body.password == results[0].User_pwd) {
+                        var token = jwt.sign({ username: req.body.username }, "sysarks");
+                        res.setHeader("Content-Type", "application/json");
+                        res.send(util.methods.setAuthResponse(results, token));
+                    } else {
+                        res.setHeader("Content-Type", "application/json");
+                        res.send(util.methods.passwordError("Password doesnt match"));
+                    }
+                }
+                else {
+                    res.setHeader("Content-Type", "application/json");
+                    res.send(util.methods.passwordError("User doesnt exist"));
+                }
             }
         });
     }).catch(err => {

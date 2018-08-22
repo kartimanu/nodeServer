@@ -9,6 +9,7 @@ const comp = {};
 var taluk_list = [];
 
 comp.syncallcompensationdetails = function (req, res) {
+    console.log("Syncing Compensation . . . .");
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(fetchquery, function (error, results, fields) {
             if (error) {
@@ -98,7 +99,8 @@ function setOMcasedata(res_data) {
                 console.log(error);
                 return;
             } else {
-                console.log(om_case_result);
+                if (om_case_result.affectedRows > 0)
+                    console.log("COMPENSATION record inserted :" + JSON.stringify(om_case_result.affectedRows));
             }
         });
     }).catch(err => {
@@ -144,7 +146,7 @@ function setOM(data) {
         COM_OM_FORM_DATE: helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE),
         COM_OM_TOTAL_CASES: data.OMDETAILS_OM_TOTNO,
         COM_OM_WS_CASES: data.OMDETAILS_OM_WSNO,
-        COM_WSID_FORM_DATE: MIN_ID[1] + ":" + helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE),        
+        COM_WSID_FORM_DATE: MIN_ID[1] + ":" + helper.methods.GetFormattedDate(data.OMDETAILS_OM_DATE),
         COM_DAY: helper.methods.GetDAY(data.OMDETAILS_OM_DATE),
         COM_MONTH: helper.methods.GetMONTH(data.OMDETAILS_OM_DATE),
         COM_YEAR: helper.methods.GetYEAR(data.OMDETAILS_OM_DATE)

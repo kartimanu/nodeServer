@@ -8,6 +8,7 @@ const insertFAQuery = "INSERT IGNORE INTO dc_cases set ? ";
 const dc = {};
 
 dc.syncformdailyusers = function (req, res, next) {
+    console.log("Syncing Daily Count . . . .");
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(fetchQuery, function (error, data, fields) {
             if (error) {
@@ -33,7 +34,8 @@ function sortdata(res) {
                     for (i = 1; i < 9; i++) {
                         insertFAdata(data, i);
                     }
-                    // console.log(JSON.stringify(dao_result));
+                    if (dao_result.affectedRows > 0)
+                        console.log("DAILY COUNT record inserted : " + JSON.stringify(dao_result.affectedRows));
                 }
             });
         }).catch(err => {
@@ -49,7 +51,8 @@ function insertFAdata(res, pos) {
                 console.log(error);
                 return;
             } else {
-                // console.log(JSON.stringify(pos + "-" + fa_result));
+                if (fa_result.affectedRows > 0)
+                    console.log("FA record inserted : " + JSON.stringify(fa_result.affectedRows));
             }
         });
     });
@@ -101,7 +104,7 @@ function setFA(data, i) {
         DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME,
         DC_FA_ID: MIN_ID[1] + "_" + FA_USERS[i],
         DC_FA_UN: FA_USERS[i],
-        DC_CASE_DATE:data.DETAILS_DC_DATE
+        DC_CASE_DATE: data.DETAILS_DC_DATE
     }
     // console.log(JSON.stringify(insertcasesquery));
     return insertcasesquery;

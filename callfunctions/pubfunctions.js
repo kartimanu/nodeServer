@@ -12,7 +12,26 @@ demo.getpubdata = function (req, res) {
                 res.send(util.methods.seterror(error));
                 return;
             } else
+                res.send(util.methods.setImgData(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+};
+
+demo.getpubImg = function (req, res) {
+    // async connection to database
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(pquery.sqlquery.getPublicityImgData, function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
                 res.send(util.methods.setresponse(results));
+            }
         });
     }).catch(err => {
         console.log(err);

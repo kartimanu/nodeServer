@@ -11,7 +11,8 @@ queryscript.deleteuser = "DELETE FROM wls_users WHERE User_name = ?";
 queryscript.checkuser = "SELECT * FROM wls_users WHERE User_name = ?";
 
 //RDB QUERY : PUBLICITY
-queryscript.getpublicitydata = "SELECT PB_METAINSTANCE_ID, PB_FILLIN_DATE, PB_DEVICE_ID, PB_SIMCARD_ID, PB_PHONE_NUMBER, PB_USER_NAME, PB_V_DATE, PB_PARK, PB_TALUK, PB_VILLAGE_1, PB_VILLAGE_2, PB_LAT, PB_LONG, PB_ALT, PB_ACC, PB_C_VILLAGE FROM publicity";
+queryscript.getpublicitydata = "SELECT * FROM publicity";
+queryscript.getPublicityImgData = "SELECT * FROM publicity_images";// WHERE PB_METAINSTANCE_ID = ?";
 
 //RDB QUERY : DAILY COUNT
 queryscript.selectallDAO = "SELECT * FROM daily_count";
@@ -75,7 +76,8 @@ qmodels.createuser = function (data) {
         user_name: data.username,
         user_pwd: data.password,
         Email_id: data.email,
-        Phone_number: data.phone
+        Phone_number: data.phone,
+        User_Role_Id: data.roleid
     };
 
     console.log("inserting user");

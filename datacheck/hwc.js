@@ -10,6 +10,7 @@ const Taluk_Query = "SELECT * FROM wls_taluk";// WHERE OLD_T_NAME = ";
 const hwc = {};
 
 hwc.syncallhwvdetails = function (req, res) {
+    console.log("Syncing HWC . . . . ");
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(fetchquery, function (error, results, fields) {
             if (error) {
@@ -36,7 +37,10 @@ function inserthwcusercase(res) {
                     insert_hwc_crop(ucdata);
                     insert_hwc_property(ucdata);
                     insert_hwc_livestock(ucdata);
-                    console.log(JSON.stringify(uc_result));
+                    if (uc_result.affectedRows > 0)
+                        console.log("HWC Record inserted :" + JSON.stringify(uc_result.affectedRows));
+                    // else
+                    //     console.log("HWC : No new records inserted.");
                 }
             });
         }).catch(err => {
@@ -58,7 +62,10 @@ function insert_hwc_crop(cropdata) {
                         console.log(error);
                         return;
                     } else {
-                        console.log("CR :" + JSON.stringify(crop_result));
+                        if (crop_result.affectedRows > 0)
+                            console.log("CR inserted :" + JSON.stringify(crop_result.affectedRows));
+                        // else
+                        //     console.log("CR : No new records inserted.");
                     }
                 });
             }).catch(err => {
@@ -84,7 +91,10 @@ function insert_hwc_property(pd_data) {
                         console.log(error);
                         return;
                     } else {
-                        console.log("PD :" + JSON.stringify(property_result));
+                        if (property_result.affectesRows > 0)
+                            console.log("PD inserted :" + JSON.stringify(property_result.affectedRows));
+                        // else
+                        //     console.log("PD : No new records inserted.");
                     }
                 });
             }).catch(err => {
@@ -110,7 +120,10 @@ function insert_hwc_livestock(lp_data) {
                         console.log(error);
                         return;
                     } else {
-                        console.log("LS :" + JSON.stringify(livestock_result));
+                        if (livestock_result.affectedRows > 0)
+                            console.log("LS inserted:" + JSON.stringify(livestock_result.affectedRows));
+                        // else
+                        //     console.log("LS : No new records inserted.");
                     }
                 });
             }).catch(err => {
