@@ -1,5 +1,6 @@
 var dbconn = require('../config/sshdbconn');
 var async = require("async");
+var util = require('../utils/helper');
 
 const fetchquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
@@ -190,11 +191,16 @@ function setHWC_livestockdata(hwcformdata, pos) {
 function setHWCdata(hwcformdata) {
 
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
+    
+    if (hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase() == 'otheranimal')
+        hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME = (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase();
+
+
     const inserthwcdataset = {
         HWC_METAINSTANCE_ID: MIN_ID[1],
         HWC_METAMODEL_VERSION: hwcformdata._MODEL_VERSION,
         HWC_METAUI_VERSION: hwcformdata._UI_VERSION,
-        HWC_METASUBMISSION_DATE: hwcformdata._SUBMISSION_DATE,
+        HWC_METASUBMISSION_DATE: util.methods.GetFormattedDate(hwcformdata._SUBMISSION_DATE),
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         HWC_FIRST_NAME: hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
         HWC_FULL_NAME: hwcformdata.EXITINFO2_CONCAT_FULLNAME,
@@ -209,10 +215,10 @@ function setHWCdata(hwcformdata) {
         HWC_LONGITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LNG,
         HWC_ALTITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ALT,
         HWC_ACCURACY: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ACC,
-        HWC_CASE_DATE: hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE,
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE),
         HWC_CASE_CATEGORY: hwcformdata.HWCINFO_INCIDENTINFO_HWC_CAT.toUpperCase(),
         HWC_ANIMAL: (!hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME) ? null : hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase(),
-        HWC_OTHER_ANIMAL: (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase(),
+        // HWC_OTHER_ANIMAL: (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase(),
         HWC_HI_NAME: (!hwcformdata.HWCINFO_HIINFO_HINAME) ? null : hwcformdata.HWCINFO_HIINFO_HINAME.toLowerCase(),
         HWC_HI_VILLAGE: (!hwcformdata.HWCINFO_HIINFO_HIVILLAGE) ? null : hwcformdata.HWCINFO_HIINFO_HIVILLAGE.toLowerCase(),
         HWC_HI_AREA: hwcformdata.HWCINFO_HIINFO_HIAREA,

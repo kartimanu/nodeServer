@@ -104,5 +104,25 @@ procedure.gethwc_byFARange_byrange = function (fromdate, todate) {
     return "SELECT HWC_FD_SUB_RANGE AS FA_SUB_RANGE, Count(HWC_FD_SUB_RANGE) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_FD_SUB_RANGE";
 }
 
+procedure.gethwc_bycat_all = function () {
+    return "select HWC_CASE_CATEGORY AS HWC_CATEGORY, count(HWC_CASE_CATEGORY) AS FREQ from hwc_details group by HWC_CASE_CATEGORY";
+}
+
+procedure.gethwc_bycat_animal = function () {
+    return "select HWC_ANIMAL AS HWC_ANIMAL, count(HWC_ANIMAL) AS FREQ from hwc_details group by HWC_ANIMAL";
+}
+
+procedure.gethwc_bycat_crop = function () {
+    return "select HWC_CROP_NAME AS HWC_CROP, count(HWC_CROP_NAME) AS FREQ from hwc_case_crop group by HWC_CROP_NAME";
+}
+
+procedure.gethwc_bycat_property = function () {
+    return "select HWC_PROPERY_NAME AS HWC_CROP, count(HWC_PROPERY_NAME) AS FREQ from hwc_case_property group by HWC_PROPERY_NAME";
+}
+
+procedure.gethwc_bycat_livestock = function () {
+    return "select HWC_LIVE_STOCK_NAME AS HWC_CROP, count(HWC_LIVE_STOCK_NAME) AS FREQ from hwc_case_livestock group by HWC_LIVE_STOCK_NAME";
+}
+
 
 exports.func = procedure;
