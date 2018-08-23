@@ -1,9 +1,9 @@
 const dbconn = require('../config/sshdbconn');
 const helper = require('../utils/helper');
-var async = require("async");
-const imagemin = require('imagemin');
-const imageminJpegtran = require('imagemin-jpegtran');
-const imageminPngquant = require('imagemin-pngquant');
+// var async = require("async");
+// const imagemin = require('imagemin');
+// const imageminJpegtran = require('imagemin-jpegtran');
+// const imageminPngquant = require('imagemin-pngquant');
 
 const qselect = "SELECT R._URI, R._MODEL_VERSION, R._UI_VERSION, R._SUBMISSION_DATE, R.TODAY, R.DEVICEID, R.SIMSERIAL, R.PHONENUMBER, R.USERNAME, R.PUB_VILL_PUB_DATE, R.PUB_VILL_PUB_PARK, R.PUB_VILL_PUB_TALUK, R.PUB_VILL_PUB_VILLAGE, R.PUB_VILL_PUB_OTHERVILLAGE, R.PUB_VILL_GPS_POINT_LAT, R.PUB_VILL_GPS_POINT_LNG, R.PUB_VILL_GPS_POINT_ALT, R.PUB_VILL_GPS_POINT_ACC, R.PUB_VILL_CONCAT_PUB_VILLAGE, I.VALUE AS IMG1, J.VALUE AS IMG2";
 const qfrom = " FROM PUBLICITY_WILD_SEVE_CORE R  LEFT JOIN PUBLICITY_WILD_SEVE_PUB_VILL_PUB_IMG_1_BLB I ON R._URI = I._TOP_LEVEL_AURI LEFT JOIN PUBLICITY_WILD_SEVE_PUB_VILL_PUB_IMG_2_BLB J ON R._URI = J._TOP_LEVEL_AURI";
@@ -71,20 +71,20 @@ function insertImgData(id, img_res1, img_res2) {
 
 };
 
-function asyncImg(imgData1, imgData2) {
+// function asyncImg(imgData1, imgData2) {
 
-        (async () => {
-            const files = await imagemin.buffer(imgData1, {
-                plugins: [
-                    imageminJpegtran(),
-                    imageminPngquant({quality: '65-80'})
-                ]
-            });
+//         (async () => {
+//             const files = await imagemin.buffer(imgData1, {
+//                 plugins: [
+//                     imageminJpegtran(),
+//                     imageminPngquant({quality: '65-80'})
+//                 ]
+//             });
          
-            console.log(files);
-        })().catch(err => {
-            console.log(err);
-        });
+//             console.log(files);
+//         })().catch(err => {
+//             console.log(err);
+//         });
 
         // (async () => {
         //     const files = await imagemin(imgData2, 'build/images', {
@@ -99,7 +99,7 @@ function asyncImg(imgData1, imgData2) {
         //     console.log(err);
         // });
 
-}
+// }
 
 function qModel(resData) {
     const MIN_ID = resData._URI.split(":");
@@ -108,7 +108,7 @@ function qModel(resData) {
     const img2_data = JSON.parse(JSON.stringify(resData.IMG2));
     const img2_buf = !img2_data ? null : new Buffer(img2_data.data, 'binary');//.toString('base64');
     
-    asyncImg(new Buffer(img1_data.data, 'binary'),img2_buf);
+    // asyncImg(new Buffer(img1_data.data, 'binary'),img2_buf);
     var insertQuery = {
         "PB_METAINSTANCE_ID": MIN_ID[1],
         "PB_METAMODEL_VERSION": resData._MODEL_VERSION,
