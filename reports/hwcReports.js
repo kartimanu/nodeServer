@@ -12,6 +12,7 @@ reports.getHWCbyrange = function (req, res, next) {
                 return;
             } else {
                 // result_data.push(data);
+                // console.log(JSON.stringify(data));
                 res.send(JSON.stringify(data));
             }
         });
