@@ -26,18 +26,83 @@ procedure.bypark_day = function () {
 };
 
 procedure.bypark_range = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_NH_CASES) AS TOTAL_NH_CASES, SUM(DC_BP_CASES) AS TOTAL_BP_CASES FROM DAILY_COUNT WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_NH_CASES) AS TOTAL_NH_CASES, SUM(DC_BP_CASES) AS TOTAL_BP_CASES FROM DAILY_COUNT WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
 };
 procedure.byHWCType_range = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_CROP) AS CROP_SUM, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY_SUM, SUM(DC_PROPERTY) AS PROPERTY_SUM, SUM(DC_LIVESTOCK) AS LIVESTOCK_SUM, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY_SUM, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH_SUM FROM dc_cases WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_CROP) AS CROP_SUM, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY_SUM, SUM(DC_PROPERTY) AS PROPERTY_SUM, SUM(DC_LIVESTOCK) AS LIVESTOCK_SUM, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY_SUM, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH_SUM FROM dc_cases WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
 };
 
 procedure.byFA_range = function (fromdate, todate) {
-    return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, DC_FA_UN AS FA_NAME,  sum(DC_CROP + DC_CROP_PROPERTY + DC_PROPERTY + DC_LIVESTOCK + DC_HUMAN_DEATH + DC_HUMAN_INJURY) AS TOTAL_CASES_FA  FROM  dc_cases WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY concat(DC_CASE_DATE,'_',DC_FA_UN) ORDER BY DC_CASE_DATE DESC";
+    return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, DC_FA_UN AS FA_NAME,  sum(DC_CROP + DC_CROP_PROPERTY + DC_PROPERTY + DC_LIVESTOCK + DC_HUMAN_DEATH + DC_HUMAN_INJURY) AS TOTAL_CASES_FA  FROM  dc_cases WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY concat(DC_CASE_DATE,'_',DC_FA_UN) ORDER BY DC_CASE_DATE DESC";
 };
 
-procedure.gethwcbyrange = function () {
-    return "SELECT  DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  HWC_PARK_NAME FROM  hwc_details ";
+procedure.gethwc_byNP = function () {
+    return "SELECT HWC_PARK_NAME AS NATIONAL_PARK, Count(HWC_PARK_NAME) AS NO_OF_CASES FROM hwc_details group by HWC_PARK_NAME";
 }
+
+procedure.gethwc_byFA = function () {
+    return "SELECT HWC_USER_NAME AS FIELD_ASSISTANT, Count(HWC_USER_NAME) AS NO_OF_CASES FROM hwc_details group by HWC_USER_NAME";
+}
+
+procedure.gethwc_byCAT = function () {
+    return "SELECT HWC_CASE_CATEGORY AS CASE_CATEGORY, Count(HWC_CASE_CATEGORY) AS NO_OF_CASES FROM hwc_details group by HWC_CASE_CATEGORY";
+}
+
+procedure.gethwc_byNP_byday = function () {
+    return "SELECT HWC_CASE_DATE AS CASE_DATE, HWC_PARK_NAME AS NATIONAL_PARK, Count(HWC_PARK_NAME) AS NO_OF_CASES FROM hwc_details group by HWC_PARK_NAME, HWC_CASE_DATE order by HWC_CASE_DATE";
+}
+
+procedure.gethwc_byFA_byday = function () {
+    return "SELECT HWC_CASE_DATE AS CASE_DATE, HWC_USER_NAME AS FIELD_ASSISTANT, Count(HWC_USER_NAME) AS NO_OF_CASES FROM hwc_details group by HWC_USER_NAME, HWC_CASE_DATE order by HWC_CASE_DATE;";
+}
+
+procedure.gethwc_byCAT_byday = function () {
+    return "SELECT HWC_CASE_DATE AS CASE_DATE,HWC_CASE_CATEGORY AS CASE_CATEGORY, Count(HWC_CASE_CATEGORY) AS NO_OF_CASES FROM hwc_details group by HWC_CASE_CATEGORY, HWC_CASE_DATE order by HWC_CASE_DATE;";
+}
+
+procedure.gethwc_byNP_range = function (fromdate, todate) {
+    return "SELECT HWC_PARK_NAME AS NATIONAL_PARK, Count(HWC_PARK_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_PARK_NAME";
+}
+
+procedure.gethwc_byFA_range = function (fromdate, todate) {
+    return "SELECT HWC_USER_NAME AS FIELD_ASSISTANT, Count(HWC_USER_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_USER_NAME";
+}
+
+procedure.gethwc_byCAT_range = function (fromdate, todate) {
+    return "SELECT HWC_CASE_CATEGORY AS CASE_CATEGORY, Count(HWC_CASE_CATEGORY) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_CASE_CATEGORY";
+}
+
+procedure.gethwc_byNP_byday_byrange = function (fromdate, todate) {
+    return "SELECT DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, HWC_PARK_NAME AS NATIONAL_PARK, Count(HWC_PARK_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_PARK_NAME, HWC_CASE_DATE order by HWC_CASE_DATE";
+}
+
+procedure.gethwc_byFA_byday_byrange = function (fromdate, todate) {
+    return "SELECT DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, HWC_USER_NAME AS FIELD_ASSISTANT, Count(HWC_USER_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_USER_NAME, HWC_CASE_DATE order by HWC_CASE_DATE;";
+}
+
+procedure.gethwc_byCAT_byday_byrange = function (fromdate, todate) {
+    return "SELECT DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,HWC_CASE_CATEGORY AS CASE_CATEGORY, Count(HWC_CASE_CATEGORY) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_CASE_CATEGORY, HWC_CASE_DATE order by HWC_CASE_DATE;";
+}
+
+procedure.gethwc_byNP_byrange = function (fromdate, todate) {
+    return "SELECT HWC_PARK_NAME AS NATIONAL_PARK, Count(HWC_PARK_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_PARK_NAME";
+}
+
+procedure.gethwc_byVillage_byrange = function (fromdate, todate) {
+    return "SELECT HWC_VILLAGE_NAME AS VILLAGE, Count(HWC_VILLAGE_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_VILLAGE_NAME";
+}
+
+procedure.gethwc_byTaluk_byrange = function (fromdate, todate) {
+    return "SELECT HWC_TALUK_NAME AS TALUK, Count(HWC_TALUK_NAME) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_TALUK_NAME";
+}
+
+procedure.gethwc_byRange_byrange = function (fromdate, todate) {
+    return "SELECT HWC_RANGE , Count(HWC_RANGE) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_RANGE";
+}
+
+procedure.gethwc_byFARange_byrange = function (fromdate, todate) {
+    return "SELECT HWC_FD_SUB_RANGE AS FA_SUB_RANGE, Count(HWC_FD_SUB_RANGE) AS NO_OF_CASES FROM hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) group by HWC_FD_SUB_RANGE";
+}
+
 
 exports.func = procedure;

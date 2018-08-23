@@ -45,11 +45,17 @@ var port = process.env.port || 2000;
 
 app.get("/", function (req, res) { res.send("[ Home - Page of API's ]") });
 
-// app.get("/getHWCreport", reportHWCfunc.report.getHWCbyrange);
-
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
 app.post("/getDCreportbyrange", reportDCfunc.report.getdailycountbyrange);
+
+app.get("/getHWCreport_bycases", reportHWCfunc.report.getHWC_caseattended);
+app.get("/getHWCreport_byday", reportHWCfunc.report.getHWC_eachday);
+app.post("/getHWCreport_bycases_range", reportHWCfunc.report.getHWC_caseattended_byrange);
+app.post("/getHWCreport_byday_range", reportHWCfunc.report.getHWC_eachday_byrange);
+app.post("/getHWCreport_byspacial_range", reportHWCfunc.report.getHWC_bySpacial_byrange);
+
+
 
 app.post("/authUser", userfunctions.caller.authUser);
 app.get("/users", userfunctions.caller.getusers);
