@@ -128,10 +128,10 @@ function qModel(resData) {
         "PB_LONG": resData.PUB_VILL_GPS_POINT_LNG,
         "PB_ALT": resData.PUB_VILL_GPS_POINT_ALT,
         "PB_ACC": resData.PUB_VILL_GPS_POINT_ACC,
-        "PB_C_VILLAGE": resData.PUB_VILL_CONCAT_PUB_VILLAGE,
-        "PB_DAY": helper.methods.GetDAY(resData.PUB_VILL_PUB_DATE),
-        "PB_MONTH": helper.methods.GetMONTH(resData.PUB_VILL_PUB_DATE),
-        "PB_YEAR": helper.methods.GetYEAR(resData.PUB_VILL_PUB_DATE)
+        "PB_C_VILLAGE": resData.PUB_VILL_CONCAT_PUB_VILLAGE
+        // "PB_DAY": helper.methods.GetDAY(resData.PUB_VILL_PUB_DATE),
+        // "PB_MONTH": helper.methods.GetMONTH(resData.PUB_VILL_PUB_DATE),
+        // "PB_YEAR": helper.methods.GetYEAR(resData.PUB_VILL_PUB_DATE)
     }
     insertImgData(insertQuery.PB_METAINSTANCE_ID, img1_buf, img2_buf);
     return insertQuery;

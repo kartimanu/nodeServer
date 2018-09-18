@@ -1,4 +1,5 @@
 const dbconn = require('../config/sshdbconn');
+const db_model = require('../utils/query_model');
 const util = require('../utils/helper');
 const myfunctions = {};
 

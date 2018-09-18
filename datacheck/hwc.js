@@ -8,6 +8,8 @@ const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
 const hwc_livestock_insertQuery = "INSERT IGNORE INTO hwc_case_livestock set ? ";
 const Taluk_Query = "SELECT * FROM wls_taluk";// WHERE OLD_T_NAME = ";
+const hwc_checkexistQuery = 'SELECT EXISTS(SELECT 1 FROM hwc_details WHERE HWC_WSID = ? || HWC_FIRST_NAME = ?) AS \'PRESENT\', HWC_METAINSTANCE_ID from hwc_details WHERE HWC_WSID= ? || HWC_FIRST_NAME = ?';
+const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
 const hwc = {};
 
 hwc.syncallhwvdetails = function (req, res) {
@@ -20,34 +22,84 @@ hwc.syncallhwvdetails = function (req, res) {
             }
             // res.send(JSON.stringify(results));
             // console.log(results);
-            inserthwcusercase(JSON.parse(JSON.stringify(results)));
+            // inserthwcusercase(JSON.parse(JSON.stringify(results)));
+            checkhwcusercase(JSON.parse(JSON.stringify(results)));
         });
     }).catch(err => {
         console.log(err);
     });
 }
 
-function inserthwcusercase(res) {
+function checkhwcusercase(res) {
     Array.from(res).forEach(ucdata => {
         dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(hwc_insertQuery, setHWCdata(ucdata), function (error, uc_result, fields) {
+            con_mdb.query(hwc_checkexistQuery, [ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(), ucdata.EXITINFO2_CONCAT_FIRSTNAME, ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(), ucdata.EXITINFO2_CONCAT_FIRSTNAME], function (error, ext_result, fields) {
                 if (error) {
                     console.log(error);
                     return;
                 } else {
-                    insert_hwc_crop(ucdata);
-                    insert_hwc_property(ucdata);
-                    insert_hwc_livestock(ucdata);
-                    if (uc_result.affectedRows > 0)
-                        console.log("HWC Record inserted :" + JSON.stringify(uc_result.affectedRows));
-                    // else
-                    //     console.log("HWC : No new records inserted.");
+                    var resp = JSON.parse(JSON.stringify(ext_result));
+                    const exist = resp[0].PRESENT;
+                    console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
+                    if (exist == 0)
+                        inserthwcusercase(ucdata);
+                    else {
+                        // console.log(resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
+                        var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
+                        if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1])
+                            insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                    }
+
                 }
             });
         }).catch(err => {
             console.log(err);
         });
     });
+}
+
+function insert_duplicates(org_id, dup_id) {
+
+    const inserthwc_dupdataset = {
+        HWC_ORG_METAID: org_id,
+        HWC_DUP_METAID: dup_id
+    }
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_insert_dupQuery, inserthwc_dupdataset, function (error, dup_result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (dup_result.affectedRows > 0)
+                    console.log("HWC Duplicate Record inserted - " + JSON.stringify(dup_result.affectedRows));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+function inserthwcusercase(ucdata) {
+    // Array.from(res).forEach(ucdata => {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_insertQuery, setHWCdata(ucdata), function (error, uc_result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                insert_hwc_crop(ucdata);
+                insert_hwc_property(ucdata);
+                insert_hwc_livestock(ucdata);
+                if (uc_result.affectedRows > 0)
+                    console.log("HWC Record inserted :" + JSON.stringify(uc_result.affectedRows));
+                // else
+                //     console.log("HWC : No new records inserted.");
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+    // });
 }
 
 function insert_hwc_crop(cropdata) {
@@ -191,7 +243,7 @@ function setHWC_livestockdata(hwcformdata, pos) {
 function setHWCdata(hwcformdata) {
 
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
-    
+
     if (hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase() == 'otheranimal')
         hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME = (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase();
 

@@ -72,10 +72,10 @@ function setDAO(data) {
         DC_NH_CASES: data.DETAILS_NH_CASES,
         DC_BP_CASES: data.DETAILS_BP_CASES,
         DC_TOTAL_CASES: data.DETAILS_NH_CASES + data.DETAILS_BP_CASES,
-        DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME,
-        DC_DAY: helper.methods.GetDAY(data.DETAILS_DC_DATE),
-        DC_MONTH: helper.methods.GetMONTH(data.DETAILS_DC_DATE),
-        DC_YEAR: helper.methods.GetYEAR(data.DETAILS_DC_DATE)
+        DC_CASE_ID: MIN_ID[1] + "_" + data.USERNAME
+        // DC_DAY: helper.methods.GetDAY(data.DETAILS_DC_DATE),
+        // DC_MONTH: helper.methods.GetMONTH(data.DETAILS_DC_DATE),
+        // DC_YEAR: helper.methods.GetYEAR(data.DETAILS_DC_DATE)
     };
 
     return insertquery;

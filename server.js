@@ -3,6 +3,7 @@ const dcfunctions = require('./callfunctions/dcfunctions');
 const pubfunctions = require('./callfunctions/pubfunctions');
 const hwcfunctions = require('./callfunctions/hwcfunctions');
 const csfunctions = require('./callfunctions/csfunctions');
+const comfunctions = require('./callfunctions/comfunctions');
 var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
@@ -66,8 +67,8 @@ app.get("/getDailyCountAO", dcfunctions.caller.getdailyDAO);
 app.get("/getDailyCountFA/:id", dcfunctions.caller.getFAusers);
 app.get("/getallDC", dcfunctions.caller.getDailyCount);
 
-app.get("/getCompensation_OM", dcfunctions.caller.getdailyDAO);
-app.get("/getOM_cases/:id", dcfunctions.caller.getFAusers);
+app.get("/getCompensation_OM", comfunctions.caller.getOMdetails);
+app.get("/getOM_cases/:id", comfunctions.caller.getOM_casedetails);
 
 app.get("/getpublicity", pubfunctions.caller.getpubdata);
 
@@ -77,6 +78,14 @@ app.get("/gethwc/:id", hwcfunctions.caller.get_hwcall_byid);
 
 app.get("/getcase_users", csfunctions.caller.get_case_users);
 app.get("/img", pubfunctions.caller.getpubImg);
+
+//home
+app.post("/getBpNhByRange", reportDCfunc.report.getBpNhByRange);
+app.get("/getPreviousBpNhCount", reportDCfunc.report.getPreviousBpNhCount);
+app.post("/getBpByCategory", reportDCfunc.report.getBpByCategory);
+app.post("/getNhByCategory", reportDCfunc.report.getNhByCategory);
+app.post("/getBpNhByCategory", reportDCfunc.report.getBpNhByCategory);
+app.get("/getBpNhYearly", reportDCfunc.report.getBpNhYearly);
 
 //observer
 setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);

@@ -124,5 +124,26 @@ procedure.gethwc_bycat_livestock = function () {
     return "select HWC_LIVE_STOCK_NAME AS HWC_CROP, count(HWC_LIVE_STOCK_NAME) AS FREQ from hwc_case_livestock group by HWC_LIVE_STOCK_NAME";
 }
 
+// HOME Chart API's
+
+procedure.getBpNhByRange = function (fromdate, todate) {
+    return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
+}
+procedure.getPreviousBpNhCount = function () {
+    return "select DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE DC_CASE_DATE BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE()"
+}
+procedure.getBpByCategory = function (fromdate, todate) {
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_BP_CASES AS BP_CASES , sum(d.DC_BP_CASES) AS BP_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+}
+procedure.getNhByCategory = function (fromdate, todate) {
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_NH_CASES AS NH_CASES , sum(d.DC_NH_CASES) AS NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+}
+procedure.getBpNhByCategory = function (fromdate, todate) {
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, sum(d.DC_NH_CASES+d.DC_BP_CASES) AS TOTAL_BP_NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+}
+procedure.getBpNhYearly = function () {
+    return "select year(DC_CASE_DATE) as YEAR, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE year(DC_CASE_DATE) in (YEAR(CURDATE())-3,YEAR(CURDATE())) group by year(DC_CASE_DATE);"
+}
+
 
 exports.func = procedure;

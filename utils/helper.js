@@ -1,8 +1,13 @@
 const utils = {};
 
-utils.GetFormattedDate = function (convertdate) {
+utils.GetFormattedFullDate = function (convertdate) {
     var todayTime = new Date(convertdate);
     return ((todayTime.getFullYear()) + "-" + (todayTime.getMonth() + 1) + "-" + todayTime.getDate() + " " + (todayTime.getHours()) + ":" + (todayTime.getMinutes()) + ":" + (todayTime.getSeconds()));
+}
+
+utils.GetFormattedDate = function (convertdate) {
+    var todayTime = new Date(convertdate);
+    return ((todayTime.getFullYear()) + "-" + (todayTime.getMonth() + 1) + "-" + todayTime.getDate());
 }
 
 utils.GetDAY = function (convertdate) {

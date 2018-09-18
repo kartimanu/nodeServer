@@ -2,6 +2,14 @@ var mysql = require('mysql2');
 var Client = require('ssh2').Client;
 var ssh = new Client();
 
+const myHost = 'newodkubuntu.centralindia.cloudapp.azure.com';
+const myUsername = 'odkuser';
+const myPassword = 'Wildlife@123';
+
+// const myHost = '35.200.143.161'; //'odk.wildseveodk.com'
+// const myUsername = 'wildseveodk';
+// const myPassword = 'admin@123';
+
 var rdb = new Promise(function (resolve, reject) {
     ssh.on('ready', function () {
         ssh.forwardOut(
@@ -34,11 +42,11 @@ var rdb = new Promise(function (resolve, reject) {
                 });
             });
     }).connect({
-        host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+        host: myHost,
         port: 22,
         readyTimeout: 99999,
-        username: 'odkuser',
-        password: 'Wildlife@123'
+        username: myUsername,
+        password: myPassword
     });
 });
 
@@ -74,11 +82,16 @@ var mdb = new Promise(function (resolve, reject) {
                 });
             });
     }).connect({
-        host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+        // host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+        // port: 22,
+        // readyTimeout: 99999,
+        // username: 'odkuser',
+        // password: 'Wildlife@123'
+        host: myHost,
         port: 22,
         readyTimeout: 99999,
-        username: 'odkuser',
-        password: 'Wildlife@123'
+        username: myUsername,
+        password: myPassword
     });
 });
 
