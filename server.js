@@ -8,8 +8,8 @@ var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
 var hwcSyncfunc = require('./datacheck/hwc');
-var reportDCfunc = require('./reports/dcreports');
-var reportHWCfunc = require('./reports/hwcreports');
+var reportDCfunc = require('./reports/dc_reports');
+var reportHWCfunc = require('./reports/hwc_reports');
 
 var bodyParser = require("body-parser");
 var express = require("express");
