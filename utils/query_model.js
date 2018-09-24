@@ -46,6 +46,11 @@ queryscript.insertintowsDC_table = "INSERT IGNORE INTO odk.daily_count set ? ";
 //FORM QUERY 
 queryscript.selectallFormDC = "SELECT * FROM wsodk_dailycount_apr_18_results";
 
+//Duplicate Data Query
+queryscript.getErrorRecordIDs = "SELECT * FROM dup_hwc";
+queryscript.getDuplicateData = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
+queryscript.getParentData = "SELECT * FROM hwc_details WHERE HWC_METAINSTANCE_ID = ? ";
+
 qmodels.get_dcofficers = function (data) {
     var MIN_ID = data['meta:instanceID'].split(":");
 

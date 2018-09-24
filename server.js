@@ -4,6 +4,7 @@ const pubfunctions = require('./callfunctions/pubfunctions');
 const hwcfunctions = require('./callfunctions/hwcfunctions');
 const csfunctions = require('./callfunctions/csfunctions');
 const comfunctions = require('./callfunctions/comfunctions');
+const errfunctions = require('./callfunctions/errorfunctions');
 var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
@@ -78,6 +79,10 @@ app.get("/gethwc/:id", hwcfunctions.caller.get_hwcall_byid);
 
 app.get("/getcase_users", csfunctions.caller.get_case_users);
 app.get("/img", pubfunctions.caller.getpubImg);
+
+app.get("/getDuplicateRecord/:id",errfunctions.caller.get_hwcDuplicateData);
+app.get("/getParentRecord/:id",errfunctions.caller.get_hwcParentData);
+app.get("/getErrorRecords",errfunctions.caller.get_errorRecords);
 
 //home
 app.post("/getBpNhByRange", reportDCfunc.report.getBpNhByRange);

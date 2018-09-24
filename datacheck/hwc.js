@@ -8,7 +8,7 @@ const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
 const hwc_livestock_insertQuery = "INSERT IGNORE INTO hwc_case_livestock set ? ";
 const Taluk_Query = "SELECT * FROM wls_taluk";// WHERE OLD_T_NAME = ";
-const hwc_checkexistQuery = 'SELECT EXISTS(SELECT 1 FROM hwc_details WHERE HWC_WSID = ? || HWC_FIRST_NAME = ?) AS \'PRESENT\', HWC_METAINSTANCE_ID from hwc_details WHERE HWC_WSID= ? || HWC_FIRST_NAME = ?';
+const hwc_checkexistQuery = 'SELECT EXISTS(SELECT 1 FROM hwc_details WHERE HWC_WSID = ? || HWC_FULL_NAME = ? || HWC_TALUK_NAME = ? || HWC_VILLAGE_NAME = ? || HWC_OLDPHONE_NUMBER = ? || HWC_NEWPHONE_NUMBER = ? || HWC_SURVEY_NUMBER = ? || HWC_RANGE = ? || HWC_FD_SUB_RANGE = ?) AS \'PRESENT\', HWC_METAINSTANCE_ID from hwc_details WHERE HWC_WSID= ? || HWC_FULL_NAME = ? || HWC_TALUK_NAME = ? || HWC_VILLAGE_NAME = ? || HWC_OLDPHONE_NUMBER = ? || HWC_NEWPHONE_NUMBER = ? || HWC_SURVEY_NUMBER = ? || HWC_RANGE = ? || HWC_FD_SUB_RANGE = ?';
 const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
 const hwc = {};
 
@@ -30,10 +30,34 @@ hwc.syncallhwvdetails = function (req, res) {
     });
 }
 
+function insertionset(ucdata){
+    const ins_set = [
+        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        ucdata.EXITINFO2_CONCAT_FULLNAME,
+        format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
+        (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
+        ucdata.EXITINFO2_CONCAT_OLDPHNUM,
+        ucdata.EXITINFO2_CONCAT_NEWPHNUM,
+        ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        format_range(ucdata.HWCINFO_RANGE),
+        format_range(ucdata.FDSUBMISSION_RANGE_FDSUB),
+        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        ucdata.EXITINFO2_CONCAT_FULLNAME,
+        format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
+        (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
+        ucdata.EXITINFO2_CONCAT_OLDPHNUM,
+        ucdata.EXITINFO2_CONCAT_NEWPHNUM,
+        ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        format_range(ucdata.HWCINFO_RANGE),
+        format_range(ucdata.FDSUBMISSION_RANGE_FDSUB)
+    ];
+    return ins_set;
+}
+
 function checkhwcusercase(res) {
     Array.from(res).forEach(ucdata => {
         dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(hwc_checkexistQuery, [ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(), ucdata.EXITINFO2_CONCAT_FIRSTNAME, ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(), ucdata.EXITINFO2_CONCAT_FIRSTNAME], function (error, ext_result, fields) {
+            con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
                 if (error) {
                     console.log(error);
                     return;
