@@ -11,6 +11,7 @@ var comSyncfunc = require('./datacheck/compensation');
 var hwcSyncfunc = require('./datacheck/hwc');
 var reportDCfunc = require('./reports/dc_reports');
 var reportHWCfunc = require('./reports/hwc_reports');
+var dash_chartfunc = require('./dashboard_api/hwc_info');
 
 var bodyParser = require("body-parser");
 var express = require("express");
@@ -45,7 +46,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -91,6 +92,19 @@ app.post("/getBpByCategory", reportDCfunc.report.getBpByCategory);
 app.post("/getNhByCategory", reportDCfunc.report.getNhByCategory);
 app.post("/getBpNhByCategory", reportDCfunc.report.getBpNhByCategory);
 app.get("/getBpNhYearly", reportDCfunc.report.getBpNhYearly);
+
+//HWC
+app.get("/getblock1",dash_chartfunc.report.getHWC_block1);
+app.post("/getblock1_byhwcdate",dash_chartfunc.report.getHWC_block1_byhwcdate);
+app.post("/getblock1_byfadate",dash_chartfunc.report.getHWC_block1_byfadate);
+app.post("/getblock2_byhwcdate_freq",dash_chartfunc.report.getfreq_block2_byhwcdate);
+app.post("/getblock2_byfadate_freq",dash_chartfunc.report.getfreq_block2_byfadate);
+app.get("/getblock2_totalcases_byyear_month",dash_chartfunc.report.get_cases_byyear_month_block2);
+app.get("/getblock2_top20cases_bycat",dash_chartfunc.report.get_top20cases_bycat_block2);
+app.get("/getblock2_top50cases_bywsid",dash_chartfunc.report.get_top50cases_bywsid_block2);
+app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
+
+
 
 //observer
 setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);

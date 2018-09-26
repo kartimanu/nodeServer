@@ -145,4 +145,102 @@ procedure.getBpNhYearly = function () {
     return "select year(DC_CASE_DATE) as YEAR, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE (year(DC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(DC_CASE_DATE);"
 }
 
+//HWC chart API's
+
+procedure.get_hwc_category = function () {
+    return "select HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details GROUP BY HWC_CASE_CATEGORY"; // between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(DC_CASE_DATE);"
+}
+procedure.get_hwc_animal = function () {
+    return "select HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details GROUP BY HWC_ANIMAL";
+}
+procedure.get_hwc_taluk = function () {
+    return "select HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details GROUP BY HWC_TALUK_NAME";
+}
+procedure.get_hwc_village = function () {
+    return "select HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details GROUP BY HWC_VILLAGE_NAME";
+}
+procedure.get_hwc_park = function () {
+    return "select HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details GROUP BY HWC_PARK_NAME";
+}
+procedure.get_hwc_range = function () {
+    return "select HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details GROUP BY HWC_RANGE";
+}
+
+//by HWC_date
+procedure.get_hwc_category_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_CASE_CATEGORY";
+}
+procedure.get_hwc_animal_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_ANIMAL";
+}
+procedure.get_hwc_taluk_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_TALUK_NAME";
+}
+procedure.get_hwc_village_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_VILLAGE_NAME";
+}
+procedure.get_hwc_park_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_PARK_NAME";
+}
+procedure.get_hwc_range_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_RANGE";
+}
+
+//by FA_date
+procedure.get_hwc_category_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_CASE_CATEGORY";
+}
+procedure.get_hwc_animal_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_ANIMAL";
+}
+procedure.get_hwc_taluk_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_TALUK_NAME";
+}
+procedure.get_hwc_village_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_VILLAGE_NAME";
+}
+procedure.get_hwc_park_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_PARK_NAME";
+}
+procedure.get_hwc_range_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_RANGE";
+}
+
+procedure.get_freq_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, COUNT(HWC_CASE_DATE) AS DATE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE";
+}
+
+procedure.get_freq_byfadate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, COUNT(HWC_FD_SUB_DATE) AS DATE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE";
+}
+
+procedure.get_cases_byyear_month = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE)";
+}
+
+procedure.get_top50_wsid_bycases = function () {
+    return "select HWC_WSID, count(HWC_WSID) AS CASES from hwc_details group by HWC_WSID order by count(HWC_WSID) desc limit 50";
+}
+
+procedure.get_top20_wsid_bycat = function () {
+    return "select HWC_WSID, HWC_CASE_CATEGORY, count(HWC_WSID) AS CASES from odk.hwc_details group by HWC_CASE_CATEGORY, HWC_WSID order by count(HWC_WSID) desc limit 20";
+}
+
+procedure.get_top10_crop = function () {
+    return "SELECT HWC_CROP_NAME AS CROP_NAME, count(HWC_CROP_NAME) AS CROP_FREQ FROM hwc_case_crop GROUP BY HWC_CROP_NAME ORDER BY count(HWC_CROP_NAME) DESC LIMIT 10;";
+}
+
+procedure.get_top10_property = function () {
+    return "SELECT HWC_PROPERY_NAME AS PROPERTY_NAME, count(HWC_PROPERY_NAME) AS PROPERTY_FREQ FROM hwc_case_property GROUP BY HWC_PROPERY_NAME ORDER BY count(HWC_PROPERY_NAME) DESC LIMIT 10;";
+}
+
+procedure.get_top10_livestock = function () {
+    return "SELECT HWC_LIVE_STOCK_NAME AS LIVESTOCK_NAME, count(HWC_LIVE_STOCK_NAME) AS LIVESTOCK_FREQ FROM hwc_case_livestock GROUP BY HWC_LIVE_STOCK_NAME ORDER BY count(HWC_LIVE_STOCK_NAME) DESC LIMIT 10;";
+}
+
+procedure.get_top30_villages = function () {
+    return "SELECT HWC_VILLAGE_NAME AS VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS VILLAGE_FREQ FROM hwc_details GROUP BY HWC_VILLAGE_NAME ORDER BY count(HWC_VILLAGE_NAME) DESC LIMIT 30;";
+}
+
+
 exports.func = procedure;
