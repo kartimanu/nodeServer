@@ -46,7 +46,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.1)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
