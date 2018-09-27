@@ -84,6 +84,9 @@ app.get("/img", pubfunctions.caller.getpubImg);
 app.get("/getDuplicateRecord/:id",errfunctions.caller.get_hwcDuplicateData);
 app.get("/getParentRecord/:id",errfunctions.caller.get_hwcParentData);
 app.get("/getErrorRecords",errfunctions.caller.get_errorRecords);
+app.post("/updateParentRecord",errfunctions.caller.update_hwcParentData);
+app.get("/updateErrorRecord/:id",errfunctions.caller.update_errorRecord);
+
 
 //home
 app.post("/getBpNhByRange", reportDCfunc.report.getBpNhByRange);
@@ -104,12 +107,10 @@ app.get("/getblock2_top20cases_bycat",dash_chartfunc.report.get_top20cases_bycat
 app.get("/getblock2_top50cases_bywsid",dash_chartfunc.report.get_top50cases_bywsid_block2);
 app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
 
-
-
-//observer
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
+// //observer
+// setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
+// setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
+// setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
+// setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
 
 app.listen(port, () => console.log("Server running on port %d", port));
