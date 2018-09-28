@@ -46,7 +46,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.1)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.2)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -86,6 +86,7 @@ app.get("/getParentRecord/:id",errfunctions.caller.get_hwcParentData);
 app.get("/getErrorRecords",errfunctions.caller.get_errorRecords);
 app.post("/updateParentRecord",errfunctions.caller.update_hwcParentData);
 app.get("/updateErrorRecord/:id",errfunctions.caller.update_errorRecord);
+app.get("/insertErrorRecord/:id",hwcSyncfunc.func.setDupRecordDetails);
 
 
 //home
@@ -108,9 +109,9 @@ app.get("/getblock2_top50cases_bywsid",dash_chartfunc.report.get_top50cases_byws
 app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
 
 // //observer
-// setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
-// setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
-// setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
-// setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
+setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
+setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
 
 app.listen(port, () => console.log("Server running on port %d", port));

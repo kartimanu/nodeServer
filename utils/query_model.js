@@ -80,8 +80,8 @@ qmodels.createuser = function (data) {
     var insertquery = {
         First_name: data.firstname,
         Last_name: data.lastname,
-        user_name: data.username,
-        user_pwd: data.password,
+        User_name: data.username,
+        User_pwd: data.password,
         Email_id: data.email,
         Phone_number: data.phone,
         User_Role_Id: data.roleid

@@ -3,6 +3,7 @@ var async = require("async");
 var util = require('../utils/helper');
 
 const fetchquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
+const fetchErrorRecordquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
@@ -24,6 +25,22 @@ hwc.syncallhwvdetails = function (req, res) {
             // console.log(results);
             // inserthwcusercase(JSON.parse(JSON.stringify(results)));
             checkhwcusercase(JSON.parse(JSON.stringify(results)));
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+hwc.setDupRecordDetails = function (req, res) {
+    console.log("Inserting the Duplicate record in HWC . . . . ");
+    dbconn.rdb.then(function (con_rdb) {
+        con_rdb.query(fetchErrorRecordquery, req.params.id, function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            // res.send(JSON.stringify(results[0]));
+            inserthwcusercase(JSON.parse(JSON.stringify(results[0])));
         });
     }).catch(err => {
         console.log(err);
@@ -64,7 +81,7 @@ function checkhwcusercase(res) {
                 } else {
                     var resp = JSON.parse(JSON.stringify(ext_result));
                     const exist = resp[0].PRESENT;
-                    console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
+                    // console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
                     if (exist == 0)
                         inserthwcusercase(ucdata);
                     else {
@@ -307,8 +324,8 @@ function setHWCdata(hwcformdata) {
         HWC_FD_SUB_RANGE: format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
         HWC_FD_NUM_FORMS: hwcformdata.FDSUBMISSION_NUMFORMS_FDSUB,
         HWC_FD_COMMENT: (!hwcformdata.EXITINFO2_ADDCOMMENTS2) ? null : hwcformdata.EXITINFO2_ADDCOMMENTS2.toLowerCase(),
-        HWC_START: hwcformdata.START,
-        HWC_END: hwcformdata.END,
+        HWC_START: util.methods.GetFormattedDate(hwcformdata.START),
+        HWC_END: util.methods.GetFormattedDate(hwcformdata.END),
         HWC_DEVICE_ID: hwcformdata.DEVICEID,
         HWC_SIMCARD_ID: hwcformdata.SIMSERIAL,
         HWC_FA_PHONE_NUMBER: hwcformdata.PHONENUMBER,
