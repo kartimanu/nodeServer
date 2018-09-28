@@ -320,7 +320,7 @@ function setHWCdata(hwcformdata) {
         HWC_HD_VILLAGE: (!hwcformdata.HWCINFO_HDINFO_HDVILLAGE) ? null : hwcformdata.HWCINFO_HDINFO_HDVILLAGE.toLowerCase(),
         HWC_HD_DETAILS: hwcformdata.HWCINFO_HDINFO_HDDETAILS,
         HWC_COMMENT: (!hwcformdata.EXITINFO1_ADDCOMMENTS) ? null : hwcformdata.EXITINFO1_ADDCOMMENTS.toLowerCase(),
-        HWC_FD_SUB_DATE: hwcformdata.FDSUBMISSION_DATE_FDSUB,
+        HWC_FD_SUB_DATE: util.methods.GetFormattedDate(hwcformdata.FDSUBMISSION_DATE_FDSUB),
         HWC_FD_SUB_RANGE: format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
         HWC_FD_NUM_FORMS: hwcformdata.FDSUBMISSION_NUMFORMS_FDSUB,
         HWC_FD_COMMENT: (!hwcformdata.EXITINFO2_ADDCOMMENTS2) ? null : hwcformdata.EXITINFO2_ADDCOMMENTS2.toLowerCase(),
