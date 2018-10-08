@@ -12,6 +12,7 @@ var hwcSyncfunc = require('./datacheck/hwc');
 var reportDCfunc = require('./reports/dc_reports');
 var reportHWCfunc = require('./reports/hwc_reports');
 var dash_chartfunc = require('./dashboard_api/hwc_info');
+var dash_chart_compfunc = require('./dashboard_api/comp_info');
 
 var bodyParser = require("body-parser");
 var express = require("express");
@@ -107,6 +108,11 @@ app.get("/getblock2_totalcases_byyear_month",dash_chartfunc.report.get_cases_byy
 app.get("/getblock2_top20cases_bycat",dash_chartfunc.report.get_top20cases_bycat_block2);
 app.get("/getblock2_top50cases_bywsid",dash_chartfunc.report.get_top50cases_bywsid_block2);
 app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
+
+//Compensation
+app.get("/gettotalcomp",dash_chart_compfunc.report.get_total_comp);
+app.post("/getcomp_filter",dash_chart_compfunc.report.get_comp_block12_bydate);
+app.post("/get_top_comp",dash_chart_compfunc.report.get_comp_topwsid_topvillage);
 
 // //observer
 setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);

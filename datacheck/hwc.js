@@ -1,3 +1,4 @@
+'use strict';
 var dbconn = require('../config/sshdbconn');
 var async = require("async");
 var util = require('../utils/helper');
@@ -47,26 +48,26 @@ hwc.setDupRecordDetails = function (req, res) {
     });
 }
 
-function insertionset(ucdata){
+function insertionset(ucdata) {
     const ins_set = [
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_FULLNAME,
-        format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
+        (!ucdata.EXITINFO2_CONCAT_TALUK) ? null : format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
         (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         ucdata.EXITINFO2_CONCAT_OLDPHNUM,
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        format_range(ucdata.HWCINFO_RANGE),
-        format_range(ucdata.FDSUBMISSION_RANGE_FDSUB),
+        (!ucdata.HWCINFO_RANGE) ? null : format_range(ucdata.HWCINFO_RANGE),
+        (!ucdata.FDSUBMISSION_RANGE_FDSUB) ? null : format_range(ucdata.FDSUBMISSION_RANGE_FDSUB),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_FULLNAME,
-        format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
+        (!ucdata.EXITINFO2_CONCAT_TALUK) ? null : format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
         (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         ucdata.EXITINFO2_CONCAT_OLDPHNUM,
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        format_range(ucdata.HWCINFO_RANGE),
-        format_range(ucdata.FDSUBMISSION_RANGE_FDSUB)
+        (!ucdata.HWCINFO_RANGE) ? null : format_range(ucdata.HWCINFO_RANGE),
+        (!ucdata.FDSUBMISSION_RANGE_FDSUB) ? null : format_range(ucdata.FDSUBMISSION_RANGE_FDSUB)
     ];
     return ins_set;
 }
@@ -80,15 +81,17 @@ function checkhwcusercase(res) {
                     return;
                 } else {
                     var resp = JSON.parse(JSON.stringify(ext_result));
-                    const exist = resp[0].PRESENT;
-                    // console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
-                    if (exist == 0)
-                        inserthwcusercase(ucdata);
-                    else {
-                        // console.log(resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
-                        var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
-                        if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1])
-                            insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                    if (resp.length > 0) {
+                        var exist = resp[0].PRESENT;
+                        // console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
+                        if (exist == 0)
+                            inserthwcusercase(ucdata);
+                        else {
+                            // console.log(resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
+                            var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
+                            if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1])
+                                insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                        }
                     }
 
                 }
@@ -297,13 +300,13 @@ function setHWCdata(hwcformdata) {
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         HWC_FIRST_NAME: hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
         HWC_FULL_NAME: hwcformdata.EXITINFO2_CONCAT_FULLNAME,
-        HWC_PARK_NAME: format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
-        HWC_TALUK_NAME: format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
+        HWC_PARK_NAME: (!hwcformdata.EXITINFO2_CONCAT_PARK) ? null : format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
+        HWC_TALUK_NAME: (!hwcformdata.EXITINFO2_CONCAT_TALUK) ? null : format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
         HWC_VILLAGE_NAME: (!hwcformdata.EXITINFO2_CONCAT_VILLAGE) ? null : hwcformdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         HWC_OLDPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_OLDPHNUM,
         HWC_NEWPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_NEWPHNUM,
         HWC_SURVEY_NUMBER: hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        HWC_RANGE: format_range(hwcformdata.HWCINFO_RANGE),
+        HWC_RANGE: (!hwcformdata.HWCINFO_RANGE) ? null : format_range(hwcformdata.HWCINFO_RANGE),
         HWC_LATITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LAT,
         HWC_LONGITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LNG,
         HWC_ALTITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ALT,
@@ -321,7 +324,7 @@ function setHWCdata(hwcformdata) {
         HWC_HD_DETAILS: hwcformdata.HWCINFO_HDINFO_HDDETAILS,
         HWC_COMMENT: (!hwcformdata.EXITINFO1_ADDCOMMENTS) ? null : hwcformdata.EXITINFO1_ADDCOMMENTS.toLowerCase(),
         HWC_FD_SUB_DATE: util.methods.GetFormattedDate(hwcformdata.FDSUBMISSION_DATE_FDSUB),
-        HWC_FD_SUB_RANGE: format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
+        HWC_FD_SUB_RANGE: (!hwcformdata.FDSUBMISSION_RANGE_FDSUB) ? null : format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
         HWC_FD_NUM_FORMS: hwcformdata.FDSUBMISSION_NUMFORMS_FDSUB,
         HWC_FD_COMMENT: (!hwcformdata.EXITINFO2_ADDCOMMENTS2) ? null : hwcformdata.EXITINFO2_ADDCOMMENTS2.toLowerCase(),
         HWC_START: util.methods.GetFormattedDate(hwcformdata.START),

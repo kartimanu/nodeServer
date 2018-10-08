@@ -242,5 +242,39 @@ procedure.get_top30_villages = function () {
     return "SELECT HWC_VILLAGE_NAME AS VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS VILLAGE_FREQ FROM hwc_details GROUP BY HWC_VILLAGE_NAME ORDER BY count(HWC_VILLAGE_NAME) DESC LIMIT 30;";
 }
 
+procedure.get_total_comp = function () {
+    return "SELECT SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details;";
+}
+
+procedure.get_total_comp = function () {
+    return "SELECT SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details;";
+}
+
+procedure.get_comp_bycategory = function (fromdate, todate) {
+    return "SELECT COM_HWC_CATAGORY as CATAGORY, count(COM_HWC_CATAGORY) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_HWC_CATAGORY;";
+}
+
+procedure.get_comp_byvillage = function (fromdate, todate) {
+    return "SELECT COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_VILLAGE;";
+}
+
+procedure.get_comp_bytaluk = function (fromdate, todate) {
+    return "SELECT COM_TALUK AS TALUK, count(COM_TALUK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_TALUK;";
+}
+
+procedure.get_comp_bypark = function (fromdate, todate) {
+    return "SELECT COM_PARK AS PARK, count(COM_PARK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_PARK;";
+}
+
+procedure.get_comp_top30_wsid = function (fromdate, todate) {
+    return "select COM_WSID AS WSID, count(COM_WSID) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' group by COM_WSID order by count(COM_WSID) DESC limit 30;"
+}
+
+procedure.get_comp_top20_village = function (fromdate, todate) {
+    return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
+}
+
+
+
 
 exports.func = procedure;
