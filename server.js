@@ -13,6 +13,8 @@ var reportDCfunc = require('./reports/dc_reports');
 var reportHWCfunc = require('./reports/hwc_reports');
 var dash_chartfunc = require('./dashboard_api/hwc_info');
 var dash_chart_compfunc = require('./dashboard_api/comp_info');
+var dash_chart_dcfunc = require('./dashboard_api/dc_info');
+var dash_chart_pubfunc = require('./dashboard_api/pub_info');
 
 var bodyParser = require("body-parser");
 var express = require("express");
@@ -47,7 +49,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.3)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.4)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -113,6 +115,16 @@ app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
 app.get("/gettotalcomp",dash_chart_compfunc.report.get_total_comp);
 app.post("/getcomp_filter",dash_chart_compfunc.report.get_comp_block12_bydate);
 app.post("/get_top_comp",dash_chart_compfunc.report.get_comp_topwsid_topvillage);
+
+//Daily Count
+app.get("/gettotaldc",dash_chart_dcfunc.report.get_total_dc);
+app.post("/getdc_total_hwc_bydate",dash_chart_dcfunc.report.get_dc_bydate);
+
+//Publicity
+app.get("/getpublicity_total",dash_chart_pubfunc.report.get_publicity_total);
+app.get("/getpublicity_all",dash_chart_pubfunc.report.get_publicity);
+app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
+
 
 // //observer
 setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);

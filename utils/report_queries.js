@@ -274,7 +274,58 @@ procedure.get_comp_top20_village = function (fromdate, todate) {
     return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
 }
 
+//QUERY for Daily count
+procedure.get_dc_total_cases = function () {
+    return "SELECT SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES, SUM(DC_NH_CASES) AS TOTAL_NH_CASES, SUM(DC_BP_CASES) AS TOTAL_BP_CASES FROM daily_count;"
+}
 
+procedure.get_dc_total_cases_byhwc_cat = function () {
+    return "SELECT SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM dc_cases;"
+}
 
+procedure.get_dc_total_cases_byFA = function () {
+    return "SELECT SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, DC_FA_UN AS FIELD_ASSISTANT FROM dc_cases GROUP BY DC_FA_UN;"
+}
+
+procedure.get_dc_total_cases_hwc_byFA = function () {
+    return "SELECT DC_FA_UN AS FIELD_ASSISTANT, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases GROUP BY DC_FA_UN;"
+}
+
+procedure.get_dc_cases_bydate = function (fromdate, todate) {
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES FROM odk.daily_count where DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' group by DC_CASE_DATE order by DC_CASE_DATE DESC;"
+}
+
+procedure.get_dc_cases_hwc_bydate = function (fromdate, todate) {
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases where DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
+}
+
+//Publicity Query
+procedure.get_pb_total = function () {
+    return "SELECT count(PB_C_VILLAGE) AS TOTAL_VILLAGE from publicity;"
+}
+
+procedure.get_pb_byvillage = function () {
+    return "SELECT PB_C_VILLAGE AS VILLAGE_NAME, count(PB_C_VILLAGE) AS VILLAGE_FREQ from publicity GROUP BY PB_C_VILLAGE;"
+}
+
+procedure.get_pb_bypark = function () {
+    return "SELECT PB_PARK AS PARK, count(PB_PARK) AS PARK_FREQ from publicity GROUP BY PB_PARK;"
+}
+
+procedure.get_pb_bytaluk = function () {
+    return "SELECT PB_TALUK AS TALUK, count(PB_TALUK) AS TALUK_FREQ from publicity GROUP BY PB_TALUK;"
+}
+
+procedure.get_pb_byvillage_bydate = function (fromdate, todate) {
+    return "SELECT PB_C_VILLAGE AS VILLAGE_NAME, count(PB_C_VILLAGE) AS VILLAGE_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_C_VILLAGE;"
+}
+
+procedure.get_pb_bypark_bydate = function (fromdate, todate) {
+    return "SELECT PB_PARK AS PARK, count(PB_PARK) AS PARK_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_PARK;"
+}
+
+procedure.get_pb_bytaluk_bydate = function (fromdate, todate) {
+    return "SELECT PB_TALUK AS TALUK, count(PB_TALUK) AS TALUK_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_TALUK;"
+}
 
 exports.func = procedure;
