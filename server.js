@@ -11,6 +11,7 @@ var comSyncfunc = require('./datacheck/compensation');
 var hwcSyncfunc = require('./datacheck/hwc');
 var reportDCfunc = require('./reports/dc_reports');
 var reportHWCfunc = require('./reports/hwc_reports');
+var dash_chart_homefunc = require('./dashboard_api/home_info');
 var dash_chartfunc = require('./dashboard_api/hwc_info');
 var dash_chart_compfunc = require('./dashboard_api/comp_info');
 var dash_chart_dcfunc = require('./dashboard_api/dc_info');
@@ -93,12 +94,12 @@ app.get("/insertErrorRecord/:id",hwcSyncfunc.func.setDupRecordDetails);
 
 
 //home
-app.post("/getBpNhByRange", reportDCfunc.report.getBpNhByRange);
-app.get("/getPreviousBpNhCount", reportDCfunc.report.getPreviousBpNhCount);
-app.post("/getBpByCategory", reportDCfunc.report.getBpByCategory);
-app.post("/getNhByCategory", reportDCfunc.report.getNhByCategory);
-app.post("/getBpNhByCategory", reportDCfunc.report.getBpNhByCategory);
-app.get("/getBpNhYearly", reportDCfunc.report.getBpNhYearly);
+app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
+app.get("/getPreviousBpNhCount", dash_chart_homefunc.report.getPreviousBpNhCount);
+app.post("/getBpByCategory", dash_chart_homefunc.report.getBpByCategory);
+app.post("/getNhByCategory", dash_chart_homefunc.report.getNhByCategory);
+app.post("/getBpNhByCategory", dash_chart_homefunc.report.getBpNhByCategory);
+app.get("/getBpNhYearly", dash_chart_homefunc.report.getBpNhYearly);
 
 //HWC
 app.get("/getblock1",dash_chartfunc.report.getHWC_block1);
