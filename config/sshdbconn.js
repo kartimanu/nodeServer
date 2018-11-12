@@ -2,13 +2,13 @@ var mysql = require('mysql2');
 var Client = require('ssh2').Client;
 var ssh = new Client();
 
-const myHost = 'newodkubuntu.centralindia.cloudapp.azure.com';
-const myUsername = 'odkuser';
-const myPassword = 'Wildlife@123';
+// const myHost = 'newodkubuntu.centralindia.cloudapp.azure.com';
+// const myUsername = 'odkuser';
+// const myPassword = 'Wildlife@123';
 
-// const myHost = '35.200.143.161'; //'odk.wildseveodk.com'
-// const myUsername = 'wildseveodk';
-// const myPassword = 'admin@123';
+const myHost = 'server.wildseveodk.com'
+const myUsername = 'odkserver';
+const myPassword = 'Admin@odk123';
 
 var rdb = new Promise(function (resolve, reject) {
     ssh.on('ready', function () {
@@ -27,7 +27,8 @@ var rdb = new Promise(function (resolve, reject) {
                 con_rdb = mysql.createConnection({
                     host: '127.0.0.1',
                     user: 'root',
-                    password: 'admin@123',
+                   // password: 'admin@123',
+                    password: 'Admin@odk123',
                     database: 'odk_prod',
                     stream: stream
                 });
@@ -67,7 +68,8 @@ var mdb = new Promise(function (resolve, reject) {
                 con_mdb = mysql.createConnection({
                     host: '127.0.0.1',
                     user: 'root',
-                    password: 'admin@123',
+                    //password: 'admin@123',
+                    password: 'Admin@odk123',                    
                     database: 'odk',
                     stream: stream
                 });

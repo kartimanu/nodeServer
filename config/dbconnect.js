@@ -1,16 +1,24 @@
 const mysql = require('mysql');
 
-const hostname = 'testodk.mysql.database.azure.com';
-const username = 'testodk@testodk';
-const password = 'Super@123';
+// const hostname = 'testodk.mysql.database.azure.com';
+// const username = 'testodk@testodk';
+// const password = 'Super@123';
 
 const connections = {};
 
+// connections.vmdb = mysql.createPool({
+//   connectionLimit: 100,
+//   host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+//   user: 'odkuser',
+//   password: 'Wildlife@123',
+//   database: 'odk_prod'
+// });
+
 connections.vmdb = mysql.createPool({
   connectionLimit: 100,
-  host: 'newodkubuntu.centralindia.cloudapp.azure.com',
-  user: 'odkuser',
-  password: 'Wildlife@123',
+  host: 'server.wildseveodk.com',
+  user: 'odkserver',
+  password: 'Admin@odk123',
   database: 'odk_prod'
 });
 

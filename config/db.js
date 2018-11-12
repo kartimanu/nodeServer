@@ -2,15 +2,22 @@ const mysqlssh = require('mysql-ssh');
 
 var db = mysqlssh.connect(
     {
-        host: 'newodkubuntu.centralindia.cloudapp.azure.com',
-        user: 'odkuser',
-        password: 'Wildlife@123'
+        // host: 'newodkubuntu.centralindia.cloudapp.azure.com',
+        // user: 'odkuser',
+        // password: 'Wildlife@123'
         // privateKey: fs.readFileSync(process.env.HOME + '/.ssh/id_rsa')
+        host: 'server.wildseveodk.com',
+        user: 'odkserver',
+        password: 'Admin@odk123'
     },
     {
+        // host: '127.0.0.1',
+        // user: 'odk_user',
+        // password: 'admin@123',
+        // database: 'odk_prod'
         host: '127.0.0.1',
         user: 'odk_user',
-        password: 'admin@123',
+        password: 'Admin@odk123',
         database: 'odk_prod'
     }
 )
