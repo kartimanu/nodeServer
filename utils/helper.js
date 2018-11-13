@@ -1,3 +1,4 @@
+'use strict';
 const utils = {};
 
 utils.GetFormattedFullDate = function (convertdate) {
@@ -62,5 +63,66 @@ utils.setImgData = function (result) {
     })
 }
 
+utils.format_park = function (park_name) {
+    const park_list =
+    {
+        "bandipurprk": "Bandipur",
+        "nagaraholeprk": "Nagarahole"
+    }
+
+    return park_name.allReplace(park_list).toLowerCase();
+}
+
+String.prototype.allReplace = function (obj) {
+    var retStr = this;
+    for (var x in obj) {
+        retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+    }
+    return retStr;
+};
+
+utils.format_taluk = function (taluk_name) {
+    const taluk_list =
+    {
+        "gundlupettlk": "gundlupet",
+        "hdkotetlk": "hdkote",
+        "HD_Kote": "hdkote",
+        "hd_kote": "hdkote",
+        "hunsurtlk": "hunsur",
+        "nanjangudtlk": "nanjangud",
+        "piriyapatnatlk": "piriyapatna",
+        "chamrajnagartlk": "chamrajnagar"
+    }
+
+    return taluk_name.allReplace(taluk_list).toLowerCase();
+}
+
+utils.format_range = function (range_name) {
+    const range_list =
+    {
+        "antersantherng": "Antersanthe",
+        "db_kupperng": "DBKuppe",
+        "dbkupperng": "DBKuppe",
+        "gsbettarng": "GSBetta",
+        "gundlupetrng": "Gundlupet",
+        "hdkoterng": "HDKote",
+        "hediyalarng": "Hediyala",
+        "hunsurrng": "Hunsur",
+        "kachuvinahallyrng": "Kachuvinahally",
+        "kundkererng": "Kundkere",
+        "maddururng": "Madduru",
+        "metikupperng": "Metikuppe",
+        "moleyururng": "Moleyuru",
+        "nbegururng": "NBeguru",
+        "nugurng": "Nugu",
+        "omkarrng": "Omkar",
+        "piriyapattanarng": "Piriyapattana",
+        "sargururng": "Sarguru",
+        "veeranahosahallirng": "Veeranahosahalli"
+    }
+
+    return range_name.allReplace(range_list).toLowerCase();
+
+}
 
 exports.methods = utils;

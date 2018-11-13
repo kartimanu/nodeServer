@@ -71,36 +71,6 @@ function insertImgData(id, img_res1, img_res2) {
 
 };
 
-// function asyncImg(imgData1, imgData2) {
-
-//         (async () => {
-//             const files = await imagemin.buffer(imgData1, {
-//                 plugins: [
-//                     imageminJpegtran(),
-//                     imageminPngquant({quality: '65-80'})
-//                 ]
-//             });
-         
-//             console.log(files);
-//         })().catch(err => {
-//             console.log(err);
-//         });
-
-        // (async () => {
-        //     const files = await imagemin(imgData2, 'build/images', {
-        //         plugins: [
-        //             imageminJpegtran(),
-        //             imageminPngquant({quality: '65-80'})
-        //         ]
-        //     });
-         
-        //     console.log("IM2"+files);
-        // })().catch(err => {
-        //     console.log(err);
-        // });
-
-// }
-
 function qModel(resData) {
     const MIN_ID = resData._URI.split(":");
     const img1_data = JSON.parse(JSON.stringify(resData.IMG1));
@@ -114,14 +84,14 @@ function qModel(resData) {
         "PB_METAMODEL_VERSION": resData._MODEL_VERSION,
         "PB_METAUI_VERSION": resData._UI_VERSION,
         "PB_METASUBMISSION_DATE": resData._SUBMISSION_DATE,
-        "PB_FILLIN_DATE": resData.TODAY,
+        "PB_FILLIN_DATE": helper.methods.GetFormattedDate(resData.TODAY),
         "PB_DEVICE_ID": resData.DEVICEID,
         "PB_SIMCARD_ID": resData.SIMSERIAL,
         "PB_PHONE_NUMBER": resData.PHONENUMBER,
         "PB_USER_NAME": resData.USERNAME,
-        "PB_V_DATE": resData.PUB_VILL_PUB_DATE,
-        "PB_PARK": resData.PUB_VILL_PUB_PARK,
-        "PB_TALUK": resData.PUB_VILL_PUB_TALUK,
+        "PB_V_DATE": helper.methods.GetFormattedDate(resData.PUB_VILL_PUB_DATE),
+        "PB_PARK": helper.methods.format_park(resData.PUB_VILL_PUB_PARK),
+        "PB_TALUK": helper.methods.format_taluk(resData.PUB_VILL_PUB_TALUK),
         "PB_VILLAGE_1": resData.PUB_VILL_PUB_VILLAGE,
         "PB_VILLAGE_2": resData.PUB_VILL_PUB_OTHERVILLAGE,
         "PB_LAT": resData.PUB_VILL_GPS_POINT_LAT,

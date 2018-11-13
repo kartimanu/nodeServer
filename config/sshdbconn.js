@@ -10,6 +10,7 @@ const myHost = 'server.wildseveodk.com'
 const myUsername = 'odkserver';
 const myPassword = 'Admin@odk123';
 
+// odk_prod
 var rdb = new Promise(function (resolve, reject) {
     ssh.on('ready', function () {
         ssh.forwardOut(
@@ -51,6 +52,8 @@ var rdb = new Promise(function (resolve, reject) {
     });
 });
 
+
+// odk
 var mdb = new Promise(function (resolve, reject) {
     ssh.on('ready', function () {
         ssh.forwardOut(

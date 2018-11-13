@@ -93,7 +93,9 @@ function checkhwcusercase(res) {
                                 insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
                         }
                     }
-
+                    else{
+                        inserthwcusercase(ucdata);
+                    }
                 }
             });
         }).catch(err => {
@@ -148,7 +150,7 @@ function inserthwcusercase(ucdata) {
 
 function insert_hwc_crop(cropdata) {
     var insertcrop_data = [];
-    for (i = 1; i < 5; i++) {
+    for (var i = 1; i < 5; i++) {
         insertcrop_data[i - 1] = setHWC_cropdata(cropdata, i);
     }
     async.each(insertcrop_data, function (inc_data, callback) {
@@ -177,7 +179,7 @@ function insert_hwc_crop(cropdata) {
 
 function insert_hwc_property(pd_data) {
     var insertPD_data = [];
-    for (i = 1; i < 5; i++) {
+    for (var i = 1; i < 5; i++) {
         insertPD_data[i - 1] = setHWC_propertydata(pd_data, i);
     }
     async.each(insertPD_data, function (inpd_data, callback) {
@@ -206,7 +208,7 @@ function insert_hwc_property(pd_data) {
 
 function insert_hwc_livestock(lp_data) {
     var insertLP_data = [];
-    for (i = 1; i < 4; i++) {
+    for (var i = 1; i < 4; i++) {
         insertLP_data[i - 1] = setHWC_livestockdata(lp_data, i);
     }
     async.each(insertLP_data, function (inl_data, callback) {
