@@ -10,8 +10,10 @@ myfunctions.get_errorRecords = function (req, res, next) {
                 console.log(error);
                 res.send(util.methods.seterror(error));
                 return;
-            } else
+            } else{
+            //    console.log(results);
                 res.send(util.methods.setresponse(results));
+            }                
         });
     }).catch(err => {
         console.log(err);
@@ -44,8 +46,10 @@ myfunctions.get_hwcDuplicateData = function (req, res, next) {
                 console.log(error);
                 res.send(util.methods.seterror(error));
                 return;
-            } else
+            } else{
+                console.log(results[0]);
                 res.send(util.methods.setresponse(setHWCdata(results[0])));
+            }
         });
     }).catch(err => {
         console.log(err);
@@ -105,13 +109,13 @@ function setHWCdata(hwcformdata) {
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         HWC_FIRST_NAME: hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
         HWC_FULL_NAME: hwcformdata.EXITINFO2_CONCAT_FULLNAME,
-        HWC_PARK_NAME: format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
-        HWC_TALUK_NAME: format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
+        HWC_PARK_NAME: util.methods.format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
+        HWC_TALUK_NAME: util.methods.format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
         HWC_VILLAGE_NAME: (!hwcformdata.EXITINFO2_CONCAT_VILLAGE) ? null : hwcformdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         HWC_OLDPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_OLDPHNUM,
         HWC_NEWPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_NEWPHNUM,
         HWC_SURVEY_NUMBER: hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        HWC_RANGE: format_range(hwcformdata.HWCINFO_RANGE),
+        HWC_RANGE: util.methods.format_range(hwcformdata.HWCINFO_RANGE),
         HWC_LATITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LAT,
         HWC_LONGITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LNG,
         HWC_ALTITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ALT,
@@ -129,7 +133,7 @@ function setHWCdata(hwcformdata) {
         HWC_HD_DETAILS: hwcformdata.HWCINFO_HDINFO_HDDETAILS,
         HWC_COMMENT: (!hwcformdata.EXITINFO1_ADDCOMMENTS) ? null : hwcformdata.EXITINFO1_ADDCOMMENTS.toLowerCase(),
         HWC_FD_SUB_DATE: util.methods.GetFormattedDate(hwcformdata.FDSUBMISSION_DATE_FDSUB),
-        HWC_FD_SUB_RANGE: format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
+        HWC_FD_SUB_RANGE: util.methods.format_range(hwcformdata.FDSUBMISSION_RANGE_FDSUB),
         HWC_FD_NUM_FORMS: hwcformdata.FDSUBMISSION_NUMFORMS_FDSUB,
         HWC_FD_COMMENT: (!hwcformdata.EXITINFO2_ADDCOMMENTS2) ? null : hwcformdata.EXITINFO2_ADDCOMMENTS2.toLowerCase(),
         HWC_START: util.methods.GetFormattedDate(hwcformdata.START),
@@ -142,67 +146,6 @@ function setHWCdata(hwcformdata) {
     }
 
     return inserthwcdataset;
-}
-
-function format_park(park_name) {
-    const park_list =
-    {
-        "bandipurprk": "Bandipur",
-        "nagaraholeprk": "Nagarahole"
-    }
-
-    return park_name.allReplace(park_list).toLowerCase();
-}
-
-String.prototype.allReplace = function (obj) {
-    var retStr = this;
-    for (var x in obj) {
-        retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
-    }
-    return retStr;
-};
-
-function format_taluk(taluk_name) {
-    const taluk_list =
-    {
-        "gundlupettlk": "gundlupet",
-        "hdkotetlk": "hdkote",
-        "HD_Kote": "hdkote",
-        "hd_kote": "hdkote",
-        "hunsurtlk": "hunsur",
-        "nanjangudtlk": "nanjangud",
-        "piriyapatnatlk": "piriyapatna",
-        "chamrajnagartlk": "chamrajnagar"
-    }
-
-    return taluk_name.allReplace(taluk_list).toLowerCase();
-}
-
-function format_range(range_name) {
-    const range_list =
-    {
-        "antersantherng": "Antersanthe",
-        "db_kupperng": "DBKuppe",
-        "dbkupperng": "DBKuppe",
-        "gsbettarng": "GSBetta",
-        "gundlupetrng": "Gundlupet",
-        "hdkoterng": "HDKote",
-        "hediyalarng": "Hediyala",
-        "hunsurrng": "Hunsur",
-        "kachuvinahallyrng": "Kachuvinahally",
-        "kundkererng": "Kundkere",
-        "maddururng": "Madduru",
-        "metikupperng": "Metikuppe",
-        "moleyururng": "Moleyuru",
-        "nbegururng": "NBeguru",
-        "nugurng": "Nugu",
-        "omkarrng": "Omkar",
-        "piriyapattanarng": "Piriyapattana",
-        "sargururng": "Sarguru",
-        "veeranahosahallirng": "Veeranahosahalli"
-    }
-
-    return range_name.allReplace(range_list).toLowerCase();
 }
 
 exports.caller = myfunctions;
