@@ -50,7 +50,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.4)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.5)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -128,9 +128,9 @@ app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
 
 // //observer
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 1);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 1);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 1);
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 1);
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 60 * 12);
+setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60 * 12);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 12);
+setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
 
 app.listen(port, () => console.log("Server running on port %d", port));
