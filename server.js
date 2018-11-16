@@ -128,9 +128,9 @@ app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
 
 // //observer
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 60 * 12);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60 * 12);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 12);
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 60 * 1);
+setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60 * 1);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 1);
+setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 1);
 
 app.listen(port, () => console.log("Server running on port %d", port));
