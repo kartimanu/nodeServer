@@ -1,7 +1,7 @@
 
-const helper = require('./helper');
-const qmodels = {};
-const queryscript = {};
+var helper = require('./helper');
+var qmodels = {};
+var queryscript = {};
 
 //RDB QUERY : USERS
 queryscript.selectallWSusers = "SELECT * FROM wls_users";
@@ -26,13 +26,13 @@ queryscript.selectOM_data = "SELECT * FROM compensation_details";
 queryscript.selectOM_casedata = "SELECT * FROM com_cases_details WHERE COM_WSID_FORM_DATE = ?";
 
 //RDB QUERY : HWC
-const line1 = "SELECT * FROM hwc_details HD LEFT JOIN hwc_case_crop HC ";
-const line2 = "ON (HD.HWC_WSID = HC.HWC_WSID && HD.HWC_CASE_DATE=HC.HWC_CASE_DATE) ";
-const line3 = "LEFT JOIN hwc_case_property HP ";
-const line4 = "ON (HD.HWC_WSID = HP.HWC_WSID && HD.HWC_CASE_DATE=HP.HWC_CASE_DATE) ";
-const line5 = "LEFT JOIN hwc_case_livestock HL ";
-const line6 = "ON (HD.HWC_WSID = HL.HWC_WSID && HD.HWC_CASE_DATE=HL.HWC_CASE_DATE) ";
-const line7 = "WHERE HWC_METAINSTANCE_ID = ?";
+var line1 = "SELECT * FROM hwc_details HD LEFT JOIN hwc_case_crop HC ";
+var line2 = "ON (HD.HWC_WSID = HC.HWC_WSID && HD.HWC_CASE_DATE=HC.HWC_CASE_DATE) ";
+var line3 = "LEFT JOIN hwc_case_property HP ";
+var line4 = "ON (HD.HWC_WSID = HP.HWC_WSID && HD.HWC_CASE_DATE=HP.HWC_CASE_DATE) ";
+var line5 = "LEFT JOIN hwc_case_livestock HL ";
+var line6 = "ON (HD.HWC_WSID = HL.HWC_WSID && HD.HWC_CASE_DATE=HL.HWC_CASE_DATE) ";
+var line7 = "WHERE HWC_METAINSTANCE_ID = ?";
 
 queryscript.select_hwc = "SELECT * FROM hwc_details";
 queryscript.selectall_hwc = line1+line2+line3+line4+line5+line6;

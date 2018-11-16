@@ -65,8 +65,9 @@ myfunctions.get_hwcParentData = function (req, res, next) {
                 console.log(error);
                 res.send(util.methods.seterror(error));
                 return;
-            } else
+            } else{
                 res.send(util.methods.setresponse(results));
+            }
         });
     }).catch(err => {
         console.log(err);
@@ -93,8 +94,9 @@ myfunctions.update_hwcParentData = function (req, res, next) {
     });
 }
 
-function setHWCdata(hwcformdata) {
 
+function setHWCdata(hwcformdata) {
+    try{
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
 
     if (hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase() == 'otheranimal')
@@ -146,6 +148,10 @@ function setHWCdata(hwcformdata) {
     }
 
     return inserthwcdataset;
+}
+catch(e){
+    console.log("Some Exception Occured" + e);
+}
 }
 
 exports.caller = myfunctions;
