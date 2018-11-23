@@ -50,7 +50,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.6)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.7)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -126,11 +126,16 @@ app.get("/getpublicity_total",dash_chart_pubfunc.report.get_publicity_total);
 app.get("/getpublicity_all",dash_chart_pubfunc.report.get_publicity);
 app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
+//Data Sync
+app.get("/syncdata",function(req,res){
+    res.send("Syncing Started...");syncData();});
 
 // //observer
-setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 60 * 1);
-setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60 * 1);
-setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 1);
-setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 1);
+function syncData(){
+    setTimeout(hwcSyncfunc.func.syncallhwvdetails, 1000 * 1 );
+    setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30 );
+    setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
+    setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 90);
+}
 
 app.listen(port, () => console.log("Server running on port %d", port));
