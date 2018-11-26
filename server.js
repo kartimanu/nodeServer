@@ -25,7 +25,7 @@ var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({origin: '*'}));
 // app.use(function (req, res, next) {
 //     if (req.url !== '/authUser' && req.url !== "/") {
 //         var token = req.headers['authorization'];
@@ -50,7 +50,7 @@ app.use(cors());
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.7)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.8)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
@@ -128,7 +128,8 @@ app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
 //Data Sync
 app.get("/syncdata",function(req,res){
-    res.send("Syncing Started...");syncData();});
+    var s = '"Syncing Started..."';
+    res.send(JSON.parse(s));syncData();});
 
 // //observer
 function syncData(){
