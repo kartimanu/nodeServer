@@ -132,12 +132,11 @@ app.get("/getpublicity_all",dash_chart_pubfunc.report.get_publicity);
 app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
 //Data Sync
-app.get("/syncdata",function(req,res){
-    var s = '"Syncing Started..."';
-    res.send(JSON.parse(s));syncData();});
+app.get("/syncdata",function(req,res){syncData();});
 
 // //observer
 function syncData(){
+    console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwvdetails, 1000 * 1 );
     setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30 );
     setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
