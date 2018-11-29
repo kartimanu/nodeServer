@@ -23,20 +23,23 @@ var cors = require("cors");
 var jwt = require("jsonwebtoken");
 var app = express();
 
+var port = process.env.port || 8080;
+// var router = express.Router();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
 app.use(function(req,res,next){
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'https://wildseveodk.com');
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, content-type, Accept');
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
-
     // Pass to next layer of middleware
     next();
     // res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
@@ -62,8 +65,6 @@ app.use(function(req,res,next){
 //         next();
 //     }
 // })
-var port = process.env.port || 8080;
-// var router = express.Router();
 
 app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.9) ]") });
 

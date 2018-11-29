@@ -230,7 +230,7 @@ procedure.get_freq_byfadate = function (fromdate, todate) {
 }
 
 procedure.get_cases_byyear_month = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE)";
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
 }
 
 procedure.get_top50_wsid_bycases = function () {
