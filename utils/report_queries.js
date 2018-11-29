@@ -125,6 +125,21 @@ procedure.gethwc_bycat_livestock = function () {
 }
 
 // HOME Chart API's
+procedure.getTotalCasesByYEAR = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE)";
+}
+
+procedure.getTotalCasesByYEARnMONTH = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+}
+
+procedure.getCategoryByYEAR = function () {
+    return "select HWC_CASE_CATEGORY, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE)";
+}
+
+procedure.getCategoryByYEARnMONTH = function () {
+    return "select HWC_CASE_CATEGORY, monthname(HWC_CASE_DATE) as MONTH, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+}
 
 procedure.getBpNhByRange = function (fromdate, todate) {
     return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";

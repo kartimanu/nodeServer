@@ -25,7 +25,7 @@ var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({origin: '*'}));
+app.use(cors());
 app.use(function(req,res,next){
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
@@ -55,18 +55,18 @@ app.use(function(req,res,next){
 var port = process.env.port || 8080;
 // var router = express.Router();
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.8)]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.9)]") });
 
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
 app.post("/getDCreportbyrange", reportDCfunc.report.getdailycountbyrange);
 
-app.get("/getHWCreport_byCat", reportHWCfunc.report.getHWC_byCat);
-app.get("/getHWCreport_bycases", reportHWCfunc.report.getHWC_caseattended);
-app.get("/getHWCreport_byday", reportHWCfunc.report.getHWC_eachday);
-app.post("/getHWCreport_bycases_range", reportHWCfunc.report.getHWC_caseattended_byrange);
-app.post("/getHWCreport_byday_range", reportHWCfunc.report.getHWC_eachday_byrange);
-app.post("/getHWCreport_byspacial_range", reportHWCfunc.report.getHWC_bySpacial_byrange);
+app.get("/getHWCreport_byCat", cors(), reportHWCfunc.report.getHWC_byCat);
+app.get("/getHWCreport_bycases", cors(), reportHWCfunc.report.getHWC_caseattended);
+app.get("/getHWCreport_byday", cors(), reportHWCfunc.report.getHWC_eachday);
+app.post("/getHWCreport_bycases_range", cors(), reportHWCfunc.report.getHWC_caseattended_byrange);
+app.post("/getHWCreport_byday_range", cors(), reportHWCfunc.report.getHWC_eachday_byrange);
+app.post("/getHWCreport_byspacial_range", cors(), reportHWCfunc.report.getHWC_bySpacial_byrange);
 
 app.post("/authUser", userfunctions.caller.authUser);
 app.get("/users", userfunctions.caller.getusers);
@@ -99,6 +99,10 @@ app.get("/insertErrorRecord/:id",hwcSyncfunc.func.setDupRecordDetails);
 
 
 //home
+
+app.get("/getTotalCasesbyYear", dash_chart_homefunc.report.getTotalCasesByYear);
+app.get("/getCategorybyYear", dash_chart_homefunc.report.getCategoryByYear);
+app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
 app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
 app.get("/getPreviousBpNhCount", dash_chart_homefunc.report.getPreviousBpNhCount);
 app.post("/getBpByCategory", dash_chart_homefunc.report.getBpByCategory);
@@ -107,15 +111,15 @@ app.post("/getBpNhByCategory", dash_chart_homefunc.report.getBpNhByCategory);
 app.get("/getBpNhYearly", dash_chart_homefunc.report.getBpNhYearly);
 
 //HWC
-app.get("/getblock1",dash_chartfunc.report.getHWC_block1);
-app.post("/getblock1_byhwcdate",dash_chartfunc.report.getHWC_block1_byhwcdate);
-app.post("/getblock1_byfadate",dash_chartfunc.report.getHWC_block1_byfadate);
-app.post("/getblock2_byhwcdate_freq",dash_chartfunc.report.getfreq_block2_byhwcdate);
-app.post("/getblock2_byfadate_freq",dash_chartfunc.report.getfreq_block2_byfadate);
-app.get("/getblock2_totalcases_byyear_month",dash_chartfunc.report.get_cases_byyear_month_block2);
-app.get("/getblock2_top20cases_bycat",dash_chartfunc.report.get_top20cases_bycat_block2);
-app.get("/getblock2_top50cases_bywsid",dash_chartfunc.report.get_top50cases_bywsid_block2);
-app.get("/getblock3_topcases",dash_chartfunc.report.get_topfreq_block3);
+app.get("/getblock1", cors(), dash_chartfunc.report.getHWC_block1);
+app.post("/getblock1_byhwcdate", cors(), dash_chartfunc.report.getHWC_block1_byhwcdate);
+app.post("/getblock1_byfadate", cors(), dash_chartfunc.report.getHWC_block1_byfadate);
+app.post("/getblock2_byhwcdate_freq", cors(), dash_chartfunc.report.getfreq_block2_byhwcdate);
+app.post("/getblock2_byfadate_freq", cors(), dash_chartfunc.report.getfreq_block2_byfadate);
+app.get("/getblock2_totalcases_byyear_month", cors(), dash_chartfunc.report.get_cases_byyear_month_block2);
+app.get("/getblock2_top20cases_bycat", cors(), dash_chartfunc.report.get_top20cases_bycat_block2);
+app.get("/getblock2_top50cases_bywsid", cors(), dash_chartfunc.report.get_top50cases_bywsid_block2);
+app.get("/getblock3_topcases", cors(), dash_chartfunc.report.get_topfreq_block3);
 
 //Compensation
 app.get("/gettotalcomp",dash_chart_compfunc.report.get_total_comp);
@@ -132,9 +136,20 @@ app.get("/getpublicity_all",dash_chart_pubfunc.report.get_publicity);
 app.post("/getpublicity_bydate",dash_chart_pubfunc.report.get_pub_bydate);
 
 //Data Sync
-app.get("/syncdata",function(req,res){syncData();});
+app.get("/syncdata",function(req,res){
+    res.send(JSON.stringify({
+        "status": 200,
+        "response": "Syncing in progress"
+    }));
+    syncData();
+});
 
 // //observer
+setInterval(hwcSyncfunc.func.syncallhwvdetails, 1000 * 60 * 60 * 12);
+setInterval(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 60 * 12);
+setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 12);
+setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
+
 function syncData(){
     console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwvdetails, 1000 * 1 );

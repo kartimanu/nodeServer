@@ -54,9 +54,9 @@ queryscript.updateParentData = "UPDATE hwc_details SET ? WHERE HWC_METAINSTANCE_
 queryscript.updateErrorRecord = "UPDATE dup_hwc SET HWC_VERIFIED = 'Y' WHERE HWC_DUP_METAID = ? ";
 
 qmodels.get_dcofficers = function (data) {
-    const MIN_ID = data['meta:instanceID'].split(":");
+    var MIN_ID = data['meta:instanceID'].split(":");
 
-    const insertquery = {
+    var insertquery = {
 
         DC_METAINSTANCE_ID: MIN_ID[1],
         DC_FILLIN_DATE: data.today,
@@ -69,7 +69,7 @@ qmodels.get_dcofficers = function (data) {
         DC_BP_CASES: data['details:bp_cases'],
         DC_TOTAL_CASES: data['details:ws_cases'],
         DC_CASE_ID: MIN_ID[1] + "_" + data.username
-
+        
     };
 
     console.log("inserting" + insertquery.DC_CASE_DATE);
@@ -77,7 +77,7 @@ qmodels.get_dcofficers = function (data) {
 }
 
 qmodels.createuser = function (data) {
-    const insertquery = {
+    var insertquery = {
         First_name: data.firstname,
         Last_name: data.lastname,
         User_name: data.username,
