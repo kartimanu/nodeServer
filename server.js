@@ -66,7 +66,7 @@ app.use(function(req,res,next){
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.9) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.10) ]") });
 
 app.get("/getDCreportbyMonth",  reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday",  reportDCfunc.report.getdailycountbyday);
@@ -110,7 +110,7 @@ app.get("/insertErrorRecord/:id",  hwcSyncfunc.func.setDupRecordDetails);
 
 
 //home
-
+app.get("/getTotalCasesbyProject",  dash_chart_homefunc.report.getTotalCasesByProjectYear);
 app.get("/getTotalCasesbyYear",  dash_chart_homefunc.report.getTotalCasesByYear);
 app.get("/getCategorybyYear",  dash_chart_homefunc.report.getCategoryByYear);
 app.post("/getBpNhByRange",  dash_chart_homefunc.report.getBpNhByRange);

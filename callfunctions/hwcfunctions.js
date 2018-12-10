@@ -3,7 +3,7 @@ const dbconn = require('../config/sshdbconn');
 const util = require('../utils/helper');
 const myfunctions = {};
 
-myfunctions.get_all_hwc = function (req, res, next) {
+myfunctions.get_all_hwc = async function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.selectall_hwc, function (error, results, fields) {
             if (error) {
@@ -37,7 +37,7 @@ myfunctions.get_hwcall_byid = function (req, res, next) {
     });
 }
 
-myfunctions.get_hwc = function (req, res, next) {
+myfunctions.get_hwc = async function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.select_hwc, function (error, results, fields) {
             if (error) {
