@@ -125,6 +125,10 @@ procedure.gethwc_bycat_livestock = function () {
 }
 
 // HOME Chart API's
+procedure.getTotalCasesByP_YR = function (from, to) {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '"+from+"' AND '"+to+"') group by year(HWC_CASE_DATE)";
+}
+
 procedure.getTotalCasesByYEAR = function () {
     return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE)";
 }
