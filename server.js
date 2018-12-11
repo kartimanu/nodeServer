@@ -109,8 +109,7 @@ app.get("/updateErrorRecord/:id",  errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id",  hwcSyncfunc.func.setDupRecordDetails);
 
 
-//home
-app.get("/getTotalCasesbyProject",  dash_chart_homefunc.report.getTotalCasesByProjectYear);
+//Home API's
 app.get("/getTotalCasesbyYear",  dash_chart_homefunc.report.getTotalCasesByYear);
 app.get("/getCategorybyYear",  dash_chart_homefunc.report.getCategoryByYear);
 app.post("/getBpNhByRange",  dash_chart_homefunc.report.getBpNhByRange);
@@ -119,7 +118,12 @@ app.get("/getPreviousBpNhCount",  dash_chart_homefunc.report.getPreviousBpNhCoun
 app.post("/getBpByCategory",  dash_chart_homefunc.report.getBpByCategory);
 app.post("/getNhByCategory",  dash_chart_homefunc.report.getNhByCategory);
 app.post("/getBpNhByCategory",  dash_chart_homefunc.report.getBpNhByCategory);
-app.get("/getBpNhYearly",  dash_chart_homefunc.report.getBpNhYearly);
+app.get("/getpark_yearwise",  dash_chart_homefunc.report.get_park_Yearly);
+app.get("/getparkcategory_yearwise",  dash_chart_homefunc.report.get_park_cat_Yearly);
+app.get("/getparkcategory_byProject",  dash_chart_homefunc.report.getcategoryByProjectYear);
+app.get("/getpark_byProject",  dash_chart_homefunc.report.getTotalCasesByProjectYear);
+app.get("/gettopvillages",  dash_chart_homefunc.report.getTopVillages);
+app.get("/gettopvillages_bycategory",  dash_chart_homefunc.report.getTopVillages_Bycategory_all);
 
 //HWC
 app.get("/getblock1",  dash_chartfunc.report.getHWC_block1);

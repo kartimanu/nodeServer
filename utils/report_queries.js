@@ -126,7 +126,11 @@ procedure.gethwc_bycat_livestock = function () {
 
 // HOME Chart API's
 procedure.getTotalCasesByP_YR = function (from, to) {
-    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '"+from+"' AND '"+to+"') group by year(HWC_CASE_DATE)";
+    return "select year(HWC_CASE_DATE) as YEAR, count(*) as NO_OF_CASES from hwc_details where (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') between '" + from + "' AND '" + to + "') group by year(HWC_CASE_DATE)";
+}
+
+procedure.getparkcategory_YR = function (from, to) {
+    return "select year(HWC_CASE_DATE) as YEAR, count(*) as NO_OF_CASES, HWC_PARK_NAME as PARK, HWC_CASE_CATEGORY as CATEGORY from hwc_details where (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') between '" + from + "' AND '" + to + "') group by year(HWC_CASE_DATE), HWC_PARK_NAME, HWC_CASE_CATEGORY;";
 }
 
 procedure.getTotalCasesByYEAR = function () {
@@ -146,22 +150,31 @@ procedure.getCategoryByYEARnMONTH = function () {
 }
 
 procedure.getBpNhByRange = function (fromdate, todate) {
-    return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '"+fromdate+"' AND '"+todate+"' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
+    return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
 }
 procedure.getPreviousBpNhCount = function () {
     return "select DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE DC_CASE_DATE BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE()"
 }
 procedure.getBpByCategory = function (fromdate, todate) {
-    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_BP_CASES AS BP_CASES , sum(d.DC_BP_CASES) AS BP_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_BP_CASES AS BP_CASES , sum(d.DC_BP_CASES) AS BP_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') and (d.DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
 }
 procedure.getNhByCategory = function (fromdate, todate) {
-    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_NH_CASES AS NH_CASES , sum(d.DC_NH_CASES) AS NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_NH_CASES AS NH_CASES , sum(d.DC_NH_CASES) AS NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') and (d.DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
 }
 procedure.getBpNhByCategory = function (fromdate, todate) {
-    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, sum(d.DC_NH_CASES+d.DC_BP_CASES) AS TOTAL_BP_NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') and (d.DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
+    return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, sum(d.DC_NH_CASES+d.DC_BP_CASES) AS TOTAL_BP_NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') and (d.DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
 }
-procedure.getBpNhYearly = function () {
-    return "select year(DC_CASE_DATE) as YEAR, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE (year(DC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(DC_CASE_DATE);"
+procedure.getBpNhYearly_all = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_DATE) as NO_OF_CASES, HWC_PARK_NAME AS PARK from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_PARK_NAME;"
+}
+procedure.getBpNhByCategory_all = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES, HWC_PARK_NAME AS PARK, HWC_CASE_CATEGORY as HWC_CATEGORY from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_CASE_CATEGORY, HWC_PARK_NAME;"
+}
+procedure.gettopvillages_all = function () {
+    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS from odk.hwc_details group by HWC_VILLAGE_NAME order by count(HWC_VILLAGE_NAME) desc limit 10;";
+}
+procedure.gettopvillages_bycategory_all = function (type) {
+    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS, HWC_CASE_CATEGORY from odk.hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 10;";
 }
 
 //HWC chart API's
@@ -187,50 +200,50 @@ procedure.get_hwc_range = function () {
 
 //by HWC_date
 procedure.get_hwc_category_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_CASE_CATEGORY";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_CASE_CATEGORY";
 }
 procedure.get_hwc_animal_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_ANIMAL";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_ANIMAL";
 }
 procedure.get_hwc_taluk_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_TALUK_NAME";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_TALUK_NAME";
 }
 procedure.get_hwc_village_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_VILLAGE_NAME";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_VILLAGE_NAME";
 }
 procedure.get_hwc_park_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_PARK_NAME";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_PARK_NAME";
 }
 procedure.get_hwc_range_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE, HWC_RANGE";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_RANGE";
 }
 
 //by FA_date
 procedure.get_hwc_category_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_CASE_CATEGORY";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_CASE_CATEGORY";
 }
 procedure.get_hwc_animal_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_ANIMAL";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_ANIMAL";
 }
 procedure.get_hwc_taluk_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_TALUK_NAME";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_TALUK_NAME AS TALUK, COUNT(HWC_TALUK_NAME) AS TALUK_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_TALUK_NAME";
 }
 procedure.get_hwc_village_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_VILLAGE_NAME";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_VILLAGE_NAME AS VILLAGE, COUNT(HWC_VILLAGE_NAME) AS VILLAGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_VILLAGE_NAME";
 }
 procedure.get_hwc_park_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_PARK_NAME";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_PARK_NAME AS PARK, COUNT(HWC_PARK_NAME) AS PARK_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_PARK_NAME";
 }
 procedure.get_hwc_range_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE, HWC_RANGE";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_RANGE, COUNT(HWC_RANGE) AS RANGE_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_RANGE";
 }
 
 procedure.get_freq_byhwcdate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, COUNT(HWC_CASE_DATE) AS DATE_FREQ from hwc_details where HWC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_CASE_DATE";
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, COUNT(HWC_CASE_DATE) AS DATE_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE";
 }
 
 procedure.get_freq_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, COUNT(HWC_FD_SUB_DATE) AS DATE_FREQ from hwc_details where HWC_FD_SUB_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY HWC_FD_SUB_DATE";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, COUNT(HWC_FD_SUB_DATE) AS DATE_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE";
 }
 
 procedure.get_cases_byyear_month = function () {
@@ -270,27 +283,27 @@ procedure.get_total_comp = function () {
 }
 
 procedure.get_comp_bycategory = function (fromdate, todate) {
-    return "SELECT COM_HWC_CATAGORY as CATAGORY, count(COM_HWC_CATAGORY) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_HWC_CATAGORY;";
+    return "SELECT COM_HWC_CATAGORY as CATAGORY, count(COM_HWC_CATAGORY) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_HWC_CATAGORY;";
 }
 
 procedure.get_comp_byvillage = function (fromdate, todate) {
-    return "SELECT COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_VILLAGE;";
+    return "SELECT COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_VILLAGE;";
 }
 
 procedure.get_comp_bytaluk = function (fromdate, todate) {
-    return "SELECT COM_TALUK AS TALUK, count(COM_TALUK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_TALUK;";
+    return "SELECT COM_TALUK AS TALUK, count(COM_TALUK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_TALUK;";
 }
 
 procedure.get_comp_bypark = function (fromdate, todate) {
-    return "SELECT COM_PARK AS PARK, count(COM_PARK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY COM_PARK;";
+    return "SELECT COM_PARK AS PARK, count(COM_PARK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_PARK;";
 }
 
 procedure.get_comp_top30_wsid = function (fromdate, todate) {
-    return "select COM_WSID AS WSID, count(COM_WSID) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' group by COM_WSID order by count(COM_WSID) DESC limit 30;"
+    return "select COM_WSID AS WSID, count(COM_WSID) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' group by COM_WSID order by count(COM_WSID) DESC limit 30;"
 }
 
 procedure.get_comp_top20_village = function (fromdate, todate) {
-    return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '"+fromdate+"' AND '"+todate+"' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
+    return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
 }
 
 //QUERY for Daily count
@@ -311,11 +324,11 @@ procedure.get_dc_total_cases_hwc_byFA = function () {
 }
 
 procedure.get_dc_cases_bydate = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES FROM odk.daily_count where DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' group by DC_CASE_DATE order by DC_CASE_DATE DESC;"
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES FROM odk.daily_count where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by DC_CASE_DATE DESC;"
 }
 
 procedure.get_dc_cases_hwc_bydate = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases where DC_CASE_DATE between '"+fromdate+"' AND '"+todate+"' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
 }
 
 //Publicity Query
@@ -336,15 +349,15 @@ procedure.get_pb_bytaluk = function () {
 }
 
 procedure.get_pb_byvillage_bydate = function (fromdate, todate) {
-    return "SELECT PB_C_VILLAGE AS VILLAGE_NAME, count(PB_C_VILLAGE) AS VILLAGE_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_C_VILLAGE;"
+    return "SELECT PB_C_VILLAGE AS VILLAGE_NAME, count(PB_C_VILLAGE) AS VILLAGE_FREQ from publicity where PB_V_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY PB_C_VILLAGE;"
 }
 
 procedure.get_pb_bypark_bydate = function (fromdate, todate) {
-    return "SELECT PB_PARK AS PARK, count(PB_PARK) AS PARK_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_PARK;"
+    return "SELECT PB_PARK AS PARK, count(PB_PARK) AS PARK_FREQ from publicity where PB_V_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY PB_PARK;"
 }
 
 procedure.get_pb_bytaluk_bydate = function (fromdate, todate) {
-    return "SELECT PB_TALUK AS TALUK, count(PB_TALUK) AS TALUK_FREQ from publicity where PB_V_DATE between '"+fromdate+"' AND '"+todate+"' GROUP BY PB_TALUK;"
+    return "SELECT PB_TALUK AS TALUK, count(PB_TALUK) AS TALUK_FREQ from publicity where PB_V_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY PB_TALUK;"
 }
 
 exports.func = procedure;
