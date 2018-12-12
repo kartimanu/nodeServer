@@ -165,6 +165,27 @@ reports.getCategoryByYear = function (req, res, next) {
     });
 }
 
+reports.getRange_all = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.getrange_year(), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data);
+            }
+        });
+        con_mdb.query(procedure.func.getrange_monthyear(), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data)
+                res.send({ success: true, data: result_data });
+                result_data.length = 0;
+            }
+        });
+    });
+}
+
 reports.getBpNhByRange = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.getBpNhByRange(req.body.fromdate, req.body.todate), function (error, data, fields) {
@@ -178,7 +199,7 @@ reports.getBpNhByRange = function (req, res, next) {
 }
 reports.getPreviousBpNhCount = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.getPreviousBpNhCount(req.body.fromdate, req.body.todate), function (error, data, fields) {
+        con_mdb.query(procedure.func.getBPNH_Previousday(), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {

@@ -66,7 +66,7 @@ app.use(function(req,res,next){
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.10) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.11) ]") });
 
 app.get("/getDCreportbyMonth",  reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday",  reportDCfunc.report.getdailycountbyday);
@@ -110,20 +110,22 @@ app.get("/insertErrorRecord/:id",  hwcSyncfunc.func.setDupRecordDetails);
 
 
 //Home API's
-app.get("/getTotalCasesbyYear",  dash_chart_homefunc.report.getTotalCasesByYear);
-app.get("/getCategorybyYear",  dash_chart_homefunc.report.getCategoryByYear);
-app.post("/getBpNhByRange",  dash_chart_homefunc.report.getBpNhByRange);
 app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
-app.get("/getPreviousBpNhCount",  dash_chart_homefunc.report.getPreviousBpNhCount);
 app.post("/getBpByCategory",  dash_chart_homefunc.report.getBpByCategory);
 app.post("/getNhByCategory",  dash_chart_homefunc.report.getNhByCategory);
 app.post("/getBpNhByCategory",  dash_chart_homefunc.report.getBpNhByCategory);
+
+app.get("/getPark_Previousday",  dash_chart_homefunc.report.getPreviousBpNhCount);
+app.get("/getCategorybyYear",  dash_chart_homefunc.report.getCategoryByYear);
+
+app.get("/getTotalCasesbyYear",  dash_chart_homefunc.report.getTotalCasesByYear);
 app.get("/getpark_yearwise",  dash_chart_homefunc.report.get_park_Yearly);
 app.get("/getparkcategory_yearwise",  dash_chart_homefunc.report.get_park_cat_Yearly);
-app.get("/getparkcategory_byProject",  dash_chart_homefunc.report.getcategoryByProjectYear);
 app.get("/getpark_byProject",  dash_chart_homefunc.report.getTotalCasesByProjectYear);
+app.get("/getparkcategory_byProject",  dash_chart_homefunc.report.getcategoryByProjectYear);
 app.get("/gettopvillages",  dash_chart_homefunc.report.getTopVillages);
 app.get("/gettopvillages_bycategory",  dash_chart_homefunc.report.getTopVillages_Bycategory_all);
+app.get("/getcases_byrange",  dash_chart_homefunc.report.getRange_all);
 
 //HWC
 app.get("/getblock1",  dash_chartfunc.report.getHWC_block1);
@@ -132,9 +134,14 @@ app.post("/getblock1_byfadate",  dash_chartfunc.report.getHWC_block1_byfadate);
 app.post("/getblock2_byhwcdate_freq",  dash_chartfunc.report.getfreq_block2_byhwcdate);
 app.post("/getblock2_byfadate_freq",  dash_chartfunc.report.getfreq_block2_byfadate);
 app.get("/getblock2_totalcases_byyear_month",  dash_chartfunc.report.get_cases_byyear_month_block2);
+app.get("/getblock2_totalcases_byprojectyear",  dash_chartfunc.report.getFreqCasesByProjectYear);
 app.get("/getblock2_top20cases_bycat",  dash_chartfunc.report.get_top20cases_bycat_block2);
 app.get("/getblock2_top50cases_bywsid",  dash_chartfunc.report.get_top50cases_bywsid_block2);
 app.get("/getblock3_topcases",  dash_chartfunc.report.get_topfreq_block3);
+app.get("/get_incidents_all",  dash_chartfunc.report.get30incidents);
+app.get("/get_wsidincidents_bycat",  dash_chartfunc.report.getwsidincidents_bycategory);
+app.get("/get_villageincidents_bycat",  dash_chartfunc.report.getvillageincidents_bycategory);
+app.get("/get_rangeincidents_bycat",  dash_chartfunc.report.getrangeincidents_bycategory);
 
 //Compensation
 app.get("/gettotalcomp",  dash_chart_compfunc.report.get_total_comp);

@@ -1,5 +1,6 @@
 const dbconn = require('../config/sshdbconn');
 const procedure = require('../utils/report_queries');
+const async = require("async");
 
 const reports = {};
 var result_data = [];
@@ -223,6 +224,46 @@ reports.get_cases_byyear_month_block2 = function (req, res, next) {
     });
 }
 
+reports.getFreqCasesByProjectYear = async function (req, res, next) {
+    try {
+        var start_yr = 2015;
+        var end_yr = (new Date()).getFullYear();
+        var year_diff = end_yr - start_yr;
+        var year_range = [];
+        var result_data = [];
+        for (var i = 0; i < year_diff; i++) {
+            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        }
+        async.each(year_range, function (yr_data, callback) {
+            if (yr_data) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.get_freqcases_byprojectyear(yr_data.from, yr_data.to), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            // console.log(JSON.stringify(result_data));
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
 reports.get_top50cases_bywsid_block2 = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {        
         con_mdb.query(procedure.func.get_top50_wsid_bycases(), function (error, data, fields) {
@@ -292,6 +333,135 @@ reports.get_topfreq_block3 = function (req, res, next) {
     }).catch(err => {
         console.log(err);
     });
+}
+
+reports.get30incidents = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_30incident_WSID(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                result_data.push(data);
+            }
+        });
+        con_mdb.query(procedure.func.get_30incident_Village(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                    result_data.push(data);                
+            }
+        });
+        con_mdb.query(procedure.func.get_30incident_Range(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                result_data.push(data);
+                res.send(JSON.stringify(result_data));
+                result_data.length = 0;
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.getwsidincidents_bycategory = async function (req, res, next) {
+    try {
+        var result_data = [];        
+        var CAT = ['CR','CRPD','PD','LP','HI','HD'];
+        async.each(CAT, function (type, callback) {
+            if (type) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.get_30incident_WSID_bycat(type), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getvillageincidents_bycategory = async function (req, res, next) {
+    try {
+        var result_data = [];        
+        var CAT = ['CR','CRPD','PD','LP','HI','HD'];
+        async.each(CAT, function (type, callback) {
+            if (type) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.get_30incident_Village_bycat(type), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getrangeincidents_bycategory = async function (req, res, next) {
+    try {
+        var result_data = [];        
+        var CAT = ['CR','CRPD','PD','LP','HI','HD'];
+        async.each(CAT, function (type, callback) {
+            if (type) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.get_30incident_Range_bycat(type), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
 }
 
 exports.report = reports;

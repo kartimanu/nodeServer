@@ -152,8 +152,8 @@ procedure.getCategoryByYEARnMONTH = function () {
 procedure.getBpNhByRange = function (fromdate, todate) {
     return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
 }
-procedure.getPreviousBpNhCount = function () {
-    return "select DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE from daily_count WHERE DC_CASE_DATE BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE()"
+procedure.getBPNH_Previousday = function () {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, sum(HWC_CASE_DATE) AS CASES from hwc_details WHERE HWC_CASE_DATE BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE()"
 }
 procedure.getBpByCategory = function (fromdate, todate) {
     return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, d.DC_BP_CASES AS BP_CASES , sum(d.DC_BP_CASES) AS BP_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') and (d.DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
@@ -175,6 +175,12 @@ procedure.gettopvillages_all = function () {
 }
 procedure.gettopvillages_bycategory_all = function (type) {
     return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS, HWC_CASE_CATEGORY from odk.hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 10;";
+}
+procedure.getrange_year = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_RANGE;";
+}
+procedure.getrange_monthyear = function () {
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE), HWC_RANGE order by year(HWC_CASE_DATE), month(HWC_CASE_DATE), HWC_RANGE;";
 }
 
 //HWC chart API's
@@ -250,6 +256,10 @@ procedure.get_cases_byyear_month = function () {
     return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
 }
 
+procedure.get_freqcases_byprojectyear = function (from, to) {
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') between '" + from + "' AND '" + to + "') group by year(HWC_CASE_DATE) order by year(HWC_CASE_DATE);";
+}
+
 procedure.get_top50_wsid_bycases = function () {
     return "select HWC_WSID, count(HWC_WSID) AS CASES from hwc_details group by HWC_WSID order by count(HWC_WSID) desc limit 50";
 }
@@ -304,6 +314,30 @@ procedure.get_comp_top30_wsid = function (fromdate, todate) {
 
 procedure.get_comp_top20_village = function (fromdate, todate) {
     return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
+}
+
+procedure.get_30incident_WSID = function () {
+    return "select HWC_WSID, count(HWC_WSID) as INCIDENT from hwc_details group by HWC_WSID order by count(HWC_WSID) desc limit 30;"
+}
+
+procedure.get_30incident_WSID_bycat = function (type) {
+    return "select HWC_WSID, count(HWC_WSID) as INCIDENT , HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_WSID, HWC_CASE_CATEGORY order by HWC_CASE_CATEGORY, count(HWC_WSID) desc limit 30;"
+}
+
+procedure.get_30incident_Village = function () {
+    return "select HWC_VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS INCIDENT from hwc_details group by HWC_VILLAGE_NAME order by count(HWC_VILLAGE_NAME) desc limit 30;"
+}
+
+procedure.get_30incident_Range = function () {
+    return "select HWC_RANGE, count(HWC_RANGE) AS INCIDENT from hwc_details group by HWC_RANGE order by count(HWC_RANGE) desc limit 30;"
+}
+
+procedure.get_30incident_Village_bycat = function (type) {
+    return "select HWC_VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 30;"
+}
+
+procedure.get_30incident_Range_bycat = function (type) {
+    return "select HWC_RANGE, count(HWC_RANGE) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_RANGE, HWC_CASE_CATEGORY order by count(HWC_RANGE) desc limit 30;"
 }
 
 //QUERY for Daily count
