@@ -68,10 +68,12 @@ app.use(function (req, res, next) {
 
 app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.12) ]") });
 
+//Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
 app.get("/getDCreportbyday", reportDCfunc.report.getdailycountbyday);
 app.post("/getDCreportbyrange", reportDCfunc.report.getdailycountbyrange);
 
+//Report API's - HWC
 app.get("/getHWCreport_byCat", reportHWCfunc.report.getHWC_byCat);
 app.get("/getHWCreport_bycases", reportHWCfunc.report.getHWC_caseattended);
 app.get("/getHWCreport_byday", reportHWCfunc.report.getHWC_eachday);

@@ -166,11 +166,11 @@ procedure.getparkcategory_YR = function (from, to) {
 }
 
 procedure.getTotalCasesByYEAR = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE)";
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE)";
 }
 
 procedure.getTotalCasesByYEARnMONTH = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
 }
 
 procedure.getParkCasesByYEARnMONTH = function (from,to) {
@@ -178,11 +178,11 @@ procedure.getParkCasesByYEARnMONTH = function (from,to) {
 }
 
 procedure.getCategoryByYEAR = function () {
-    return "select HWC_CASE_CATEGORY, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE)";
+    return "select HWC_CASE_CATEGORY, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE)";
 }
 
 procedure.getCategoryByYEARnMONTH = function () {
-    return "select HWC_CASE_CATEGORY, monthname(HWC_CASE_DATE) as MONTH, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+    return "select HWC_CASE_CATEGORY, monthname(HWC_CASE_DATE) as MONTH, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE),  HWC_CASE_CATEGORY order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
 }
 
 procedure.getBpNhByRange = function (fromdate, todate) {
@@ -201,10 +201,10 @@ procedure.getBpNhByCategory = function (fromdate, todate) {
     return "select DATE_FORMAT(d.DC_CASE_DATE, '%d-%m-%Y')  as CASE_DATE, h.HWC_CASE_CATEGORY as CATEGORY, sum(d.DC_NH_CASES+d.DC_BP_CASES) AS TOTAL_BP_NH_CASES from daily_count d, hwc_details h where (h.HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') and (d.DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "') group by d.DC_CASE_DATE, h.HWC_CASE_DATE;"
 }
 procedure.getBpNhYearly_all = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_DATE) as NO_OF_CASES, HWC_PARK_NAME AS PARK from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_PARK_NAME;"
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_DATE) as NO_OF_CASES, HWC_PARK_NAME AS PARK from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_PARK_NAME;"
 }
 procedure.getBpNhByCategory_all = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES, HWC_PARK_NAME AS PARK, HWC_CASE_CATEGORY as HWC_CATEGORY from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_CASE_CATEGORY, HWC_PARK_NAME;"
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES, HWC_PARK_NAME AS PARK, HWC_CASE_CATEGORY as HWC_CATEGORY from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_CASE_CATEGORY, HWC_PARK_NAME;"
 }
 procedure.gettopvillages_all = function () {
     return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS from hwc_details group by HWC_VILLAGE_NAME order by count(HWC_VILLAGE_NAME) desc limit 10;";
@@ -213,10 +213,10 @@ procedure.gettopvillages_bycategory_all = function (type) {
     return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 10;";
 }
 procedure.getrange_year = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_RANGE;";
+    return "select year(HWC_CASE_DATE) as YEAR, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_RANGE;";
 }
 procedure.getrange_monthyear = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE), HWC_RANGE order by year(HWC_CASE_DATE), month(HWC_CASE_DATE), HWC_RANGE;";
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE), HWC_RANGE order by year(HWC_CASE_DATE), month(HWC_CASE_DATE), HWC_RANGE;";
 }
 
 //HWC chart API's
@@ -289,7 +289,7 @@ procedure.get_freq_byfadate = function (fromdate, todate) {
 }
 
 procedure.get_cases_byyear_month = function () {
-    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+    return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_DATE) AS TOTAL_CASES from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
 }
 
 procedure.get_freqcases_byprojectyear = function (from, to) {
