@@ -275,4 +275,205 @@ reports.getTopVillages = function (req, res, next) {
     });
 }
 
+reports.getBPNH_Bydate = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.getBPNH_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data);
+            }
+        });
+        con_mdb.query(procedure.func.getNH_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data);
+            }
+        });
+        con_mdb.query(procedure.func.getBP_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data)
+                res.send({ success: true, data: result_data });
+                result_data.length = 0;
+            }
+        });
+    });
+}
+
+reports.getBPNH_prevday = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.getBPNH_byprevdate(), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data);
+            }
+        });
+        con_mdb.query(procedure.func.getBPNH_cat_byprevdate(), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                result_data.push(data)
+                res.send({ success: true, data: result_data });
+                result_data.length = 0;
+            }
+        });
+    });
+}
+
+reports.getParkTotal_ByProjectYear = async function (req, res, next) {
+    try {
+        var start_yr = 2015;
+        var end_yr = (new Date()).getFullYear();
+        var year_diff = end_yr - start_yr;
+        var year_range = [];
+        var result_data = [];
+        for (var i = 0; i < year_diff; i++) {
+            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        }
+        async.each(year_range, function (yr_data, callback) {
+            if (yr_data) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.getBPNH_byprojectYR(yr_data.from, yr_data.to), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getParknCategory_ByProjectYear = async function (req, res, next) {
+    try {
+        var start_yr = 2015;
+        var end_yr = (new Date()).getFullYear();
+        var year_diff = end_yr - start_yr;
+        var year_range = [];
+        var result_data = [];
+        for (var i = 0; i < year_diff; i++) {
+            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        }
+        async.each(year_range, function (yr_data, callback) {
+            if (yr_data) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.getBPNH_cat_byprojectYR(yr_data.from, yr_data.to), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getPark_ByProjectYear = async function (req, res, next) {
+    try {
+        var start_yr = 2015;
+        var end_yr = (new Date()).getFullYear();
+        var year_diff = end_yr - start_yr;
+        var year_range = [];
+        var result_data = [];
+        for (var i = 0; i < year_diff; i++) {
+            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        }
+        async.each(year_range, function (yr_data, callback) {
+            if (yr_data) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.getBP_NH_byprojectYR(yr_data.from, yr_data.to), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getPark_ByYearnMonth = async function (req, res, next) {
+    try {
+        var start_yr = 2015;
+        var end_yr = (new Date()).getFullYear();
+        var year_diff = end_yr - start_yr;
+        var year_range = [];
+        var result_data = [];
+        for (var i = 0; i < year_diff; i++) {
+            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        }
+        async.each(year_range, function (yr_data, callback) {
+            if (yr_data) {
+                dbconn.mdb.then(function (con_mdb) {
+                    con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(yr_data.from, yr_data.to), function (error, result, fields) {
+                        if (error) {
+                            res.send({ success: false, data: JSON.stringify(error) });
+                            console.log(error);
+                            return;
+                        } else if (result) {
+                            result_data.push(result);
+                            callback();
+                        }
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }, function (err) {
+            if (err)
+                console.log(err);
+            res.send({ success: true, data: JSON.stringify(result_data) });
+        })
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
 exports.report = reports;

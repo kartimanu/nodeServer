@@ -125,6 +125,38 @@ procedure.gethwc_bycat_livestock = function () {
 }
 
 // HOME Chart API's
+procedure.getBPNH_byprojectYR = function (from, to) {
+    return "select HWC_PARK_NAME,count(HWC_CASE_CATEGORY) as cases_july2june from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by HWC_PARK_NAME order by HWC_PARK_NAME;";
+}
+
+procedure.getBPNH_cat_byprojectYR = function (from, to) {
+    return "select HWC_CASE_CATEGORY as BPNH,count(HWC_CASE_CATEGORY) as cases_july2june from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by HWC_CASE_CATEGORY order by field(hwc_case_category,'CR','CRPD','PD','LP','HI','HD');";
+}
+
+procedure.getBP_NH_byprojectYR = function (from, to) {
+    return "select hwc_park_name,HWC_CASE_CATEGORY as BPNH,count(HWC_CASE_CATEGORY) as cases_july2june from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by hwc_park_name,HWC_CASE_CATEGORY order by hwc_park_name,field(hwc_case_category,'CR','CRPD','PD','LP','HI','HD');";
+}
+
+procedure.getBPNH_bydate = function (from, to) {
+    return "select HWC_CASE_CATEGORY,count(HWC_CASE_CATEGORY) as No_of_cases from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by HWC_CASE_CATEGORY order by field(hwc_case_category,'CR','CRPD','PD','LP','HI','HD');";
+}
+
+procedure.getBP_bydate = function (from, to) {
+    return "select HWC_PARK_NAME,HWC_CASE_CATEGORY,count(HWC_CASE_CATEGORY) as No_of_cases from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' and hwc_park_name='bandipur' group by HWC_PARK_NAME,HWC_CASE_CATEGORY order by field(hwc_case_category,'CR','CRPD','PD','LP','HI','HD'),hwc_park_name;";
+}
+
+procedure.getNH_bydate = function (from, to) {
+    return "select HWC_PARK_NAME,HWC_CASE_CATEGORY,count(HWC_CASE_CATEGORY) as No_of_cases from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' and hwc_park_name='NAGARAHOLE' group by HWC_PARK_NAME,HWC_CASE_CATEGORY order by field(hwc_case_category,'CR','CRPD','PD','LP','HI','HD'),hwc_park_name;";
+}
+
+procedure.getBPNH_byprevdate = function () {
+    return "select dc_case_date,DC_BP_CASES AS Bandipur, DC_NH_CASES as Nagarahole,(DC_NH_CASES+DC_BP_CASES) as CASES_BPNH from daily_count where dc_case_date >= CAST(NOW() - INTERVAL 1 DAY AS DATE) AND dc_case_date <= CAST(NOW() AS DATE) group by CASES_BPNH;";
+}
+
+procedure.getBPNH_cat_byprevdate = function () {
+    return "select distinct(DC_CASE_DATE) as Date_S,sum(DC_CROP) as CR,sum(DC_CROP_PROPERTY) as CRPD,sum(DC_PROPERTY) as PD,sum(DC_LIVESTOCK) as LP, sum(DC_HUMAN_INJURY) as HI, sum(DC_HUMAN_DEATH) as HD, sum(DC_CROP+DC_CROP_PROPERTY+DC_PROPERTY+DC_LIVESTOCK+DC_HUMAN_INJURY+DC_HUMAN_DEATH) as TOTAL from dc_cases where dc_case_date >= CAST(NOW() - INTERVAL 1 DAY AS DATE) AND dc_case_date <= CAST(NOW() AS DATE);";
+}
+
 procedure.getTotalCasesByP_YR = function (from, to) {
     return "select year(HWC_CASE_DATE) as YEAR, count(*) as NO_OF_CASES from hwc_details where (DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') between '" + from + "' AND '" + to + "') group by year(HWC_CASE_DATE)";
 }
@@ -139,6 +171,10 @@ procedure.getTotalCasesByYEAR = function () {
 
 procedure.getTotalCasesByYEARnMONTH = function () {
     return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), month(HWC_CASE_DATE) order by year(HWC_CASE_DATE), month(HWC_CASE_DATE)";
+}
+
+procedure.getParkCasesByYEARnMONTH = function (from,to) {
+    return "select year(HWC_CASE_DATE) as Year_s,monthname(HWC_CASE_DATE) as Month_s,count(HWC_CASE_CATEGORY) as No_of_cases,HWC_PARK_NAME from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by Year_s,Month_s,HWC_PARK_NAME order by HWC_PARK_NAME, FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
 }
 
 procedure.getCategoryByYEAR = function () {
@@ -171,10 +207,10 @@ procedure.getBpNhByCategory_all = function () {
     return "select year(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES, HWC_PARK_NAME AS PARK, HWC_CASE_CATEGORY as HWC_CATEGORY from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_CASE_CATEGORY, HWC_PARK_NAME;"
 }
 procedure.gettopvillages_all = function () {
-    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS from odk.hwc_details group by HWC_VILLAGE_NAME order by count(HWC_VILLAGE_NAME) desc limit 10;";
+    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS from hwc_details group by HWC_VILLAGE_NAME order by count(HWC_VILLAGE_NAME) desc limit 10;";
 }
 procedure.gettopvillages_bycategory_all = function (type) {
-    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS, HWC_CASE_CATEGORY from odk.hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 10;";
+    return "select HWC_VILLAGE_NAME as VILLAGE, count(HWC_VILLAGE_NAME) as FREQS, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 10;";
 }
 procedure.getrange_year = function () {
     return "select year(HWC_CASE_DATE) as YEAR, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between YEAR(CURDATE())-3 and YEAR(CURDATE())) group by year(HWC_CASE_DATE), HWC_RANGE;";
@@ -265,7 +301,7 @@ procedure.get_top50_wsid_bycases = function () {
 }
 
 procedure.get_top20_wsid_bycat = function () {
-    return "select HWC_WSID, HWC_CASE_CATEGORY, count(HWC_WSID) AS CASES from odk.hwc_details group by HWC_CASE_CATEGORY, HWC_WSID order by count(HWC_WSID) desc limit 20";
+    return "select HWC_WSID, HWC_CASE_CATEGORY, count(HWC_WSID) AS CASES from hwc_details group by HWC_CASE_CATEGORY, HWC_WSID order by count(HWC_WSID) desc limit 20";
 }
 
 procedure.get_top10_crop = function () {
@@ -321,7 +357,7 @@ procedure.get_30incident_WSID = function () {
 }
 
 procedure.get_30incident_WSID_bycat = function (type) {
-    return "select HWC_WSID, count(HWC_WSID) as INCIDENT , HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_WSID, HWC_CASE_CATEGORY order by HWC_CASE_CATEGORY, count(HWC_WSID) desc limit 30;"
+    return "select HWC_WSID, count(HWC_WSID) as INCIDENT , HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_WSID, HWC_CASE_CATEGORY order by HWC_CASE_CATEGORY, count(HWC_WSID) desc limit 30;"
 }
 
 procedure.get_30incident_Village = function () {
@@ -333,11 +369,11 @@ procedure.get_30incident_Range = function () {
 }
 
 procedure.get_30incident_Village_bycat = function (type) {
-    return "select HWC_VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 30;"
+    return "select HWC_VILLAGE_NAME, count(HWC_VILLAGE_NAME) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_VILLAGE_NAME, HWC_CASE_CATEGORY order by count(HWC_VILLAGE_NAME) desc limit 30;"
 }
 
 procedure.get_30incident_Range_bycat = function (type) {
-    return "select HWC_RANGE, count(HWC_RANGE) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '"+type+"' group by HWC_RANGE, HWC_CASE_CATEGORY order by count(HWC_RANGE) desc limit 30;"
+    return "select HWC_RANGE, count(HWC_RANGE) AS INCIDENT, HWC_CASE_CATEGORY from hwc_details where HWC_CASE_CATEGORY = '" + type + "' group by HWC_RANGE, HWC_CASE_CATEGORY order by count(HWC_RANGE) desc limit 30;"
 }
 
 //QUERY for Daily count
@@ -354,15 +390,15 @@ procedure.get_dc_total_cases_byFA = function () {
 }
 
 procedure.get_dc_total_cases_hwc_byFA = function () {
-    return "SELECT DC_FA_UN AS FIELD_ASSISTANT, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases GROUP BY DC_FA_UN;"
+    return "SELECT DC_FA_UN AS FIELD_ASSISTANT, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM cases GROUP BY DC_FA_UN;"
 }
 
 procedure.get_dc_cases_bydate = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES FROM odk.daily_count where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by DC_CASE_DATE DESC;"
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_CASES) AS DC_TOTAL_CASES FROM daily_count where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by DC_CASE_DATE DESC;"
 }
 
 procedure.get_dc_cases_hwc_bydate = function (fromdate, todate) {
-    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM odk.dc_cases where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
+    return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM dc_cases where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
 }
 
 //Publicity Query
@@ -392,6 +428,22 @@ procedure.get_pb_bypark_bydate = function (fromdate, todate) {
 
 procedure.get_pb_bytaluk_bydate = function (fromdate, todate) {
     return "SELECT PB_TALUK AS TALUK, count(PB_TALUK) AS TALUK_FREQ from publicity where PB_V_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY PB_TALUK;"
+}
+
+procedure.get_freq_byvillagevisit = function () {
+    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity group by PB_VILLAGE_1 order by Visits desc limit 30;"
+}
+
+procedure.get_freq_byvillagevisit_bydate = function (fromdate, todate) {
+    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity WHERE pb_v_date between '" + fromdate + "' AND '" + todate + "' group by PB_VILLAGE_1 order by Visits desc limit 30;"
+}
+
+procedure.get_villagevisit_byFA = function () {
+    return "select distinct(PB_USER_NAME) as FA,count(PB_VILLAGE_1) as Visited_to_villages from publicity group by PB_USER_NAME order by Visited_to_villages desc;"
+}
+
+procedure.get_villagevisit_byFA_bydate = function (fromdate, todate) {
+    return "select distinct(PB_USER_NAME) as FA,count(PB_VILLAGE_1) as Visited_to_villages from publicity WHERE PB_V_DATE BETWEEN '" + fromdate + "' AND '" + todate + "' group by PB_USER_NAME order by Visited_to_villages desc;"
 }
 
 exports.func = procedure;

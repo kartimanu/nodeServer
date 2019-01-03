@@ -83,5 +83,61 @@ reports.get_pub_bydate = function (req, res, next) {
         console.log(err);
     });
 }
+reports.get_villagevisit_freq = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_freq_byvillagevisit(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+reports.get_villagevisit_freq_bydate = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_freq_byvillagevisit_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+reports.get_villagevisit_byFA = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_villagevisit_byFA(), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+reports.get_villagevisit_byFA_bydate = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_villagevisit_byFA_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
 
 exports.report = reports;
