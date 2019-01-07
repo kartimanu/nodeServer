@@ -438,38 +438,48 @@ reports.getPark_ByProjectYear = async function (req, res, next) {
     }
 }
 
-reports.getPark_ByYearnMonth = async function (req, res, next) {
+reports.getPark_ByYearnMonth = function (req, res, next) {
+    
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
-        })
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+        //         dbconn.mdb.then(function (con_mdb) {
+        //             con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(), function (error, result, fields) {
+        //                 if (error) {
+        //                     res.send({ success: false, data: JSON.stringify(error) });
+        //                     console.log(error);
+        //                     return;
+        //                 } else if (result) {
+        //                     result_data.push(result);
+        //                     callback();
+        //                 }
+        //             });
+        //         }).catch(err => {
+        //             console.log(err);
+        //         })
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);

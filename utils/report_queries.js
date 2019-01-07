@@ -174,7 +174,7 @@ procedure.getTotalCasesByYEARnMONTH = function () {
 }
 
 procedure.getParkCasesByYEARnMONTH = function (from,to) {
-    return "select year(HWC_CASE_DATE) as Year_s,monthname(HWC_CASE_DATE) as Month_s,count(HWC_CASE_CATEGORY) as No_of_cases,HWC_PARK_NAME from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by Year_s,Month_s,HWC_PARK_NAME order by Year_s,HWC_PARK_NAME, FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
+    return "select year(HWC_CASE_DATE) as Year_s,monthname(HWC_CASE_DATE) as Month_s,count(HWC_CASE_CATEGORY) as No_of_cases,HWC_PARK_NAME from hwc_details group by Year_s,Month_s,HWC_PARK_NAME order by Year_s,HWC_PARK_NAME, FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
 }
 
 procedure.getCategoryByYEAR = function () {
