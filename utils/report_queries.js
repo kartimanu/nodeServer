@@ -174,7 +174,7 @@ procedure.getTotalCasesByYEARnMONTH = function () {
 }
 
 procedure.getParkCasesByYEARnMONTH = function (from,to) {
-    return "select year(HWC_CASE_DATE) as Year_s,monthname(HWC_CASE_DATE) as Month_s,count(HWC_CASE_CATEGORY) as No_of_cases,HWC_PARK_NAME from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by Year_s,Month_s,HWC_PARK_NAME order by HWC_PARK_NAME, FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
+    return "select year(HWC_CASE_DATE) as Year_s,monthname(HWC_CASE_DATE) as Month_s,count(HWC_CASE_CATEGORY) as No_of_cases,HWC_PARK_NAME from hwc_details where HWC_CASE_DATE between '" + from + "' AND '" + to + "' group by Year_s,Month_s,HWC_PARK_NAME order by Year_s,HWC_PARK_NAME, FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
 }
 
 procedure.getCategoryByYEAR = function () {
@@ -390,7 +390,7 @@ procedure.get_dc_total_cases_byFA = function () {
 }
 
 procedure.get_dc_total_cases_hwc_byFA = function () {
-    return "SELECT DC_FA_UN AS FIELD_ASSISTANT, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM cases GROUP BY DC_FA_UN;"
+    return "SELECT DC_FA_UN AS FIELD_ASSISTANT, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM dc_cases GROUP BY DC_FA_UN;"
 }
 
 procedure.get_dc_cases_bydate = function (fromdate, todate) {
@@ -431,11 +431,11 @@ procedure.get_pb_bytaluk_bydate = function (fromdate, todate) {
 }
 
 procedure.get_freq_byvillagevisit = function () {
-    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity group by PB_VILLAGE_1 order by Visits desc limit 30;"
+    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity group by PB_VILLAGE_1 order by Visits desc;"
 }
 
 procedure.get_freq_byvillagevisit_bydate = function (fromdate, todate) {
-    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity WHERE pb_v_date between '" + fromdate + "' AND '" + todate + "' group by PB_VILLAGE_1 order by Visits desc limit 30;"
+    return "select distinct(PB_VILLAGE_1) as Village,count(PB_VILLAGE_1) as Visits from publicity WHERE pb_v_date between '" + fromdate + "' AND '" + todate + "' group by PB_VILLAGE_1 order by Visits desc;"
 }
 
 procedure.get_villagevisit_byFA = function () {
