@@ -446,4 +446,17 @@ procedure.get_villagevisit_byFA_bydate = function (fromdate, todate) {
     return "select distinct(PB_USER_NAME) as FA,count(PB_VILLAGE_1) as Visited_to_villages from publicity WHERE PB_V_DATE BETWEEN '" + fromdate + "' AND '" + todate + "' group by PB_USER_NAME order by Visited_to_villages desc;"
 }
 
+//DB Records Download
+procedure.get_HWCDB_byprojectwise = function (fromdate, todate) {
+    return "select * from hwc_details where DATE_FORMAT(HWC_CASE_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
+}
+
+procedure.get_DCDB_byprojectwise = function (fromdate, todate) {
+    return "select * from daily_count where DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
+}
+
+procedure.get_PUBDB_byprojectwise = function (fromdate, todate) {
+    return "select * from publicity where DATE_FORMAT(PB_V_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
+}
+
 exports.func = procedure;

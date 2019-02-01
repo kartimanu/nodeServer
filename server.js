@@ -152,6 +152,9 @@ app.get("/get_incidents_all", dash_chartfunc.report.get30incidents);
 app.get("/get_wsidincidents_bycat", dash_chartfunc.report.getwsidincidents_bycategory);
 app.get("/get_villageincidents_bycat", dash_chartfunc.report.getvillageincidents_bycategory);
 app.get("/get_rangeincidents_bycat", dash_chartfunc.report.getrangeincidents_bycategory);
+app.post("/get_HWC_DB", dash_chartfunc.report.get_HWCDB_projectwise);
+app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
+app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
 
 //Compensation
 app.get("/gettotalcomp", dash_chart_compfunc.report.get_total_comp);
@@ -188,6 +191,7 @@ app.get("/syncdata", function (req, res) {
 // setInterval(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 60 * 12);
 // setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
 
+// setTimeout(hwcSyncfunc.func.syncimg, 1000);
 function syncData() {
     console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwvdetails, 1000 * 1);

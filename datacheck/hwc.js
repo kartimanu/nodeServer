@@ -9,10 +9,27 @@ const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
 const hwc_livestock_insertQuery = "INSERT IGNORE INTO hwc_case_livestock set ? ";
-const Taluk_Query = "SELECT * FROM wls_taluk";// WHERE OLD_T_NAME = ";
 const hwc_checkexistQuery = "SELECT *, CASE WHEN HWC_WSID = ? THEN 1 WHEN HWC_WSID = ? AND HWC_FULL_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_TALUK_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_VILLAGE_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_OLDPHONE_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_NEWPHONE_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_SURVEY_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_RANGE = ? THEN 1 WHEN HWC_WSID = ? AND HWC_FD_SUB_RANGE = ? THEN 1 ELSE 0 END AS \'PRESENT\' FROM (SELECT * FROM hwc_details WHERE HWC_WSID = ? || HWC_WSID = ? AND HWC_FULL_NAME = ? || HWC_WSID = ? AND HWC_TALUK_NAME = ? || HWC_WSID = ? AND HWC_VILLAGE_NAME = ? || HWC_WSID = ? AND HWC_OLDPHONE_NUMBER = ? || HWC_WSID = ? AND HWC_NEWPHONE_NUMBER = ? || HWC_WSID = ? AND HWC_SURVEY_NUMBER = ? || HWC_WSID = ? AND HWC_RANGE = ? || HWC_WSID = ? AND HWC_FD_SUB_RANGE = ?) AS RESULTSET";
 const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
 const hwc = {};
+var img1, img2, img3, img4, img5, img6, img7, vid1, res_photo, res_sign, ackImg, fdimg1, fdimg2, fdimg3;
+const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image2query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE2_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image3query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE3_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image4query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE4_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image5query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE5_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image6query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE6_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image7query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE7_BLB where _TOP_LEVEL_AURI = ";
+const hwc_video1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCVIDEO_BLB where _TOP_LEVEL_AURI = ";
+const hwc_resPhotoquery = "SELECT VALUE FROM HWC_Y4_M6_EXITINFO_RESPPHOTO_BLB where _TOP_LEVEL_AURI = ";
+const hwc_resSignquery = "SELECT VALUE FROM HWC_Y4_M6_EXITINFO_RESPSIGN_BLB where _TOP_LEVEL_AURI = ";
+const hwc_ackimagequery = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_ACK_IMAGE_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img1query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE1_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img2query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE2_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img3query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE3_BLB where _TOP_LEVEL_AURI = ";
+
+const hwc_media_insertQuery = "INSERT IGNORE INTO hwc_case_image set ? ";
+const hwc_media_fdinsertQuery = "INSERT IGNORE INTO hwc_fd_image set ? ";
 
 hwc.syncallhwvdetails = function (req, res) {
     console.log("Syncing HWC . . . . ");
@@ -110,7 +127,7 @@ function checkhwcusercase(res) {
                                 insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
                         }
                     }
-                    else{
+                    else {
                         inserthwcusercase(ucdata);
                     }
                 }
@@ -358,6 +375,246 @@ function setHWCdata(hwcformdata) {
     return inserthwcdataset;
 }
 
+function insert_imageset(hwc_data) {
+    dbconn.rdb.then(function (con_rdb) {
+        con_rdb.query(hwc_image1query + "'" + hwc_data.META_INSTANCE_ID + "'", function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                return;
+            } else {
+                var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                img1 = !img_buf ? null : new Buffer(img_buf.data, 'binary');//.toString('base64');
+                console.log("1");
+            }
+        });
+        con_rdb.query(hwc_image2query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img2 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("2");
+                }
+            }
+        });
+        con_rdb.query(hwc_image3query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img3 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("3");
+                }
+            }
+        });
+        con_rdb.query(hwc_image4query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img4 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("4");
+                }
+            }
+        });
+        con_rdb.query(hwc_image5query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img5 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("5");
+                }
+            }
+        });
+        con_rdb.query(hwc_image6query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img6 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("6");
+                }
+            }
+        });
+        con_rdb.query(hwc_image7query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    img7 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("7");
+                }
+            }
+        });
+        con_rdb.query(hwc_video1query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    vid1 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                    console.log("video")
+                }
+            }
+        });
+        con_rdb.query(hwc_resPhotoquery + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    res_photo = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+            }
+        });
+        con_rdb.query(hwc_resSignquery + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    res_sign = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+            }
+        });
+        con_rdb.query(hwc_ackimagequery + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    ackImg = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+                insert_imgSet(hwc_data, img1, img2, img3, img4, img5, img6, img7, vid1, res_photo, res_sign, ackImg);
+            }
+        });
+        con_rdb.query(hwc_fdsub_img1query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    fdimg1 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+            }
+        });
+        con_rdb.query(hwc_fdsub_img2query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    fdimg2 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+            }
+        });
+        con_rdb.query(hwc_fdsub_img3query + "'" + hwc_data.META_INSTANCE_ID + "'", function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.length > 0) {
+                    var img_buf = JSON.parse(JSON.stringify(result[0].VALUE));
+                    fdimg3 = !img_buf ? null : new Buffer(img_buf.data, 'binary');
+                }
+                insert_fdimgSet(hwc_data, fdimg1, fdimg2, fdimg3);
+            }
+        });
+    }).catch(err => {
+        console.log("Error Occured :" + err);
+    });
+}
+
+function insert_imgSet(hwc_data, img_1, img_2, img_3, img_4, img_5, img_6, img_7, vid_1, resPhoto, resSign, ackImage) {
+    var MIN_ID = hwc_data.META_INSTANCE_ID.split(":");
+    const inserthwc_image_dataset = {
+        HWC_META_ID: MIN_ID[1],
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwc_data.HWCINFO_INCIDENTINFO_HWCDATE),
+        HWC_WSID: hwc_data.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        HWC_CASE_IMAGE1: img_1,
+        HWC_CASE_IMAGE2: img_2,
+        HWC_CASE_IMAGE3: img_3,
+        HWC_CASE_IMAGE4: img_4,
+        HWC_CASE_IMAGE5: img_5,
+        HWC_CASE_IMAGE6: img_6,
+        HWC_CASE_IMAGE7: img_7,
+        HWC_CASE_VIDEO: vid_1,
+        HWC_CASE_RESP_PHOTO: resPhoto,
+        HWC_CASE_RESP_SIGN: resSign,
+        HWC_CASE_ACK_IMAGE: ackImage
+    }
+
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_media_insertQuery, inserthwc_image_dataset, function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.affectesRows > 0)
+                    console.log("images inserted :" + JSON.stringify(result.affectedRows));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+function insert_fdimgSet(hwc_data, img_1, img_2, img_3) {
+    var MIN_ID = hwc_data.META_INSTANCE_ID.split(":");
+    const inserthwc_image_dataset = {
+        HWC_META_ID: MIN_ID[1],
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwc_data.HWCINFO_INCIDENTINFO_HWCDATE),
+        HWC_WSID: hwc_data.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        HWC_CASE_IMAGE1: img_1,
+        HWC_CASE_IMAGE2: img_2,
+        HWC_CASE_IMAGE3: img_3
+    }
+
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_media_fdinsertQuery, inserthwc_image_dataset, function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                if (result.affectesRows > 0)
+                    console.log("fdimages inserted :" + JSON.stringify(result.affectedRows));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+hwc.syncimg = function (req, res) {
+    console.log("Syncing Image . . . . ");
+    const dataset = {
+        META_INSTANCE_ID: "uuid:d6ea1b05-ceef-4e79-97df-612dbc3584dd",
+        HWCINFO_INCIDENTINFO_HWCDATE: util.methods.GetFormattedDate("2019-01-09 09:30:09.337000"),
+        EXITINFO2_CONCAT_WSID: "AAF_335"
+    }
+    insert_imageset(dataset);
+
+}
 
 
 exports.func = hwc;
