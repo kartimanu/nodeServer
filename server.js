@@ -123,6 +123,8 @@ app.get("/getBpNh_projectyr", dash_chart_homefunc.report.getParkTotal_ByProjectY
 app.get("/getBpNh_cat_projectyr", dash_chart_homefunc.report.getParknCategory_ByProjectYear);
 app.get("/getBp_Nh_cat_projectyr", dash_chart_homefunc.report.getPark_ByProjectYear);
 app.get("/getpark_yearmonth", dash_chart_homefunc.report.getPark_ByYearnMonth);
+app.post("/getdcvshwc", dash_chart_homefunc.report.getdcvshwc);
+app.post("/getdcvshwc_category", dash_chart_homefunc.report.getdcvshwcCategory);
 //--- END ---
 
 app.get("/getPark_Previousday", dash_chart_homefunc.report.getPreviousBpNhCount);
@@ -175,6 +177,8 @@ app.post("/getpublicity_village_freq_bydate", dash_chart_pubfunc.report.get_vill
 app.post("/getpublicity_village_FA_bydate", dash_chart_pubfunc.report.get_villagevisit_byFA_bydate);
 //-- end --
 app.post("/getpublicity_bydate", dash_chart_pubfunc.report.get_pub_bydate);
+app.post("/getpublicity_mapincidents_bydate", dash_chart_pubfunc.report.get_mapincidents_byrange);
+app.get("/getpublicity_mapincidents", dash_chart_pubfunc.report.get_mapincidents);
 
 //Data Sync
 app.get("/syncdata", function (req, res) {

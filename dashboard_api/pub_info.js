@@ -140,4 +140,34 @@ reports.get_villagevisit_byFA_bydate = function (req, res, next) {
     });
 }
 
+reports.get_mapincidents_byrange = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_pub_mapincidents_bydaterange(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_mapincidents = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_pub_mapincidents(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 exports.report = reports;

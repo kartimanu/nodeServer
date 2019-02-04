@@ -438,6 +438,30 @@ reports.getPark_ByProjectYear = async function (req, res, next) {
     }
 }
 
+reports.getdcvshwc = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_dcvshwc_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                res.send({ success: true, data: data });
+            }
+        });
+    });
+}
+
+reports.getdcvshwcCategory = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_dcvshwc_cat_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                res.send({ success: false, data: error });
+            } else {
+                res.send({ success: true, data: data });
+            }
+        });
+    });
+}
+
 reports.getPark_ByYearnMonth = function (req, res, next) {
     
     try {

@@ -401,6 +401,14 @@ procedure.get_dc_cases_hwc_bydate = function (fromdate, todate) {
     return "SELECT DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE, SUM(DC_TOTAL_ATTENDED_CASE) AS TOTAL, SUM(DC_CROP) AS CROP, SUM(DC_PROPERTY) AS PROPERTY, SUM(DC_CROP_PROPERTY) AS CROP_PROPERTY, SUM(DC_LIVESTOCK) AS LIVESTOCK, SUM(DC_HUMAN_INJURY) AS HUMAN_INJURY, SUM(DC_HUMAN_DEATH) AS HUMAN_DEATH FROM dc_cases where DC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' group by DC_CASE_DATE order by count(DC_CASE_DATE) DESC;"
 }
 
+procedure.get_dcvshwc_bydate = function (fromdate, todate) {
+    return "select sum(dc_total_cases) as Cases from daily_count where dc_case_date between '" + fromdate + "' AND '" + todate + "' union select count(hwc_case_category) from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "';"
+}
+
+procedure.get_dcvshwc_cat_bydate = function (fromdate, todate) {
+    return "select sum(dc_crop) as CR, sum(dc_crop_property) as CRPD, sum(dc_property) as PD, sum(dc_livestock) as LP, sum(dc_human_injury) as HI, sum(dc_human_death) as HD from dc_cases where dc_case_date between '" + fromdate + "' AND '" + todate + "' union select count(if(hwc_case_category='CR', 1, NULL)) 'CR', count(if(hwc_case_category='CRPD', 1, NULL)) 'CRPD', count(if(hwc_case_category='PD',1,NULL)) 'PD', count(if(hwc_case_category='LP',1,NULL)) 'LP', count(if(hwc_case_category='HI',1,NULL)) 'HI', count(if(hwc_case_category='HD',1,NULL)) 'HD' from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "';"
+}
+
 //Publicity Query
 procedure.get_pb_total = function () {
     return "SELECT count(PB_C_VILLAGE) AS TOTAL_VILLAGE from publicity;"
@@ -457,6 +465,14 @@ procedure.get_DCDB_byprojectwise = function (fromdate, todate) {
 
 procedure.get_PUBDB_byprojectwise = function (fromdate, todate) {
     return "select * from publicity where DATE_FORMAT(PB_V_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
+}
+
+procedure.get_pub_mapincidents_bydaterange = function (fromdate, todate) {
+    return "select concat(ucase(left(PB_C_VILLAGE,1)),substring(PB_C_VILLAGE,2)) as Village, concat(ucase(left(PB_USER_NAME,1)),substring(PB_USER_NAME,2)) as USER_NAME, concat(ucase(left(PB_PARK,1)),substring(PB_PARK,2)) as PARK, concat(ucase(left(PB_TALUK,1)),substring(PB_TALUK,2)) as TALUK, PB_V_DATE,PB_LAT,PB_LONG,PB_ALT,PB_ACC from publicity WHERE PB_V_DATE between '"+fromdate+"' AND '"+todate+"' order by village;";
+}
+
+procedure.get_pub_mapincidents = function () {
+    return "select concat(ucase(left(PB_C_VILLAGE,1)),substring(PB_C_VILLAGE,2)) as Village, concat(ucase(left(PB_USER_NAME,1)),substring(PB_USER_NAME,2)) as USER_NAME, concat(ucase(left(PB_PARK,1)),substring(PB_PARK,2)) as PARK, concat(ucase(left(PB_TALUK,1)),substring(PB_TALUK,2)) as TALUK, PB_V_DATE,PB_LAT,PB_LONG,PB_ALT,PB_ACC from publicity order by pb_v_date;";
 }
 
 exports.func = procedure;
