@@ -375,7 +375,7 @@ function setHWCdata(hwcformdata) {
     return inserthwcdataset;
 }
 
-function insert_imageset(hwc_data) {
+async function insert_imageset(hwc_data) {
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(hwc_image1query + "'" + hwc_data.META_INSTANCE_ID + "'", function (err, result, fields) {
             if (err) {

@@ -475,4 +475,36 @@ procedure.get_pub_mapincidents = function () {
     return "select concat(ucase(left(PB_C_VILLAGE,1)),substring(PB_C_VILLAGE,2)) as Village, concat(ucase(left(PB_USER_NAME,1)),substring(PB_USER_NAME,2)) as USER_NAME, concat(ucase(left(PB_PARK,1)),substring(PB_PARK,2)) as PARK, concat(ucase(left(PB_TALUK,1)),substring(PB_TALUK,2)) as TALUK, PB_V_DATE,PB_LAT,PB_LONG,PB_ALT,PB_ACC from publicity order by pb_v_date;";
 }
 
+procedure.get_hwc_mapincidents_bycategory = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' order by hwc_case_category,hwc_case_date;";
+}
+
+procedure.get_hwc_mapincidents_byanimal = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, concat(ucase(left(HWC_ANIMAL,1)),substring(HWC_ANIMAL,2)) as HWC_ANIMAL, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' order by hwc_animal,hwc_case_date;";
+}
+
+procedure.get_hwc_mapincidents_byCR = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='CR' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byCRPD = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='CRPD' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byPD = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='PD' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byLP = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='LP' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byHI = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='HI' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byHD = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='HD' order by hwc_case_category,hwc_case_date;"
+}
+
 exports.func = procedure;

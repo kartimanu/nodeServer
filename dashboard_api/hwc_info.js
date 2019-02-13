@@ -509,4 +509,124 @@ reports.get_PUBDB_projectwise = function (req, res, next) {
     });
 }
 
+reports.get_HWC_mapbycategory = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_bycategory(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyanimal = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byanimal(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyCR = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byCR(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyCRPD = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byCRPD(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyPD = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byPD(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyLP = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byLP(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyHI = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byHI(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyHD = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byHD(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 exports.report = reports;

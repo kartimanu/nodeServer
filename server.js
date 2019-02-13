@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.13) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.14) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -156,7 +156,16 @@ app.get("/get_villageincidents_bycat", dash_chartfunc.report.getvillageincidents
 app.get("/get_rangeincidents_bycat", dash_chartfunc.report.getrangeincidents_bycategory);
 app.post("/get_HWC_DB", dash_chartfunc.report.get_HWCDB_projectwise);
 app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
-app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
+
+//New MAP APi's
+app.post("/get_MAP_byanimal", dash_chartfunc.report.get_HWC_mapbyanimal);
+app.post("/get_MAP_bycategory", dash_chartfunc.report.get_HWC_mapbycategory);
+app.post("/get_MAP_bycat_CR", dash_chartfunc.report.get_HWC_mapbyCR);
+app.post("/get_MAP_bycat_CRPD", dash_chartfunc.report.get_HWC_mapbyCRPD);
+app.post("/get_MAP_bycat_PD", dash_chartfunc.report.get_HWC_mapbyPD);
+app.post("/get_MAP_bycat_LP", dash_chartfunc.report.get_HWC_mapbyLP);
+app.post("/get_MAP_bycat_HI", dash_chartfunc.report.get_HWC_mapbyHI);
+app.post("/get_MAP_bycat_HD", dash_chartfunc.report.get_HWC_mapbyHD);
 
 //Compensation
 app.get("/gettotalcomp", dash_chart_compfunc.report.get_total_comp);
