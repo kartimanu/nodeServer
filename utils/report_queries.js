@@ -321,35 +321,63 @@ procedure.get_top30_villages = function () {
 }
 
 procedure.get_total_comp = function () {
-    return "SELECT SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details;";
+    return "select count(COM_HWC_CATAGORY) as Total_Com_Frequency,round(sum(com_amount),2) as Total_Com_Amt, round(avg(com_amount),2) as Average_Com_Amt, round(max(com_amount),2) as Max_Com_Amt, round(min(com_amount),2) as Min_Com_Amt from com_cases_details;";
 }
 
-procedure.get_total_comp = function () {
-    return "SELECT SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details;";
+procedure.get_total_comp_bycategory = function () {
+    return "select UCASE(COM_HWC_CATAGORY) as HWC_Category,count(COM_HWC_CATAGORY) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details group by field(com_hwc_catagory,'CR','CRPD','PD','LP','HI','HD');";
 }
 
 procedure.get_comp_bycategory = function (fromdate, todate) {
-    return "SELECT COM_HWC_CATAGORY as CATAGORY, count(COM_HWC_CATAGORY) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_HWC_CATAGORY;";
+    return "select UCASE(COM_HWC_CATAGORY) as HWC_Category,count(COM_HWC_CATAGORY) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by field(com_hwc_catagory,'CR','CRPD','PD','LP','HI','HD');";
 }
 
 procedure.get_comp_byvillage = function (fromdate, todate) {
-    return "SELECT COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_VILLAGE;";
+    return "select CONCAT(UCASE(LEFT(COM_VILLAGE,1)),SUBSTRING(COM_VILLAGE,2)) as VILLAGE, count(COM_VILLAGE) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by COM_VILLAGE;";
 }
 
 procedure.get_comp_bytaluk = function (fromdate, todate) {
-    return "SELECT COM_TALUK AS TALUK, count(COM_TALUK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_TALUK;";
+    return "select CONCAT(UCASE(LEFT(COM_TALUK,1)),SUBSTRING(COM_TALUK,2)) as TALUK, count(COM_TALUK) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by COM_TALUK;";
 }
 
 procedure.get_comp_bypark = function (fromdate, todate) {
-    return "SELECT COM_PARK AS PARK, count(COM_PARK) AS FREQ, SUM(COM_AMOUNT) AS TOTAL, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN FROM com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY COM_PARK;";
+    return "select CONCAT(UCASE(LEFT(COM_PARK,1)),SUBSTRING(COM_PARK,2)) as PARK, count(COM_PARK) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by COM_PARK;";
+}
+
+procedure.get_comp_byFArange = function (fromdate, todate) {
+    return "select CONCAT(UCASE(LEFT(COM_OM_RANGE,1)),SUBSTRING(COM_OM_RANGE,2)) as COM_RANGE, count(COM_OM_RANGE) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from compensation_details, com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by COM_OM_RANGE;";
 }
 
 procedure.get_comp_top30_wsid = function (fromdate, todate) {
-    return "select COM_WSID AS WSID, count(COM_WSID) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' group by COM_WSID order by count(COM_WSID) DESC limit 30;"
+    return "select COM_WSID AS WSID,count(COM_WSID) as WSID_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by COM_WSID order by WSID_Frequency DESC LIMIT 30;"
 }
 
 procedure.get_comp_top20_village = function (fromdate, todate) {
-    return "select COM_VILLAGE AS VILLAGE, count(COM_VILLAGE) AS FREQ, AVG(COM_AMOUNT) AS AVERAGE, MAX(COM_AMOUNT)AS COMP_MAX, MIN(COM_AMOUNT) AS COMP_MIN from com_cases_details where COM_HWC_DATE between '" + fromdate + "' AND '" + todate + "' group by COM_VILLAGE order by count(COM_VILLAGE) DESC limit 20;"
+    return "select CONCAT(UCASE(LEFT(COM_VILLAGE,1)),SUBSTRING(COM_VILLAGE,2)) as VILLAGE, count(COM_VILLAGE) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by COM_VILLAGE order by Comp_Frequency DESC limit 20;"
+}
+
+procedure.get_comp_byomsheet = function (fromdate, todate) {
+    return "select COM_OM_SHEET_NUM as OM_SHEET_NO,COM_WSID as WSID,count(COM_WSID) as Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by COM_OM_SHEET_NUM,COM_WSID order by COM_OM_SHEET_NUM,Frequency desc;";
+}
+
+procedure.get_comp_byomsheetdate = function (fromdate, todate) {
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date,count(COM_AMOUNT) as Freq_Comp, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;"
+}
+
+procedure.get_comp_amount_byomsheetdate = function (fromdate, todate) {
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;";
+}
+
+procedure.get_comp_amount_byomsheetdate_bycategory = function (fromdate, todate) {
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, ucase(COM_HWC_CATAGORY) as HWC_Category, count(COM_HWC_CATAGORY) as Freq_HWC_Category, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded,com_hwc_catagory order by com_om_sheet_uploaded,COM_HWC_CATAGORY;";
+}
+
+procedure.get_com_omsheet = function () {
+    return "select count(com_om_sheet_num) as No_of_sheet from compensation_details;"
+}
+
+procedure.get_com_omsheet_bydate = function (fromdate,todate) {
+    return "select count(com_om_sheet_num) as No_of_sheets from compensation_details where COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "';"
 }
 
 procedure.get_30incident_WSID = function () {

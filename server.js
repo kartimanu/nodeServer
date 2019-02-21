@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.14) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.15) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -169,8 +169,15 @@ app.post("/get_MAP_bycat_HD", dash_chartfunc.report.get_HWC_mapbyHD);
 
 //Compensation
 app.get("/gettotalcomp", dash_chart_compfunc.report.get_total_comp);
+app.get("/gettotalcomp_bycategory", dash_chart_compfunc.report.get_total_comp_bycategory);
+app.get("/getcomp_omsheet", dash_chart_compfunc.report.getcomp_omsheet);
+app.post("/getcomp_omsheet_bydate", dash_chart_compfunc.report.getcomp_omsheetbydate);
 app.post("/getcomp_filter", dash_chart_compfunc.report.get_comp_block12_bydate);
 app.post("/get_top_comp", dash_chart_compfunc.report.get_comp_topwsid_topvillage);
+app.post("/getcomp_amt_omsheetdate", dash_chart_compfunc.report.getcompamount_byomsheetdate);
+app.post("/getcomp_amt_omsheetdate_bycategory", dash_chart_compfunc.report.getcompamount_omsheetdate_bycategory);
+app.post("/getcomp_byomsheet", dash_chart_compfunc.report.getcomp_byomsheet);
+app.post("/getcomp_byomsheetdate", dash_chart_compfunc.report.getcomp_byomsheetdate);
 
 //Daily Count
 app.get("/gettotaldc", dash_chart_dcfunc.report.get_total_dc);
