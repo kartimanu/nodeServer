@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.15) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.16) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -125,6 +125,18 @@ app.get("/getBp_Nh_cat_projectyr", dash_chart_homefunc.report.getPark_ByProjectY
 app.get("/getpark_yearmonth", dash_chart_homefunc.report.getPark_ByYearnMonth);
 app.post("/getdcvshwc", dash_chart_homefunc.report.getdcvshwc);
 app.post("/getdcvshwc_category", dash_chart_homefunc.report.getdcvshwcCategory);
+app.get("/getOverallCompensation", dash_chart_homefunc.report.OverallCompensation);
+app.post("/getCompensation_ByDate", dash_chart_homefunc.report.getCompensationByDate);
+app.post("/getCompensation_ByCategory", dash_chart_homefunc.report.getCompensationByCategory);
+app.post("/getCompensation_ProcessedDays", dash_chart_homefunc.report.getTimeTakenForCompensation);
+app.post("/getCompensation_TotalProcessedDays", dash_chart_homefunc.report.getTotalTimeTakenForCompensation);
+app.post("/getCompensation_TotalProcessedDays_ByCategory", dash_chart_homefunc.report.getTotalTimeTakenForCompensationByCategory);
+app.get("/getCompensation_ByProjectYear", dash_chart_homefunc.report.getCompensation_ByProjectYear);
+app.get("/getCompensation_ByCategory_ProjectYear", dash_chart_homefunc.report.getCompensation_ByCategory_ByProjectYear);
+app.get("/getCompensation_ByProjectYear_ByCategoryInSheet", dash_chart_homefunc.report.getCompensation_ByCategorySheet_ByProjectYear);
+app.get("/getCompensation_ByProjectYear_BYCategory", dash_chart_homefunc.report.getCompensation_ByCategoryAll_ByProjectYear);
+app.get("/getCompensation_ByProjectYear_BYSheet", dash_chart_homefunc.report.getCompensationBySheet_ByProjectYear);
+
 //--- END ---
 
 app.get("/getPark_Previousday", dash_chart_homefunc.report.getPreviousBpNhCount);

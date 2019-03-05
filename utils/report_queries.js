@@ -219,6 +219,52 @@ procedure.getrange_monthyear = function () {
     return "select year(HWC_CASE_DATE) as YEAR, monthname(HWC_CASE_DATE) as MONTH, count(HWC_RANGE) as NO_OF_CASES, HWC_RANGE from hwc_details WHERE (year(HWC_CASE_DATE) between '2015' and YEAR(CURDATE())) group by month(HWC_CASE_DATE), year(HWC_CASE_DATE), HWC_RANGE order by year(HWC_CASE_DATE), month(HWC_CASE_DATE), HWC_RANGE;";
 }
 
+//Compensation chart API's
+
+procedure.getcompensation_sincestart = function () {
+    return "select count(COM_HWC_CATAGORY) as Total_Com_Frequency,round(sum(com_amount),2) as Total_Com_Amt, round(avg(com_amount),2) as Average_Com_Amt, round(max(com_amount),2) as Max_Com_Amt, round(min(com_amount),2) as Min_Com_Amt from com_cases_details;";
+}
+
+procedure.getcompensation_bydate = function (fromdate,todate) {
+    return "select count(COM_HWC_CATAGORY) as Total_Com_Frequency,round(sum(com_amount),2) as Total_Com_Amt, round(avg(com_amount),2) as Average_Com_Amt, round(max(com_amount),2) as Max_Com_Amt, round(min(com_amount),2) as Min_Com_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "';";
+}
+
+procedure.getcompensation_byCategory = function (fromdate,todate) {
+    return "select UCASE(COM_HWC_CATAGORY) as HWC_Category,count(COM_HWC_CATAGORY) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by com_hwc_catagory order by field(COM_HWC_CATAGORY, 'CR','CRPD','PD','LP','HI','HD');";
+}
+
+procedure.getTotalcompensation_byprojectyear = function (fromdate,todate) {
+    return "select count(COM_HWC_CATAGORY) as Total_Com_Frequency,round(sum(com_amount),2) as Total_Com_Amt, round(avg(com_amount),2) as Average_Com_Amt, round(max(com_amount),2) as Max_Com_Amt, round(min(com_amount),2) as Min_Com_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "';";
+}
+
+procedure.getcompensationbycategory_byprojectyear = function (fromdate,todate) {
+    return "select UCASE(COM_HWC_CATAGORY) as HWC_Category,count(COM_HWC_CATAGORY) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' group by com_hwc_catagory order by field(COM_HWC_CATAGORY, 'CR','CRPD','PD','LP','HI','HD');";
+}
+
+procedure.getCompensationProcessedDays = function (fromdate,todate) {
+    return "select x.com_om_sheet_num as OM_SHEET,x.COM_OM_SHEET_UPLOADED as UPLOADED_DATE, y.com_hwc_date as HWC_DATE, (timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id order by x.com_om_sheet_num;";
+}
+
+procedure.getCompensationTotalProcessedDays = function (fromdate,todate) {
+    return "select x.com_om_sheet_num as OM_SHEET, count(x.com_om_sheet_NUM) as NO_OF_SHEET, SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS, round(SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED))/count(x.com_om_sheet_NUM),2) AS COMPENSATION_AVERAGE from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id group by x.com_om_sheet_num order by x.com_om_sheet_num;";
+}
+
+procedure.getCompensationProcessedDays_bycategory = function (fromdate,todate) {
+    return "select ucase(y.com_hwc_catagory) as HWC_CATEGORY,x.com_om_sheet_num as OM_SHEET, count(x.com_om_sheet_NUM) as NO_OF_SHEET, SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS, round(SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED))/count(x.com_om_sheet_NUM),2) AS COMPENSATION_AVERAGE from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id group by x.com_om_sheet_num,y.com_hwc_catagory order by field(y.COM_HWC_CATAGORY, 'CR','CRPD','PD','LP','HI','HD'),x.com_om_sheet_num;";
+}
+
+procedure.getCompProcessedDays_byProjectYear = function (fromdate,todate) {
+    return "select x.com_om_sheet_num as OM_SHEET, count(x.com_om_sheet_NUM) as NO_OF_SHEET, SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS, round(SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED))/count(x.com_om_sheet_NUM),2) AS COMPENSATION_AVERAGE from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id group by x.com_om_sheet_num order by x.com_om_sheet_num;";
+}
+
+procedure.getCompProcessedDaysCategoryBysheet_byProjectYear = function (fromdate,todate) {
+    return "select ucase(y.COM_HWC_CATAGORY) as HWC_CATEGORY,x.com_om_sheet_num as OM_SHEET, count(x.com_om_sheet_NUM) as NO_OF_SHEET, SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS, round(SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED))/count(x.com_om_sheet_NUM),2) AS COMPENSATION_AVERAGE from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id group by x.com_om_sheet_num,y.COM_HWC_CATAGORY order by field(y.COM_HWC_CATAGORY, 'CR','CRPD','PD','LP','HI','HD'),x.com_om_sheet_num;";
+}
+
+procedure.getCompProcessedDaysCategoryAll_byProjectYear = function (fromdate,todate) {
+    return "select ucase(y.COM_HWC_CATAGORY) as HWC_CATEGORY, count(x.com_om_sheet_NUM) as NO_OF_SHEET, SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED)) as COMPENSATION_DAYS, round(SUM(timestampdiff(day,y.COM_HWC_DATE,x.COM_OM_SHEET_UPLOADED))/count(x.com_om_sheet_NUM),2) AS COMPENSATION_AVERAGE from compensation_details x, com_cases_details y where x.COM_OM_SHEET_UPLOADED between '" + fromdate + "' AND '" + todate + "' and x.com_metainstance_id=y.com_parent_id group by y.COM_HWC_CATAGORY order by field(y.COM_HWC_CATAGORY, 'CR','CRPD','PD','LP','HI','HD'); ";
+}
+
 //HWC chart API's
 
 procedure.get_hwc_category = function () {
