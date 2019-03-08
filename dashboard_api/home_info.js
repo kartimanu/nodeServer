@@ -125,14 +125,14 @@ reports.getTopVillages_Bycategory_all = async function (req, res, next) {
 
 reports.getTotalCasesByYear = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.getTotalCasesByYEAR(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getTotalCasesByYEAR(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
                 result_data.push(data);
             }
         });
-        con_mdb.query(procedure.func.getTotalCasesByYEARnMONTH(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getTotalCasesByYEARnMONTH(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
@@ -146,14 +146,14 @@ reports.getTotalCasesByYear = function (req, res, next) {
 
 reports.getCategoryByYear = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.getCategoryByYEAR(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getCategoryByYEAR(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
                 result_data.push(data);
             }
         });
-        con_mdb.query(procedure.func.getCategoryByYEARnMONTH(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getCategoryByYEARnMONTH(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
@@ -167,14 +167,14 @@ reports.getCategoryByYear = function (req, res, next) {
 
 reports.getRange_all = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.getrange_year(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getrange_year(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
                 result_data.push(data);
             }
         });
-        con_mdb.query(procedure.func.getrange_monthyear(), function (error, data, fields) {
+        con_mdb.query(procedure.func.getrange_monthyear(req.body.year), function (error, data, fields) {
             if (error) {
                 res.send({ success: false, data: error });
             } else {
@@ -402,36 +402,37 @@ reports.getParknCategory_ByProjectYear = async function (req, res, next) {
 
 reports.getPark_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getBP_NH_byprojectYR(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getBP_NH_byprojectYR(req.body.fromdate+"-07-01", req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);
@@ -466,7 +467,7 @@ reports.getPark_ByYearnMonth = function (req, res, next) {
     
     try {
         dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(), function (error, data, fields) {
+            con_mdb.query(procedure.func.getParkCasesByYEARnMONTH(req.body.year), function (error, data, fields) {
                 if (error) {
                     res.send({ success: false, data: error });
                 } else {
@@ -554,36 +555,36 @@ reports.getTotalTimeTakenForCompensationByCategory = function (req, res, next) {
 
 reports.getCompensationBySheet_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getTotalcompensation_byprojectyear(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getTotalcompensation_byprojectyear(req.body.fromdate+"-07-01",req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);
@@ -592,36 +593,36 @@ reports.getCompensationBySheet_ByProjectYear = async function (req, res, next) {
 
 reports.getCompensation_ByCategory_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getcompensationbycategory_byprojectyear(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getcompensationbycategory_byprojectyear(req.body.fromdate+"-07-01",req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);
@@ -630,36 +631,36 @@ reports.getCompensation_ByCategory_ByProjectYear = async function (req, res, nex
 
 reports.getCompensation_ByCategorySheet_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getCompProcessedDaysCategoryBysheet_byProjectYear(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getCompProcessedDaysCategoryBysheet_byProjectYear(req.body.fromdate+"-07-01",req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);
@@ -668,36 +669,36 @@ reports.getCompensation_ByCategorySheet_ByProjectYear = async function (req, res
 
 reports.getCompensation_ByCategoryAll_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getCompProcessedDaysCategoryAll_byProjectYear(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getCompProcessedDaysCategoryAll_byProjectYear(req.body.fromdate+"-07-01",req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);
@@ -706,36 +707,37 @@ reports.getCompensation_ByCategoryAll_ByProjectYear = async function (req, res, 
 
 reports.getCompensation_ByProjectYear = async function (req, res, next) {
     try {
-        var start_yr = 2015;
-        var end_yr = (new Date()).getFullYear();
-        var year_diff = end_yr - start_yr;
-        var year_range = [];
-        var result_data = [];
-        for (var i = 0; i < year_diff; i++) {
-            year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
-        }
-        async.each(year_range, function (yr_data, callback) {
-            if (yr_data) {
-                dbconn.mdb.then(function (con_mdb) {
-                    con_mdb.query(procedure.func.getCompProcessedDays_byProjectYear(yr_data.from, yr_data.to), function (error, result, fields) {
-                        if (error) {
-                            res.send({ success: false, data: JSON.stringify(error) });
-                            console.log(error);
-                            return;
-                        } else if (result) {
-                            result_data.push(result);
-                            callback();
-                        }
-                    });
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-        }, function (err) {
-            if (err)
-                console.log(err);
-            res.send({ success: true, data: JSON.stringify(result_data) });
+        // var start_yr = 2015;
+        // var end_yr = (new Date()).getFullYear();
+        // var year_diff = end_yr - start_yr;
+        // var year_range = [];
+        // var result_data = [];
+        // for (var i = 0; i < year_diff; i++) {
+        //     year_range[i] = { "from": [start_yr + i] + "-07-01", "to": [start_yr + (i + 1)] + "-06-30" };
+        // }
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getCompProcessedDays_byProjectYear(req.body.fromdate+"-07-01",req.body.todate+"-06-30"), function (error, result, fields) {
+                if (error) {
+                    res.send({ success: false, data: JSON.stringify(error) });
+                    console.log(error);
+                    return;
+                } else if (result) 
+                {
+                    res.send({ success: true, data: JSON.stringify(result) });
+                }
+            });
+        }).catch(err => {
+            console.log(err);
         })
+        // async.each(year_range, function (yr_data, callback) {
+        //     if (yr_data) {
+                
+        //     }
+        // }, function (err) {
+        //     if (err)
+        //         console.log(err);
+        //     res.send({ success: true, data: JSON.stringify(result_data) });
+        // })
     } catch (ex) {
         res.send({ success: false, data: ex });
         console.log(ex);

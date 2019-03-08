@@ -4,7 +4,7 @@ var async = require("async");
 var util = require('../utils/helper');
 
 const fetchquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
-const fetchErrorRecordquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
+const fetchErrorRecordquery = "SELECT * FROM HWC_Y4_M6_CORE C1 JOIN HWC_Y4_M6_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M6_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
@@ -13,7 +13,7 @@ const hwc_checkexistQuery = "SELECT *, CASE WHEN HWC_WSID = ? THEN 1 WHEN HWC_WS
 const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
 const hwc = {};
 var img1, img2, img3, img4, img5, img6, img7, vid1, res_photo, res_sign, ackImg, fdimg1, fdimg2, fdimg3;
-const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ?";
 const hwc_image2query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE2_BLB where _TOP_LEVEL_AURI = ";
 const hwc_image3query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE3_BLB where _TOP_LEVEL_AURI = ";
 const hwc_image4query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE4_BLB where _TOP_LEVEL_AURI = ";
@@ -57,7 +57,7 @@ hwc.setDupRecordDetails = function (req, res) {
                 console.log(error);
                 return;
             }
-            // res.send(JSON.stringify(results[0]));
+            res.send(JSON.stringify(results[0]));
             inserthwcusercase(JSON.parse(JSON.stringify(results[0])));
         });
     }).catch(err => {
@@ -373,6 +373,27 @@ function setHWCdata(hwcformdata) {
     }
 
     return inserthwcdataset;
+}
+
+hwc.getRawImage = function (req, res) {
+    dbconn.rdb.then(function (con_rdb) {
+        con_rdb.query(hwc_image1query, [req.params.metaid], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            }else{        
+                if(results.length>0){        
+                    var img_buf = JSON.parse(JSON.stringify(results[0].VALUE));
+                    img1 = !img_buf ? null : new Buffer(img_buf.data, 'binary').toString('base64');
+                    res.send({ success: true, data: img1 });
+                }else{
+                    res.send({ success: false, data: JSON.stringify("No Image Available") });
+                }
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
 }
 
 async function insert_imageset(hwc_data) {
