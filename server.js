@@ -111,7 +111,6 @@ app.get("/updateErrorRecord/:id", errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id", hwcSyncfunc.func.setDupRecordDetails);
 app.get("/getImage/:metaid", hwcSyncfunc.func.getRawImage);
 
-
 //Home API's
 app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
 app.post("/getBpByCategory", dash_chart_homefunc.report.getBpByCategory);

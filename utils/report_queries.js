@@ -403,19 +403,19 @@ procedure.get_comp_top20_village = function (fromdate, todate) {
 }
 
 procedure.get_comp_byomsheet = function (fromdate, todate) {
-    return "select COM_OM_SHEET_NUM as OM_SHEET_NO,COM_WSID as WSID,count(COM_WSID) as Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by COM_OM_SHEET_NUM,COM_WSID order by COM_OM_SHEET_NUM,Frequency desc;";
+    return "select COM_OM_SHEET_NUM as OM_SHEET_NO,COM_WSID as WSID,count(COM_WSID) as Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_om_sheet_uploaded between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by COM_OM_SHEET_NUM,COM_WSID order by COM_OM_SHEET_NUM,Frequency desc;";
 }
 
 procedure.get_comp_byomsheetdate = function (fromdate, todate) {
-    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date,count(COM_AMOUNT) as Freq_Comp, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;"
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date,count(COM_AMOUNT) as Freq_Comp, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_om_sheet_uploaded between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;"
 }
 
 procedure.get_comp_amount_byomsheetdate = function (fromdate, todate) {
-    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;";
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_om_sheet_uploaded between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded order by com_om_sheet_uploaded;";
 }
 
 procedure.get_comp_amount_byomsheetdate_bycategory = function (fromdate, todate) {
-    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, ucase(COM_HWC_CATAGORY) as HWC_Category, count(COM_HWC_CATAGORY) as Freq_HWC_Category, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded,com_hwc_catagory order by com_om_sheet_uploaded,COM_HWC_CATAGORY;";
+    return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, ucase(COM_HWC_CATAGORY) as HWC_Category, count(COM_HWC_CATAGORY) as Freq_HWC_Category, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_om_sheet_uploaded between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded,com_hwc_catagory order by com_om_sheet_uploaded,COM_HWC_CATAGORY;";
 }
 
 procedure.get_com_omsheet = function () {
