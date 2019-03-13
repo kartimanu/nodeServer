@@ -494,6 +494,21 @@ reports.get_DCDB_projectwise = function (req, res, next) {
     });
 }
 
+reports.get_COMPDB_projectwise = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_COMPDB_byprojectwise(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 reports.get_PUBDB_projectwise = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.get_PUBDB_byprojectwise(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {

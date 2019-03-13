@@ -31,7 +31,7 @@ const hwc_fdsub_img3query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE3_
 const hwc_media_insertQuery = "INSERT IGNORE INTO hwc_case_image set ? ";
 const hwc_media_fdinsertQuery = "INSERT IGNORE INTO hwc_fd_image set ? ";
 
-hwc.syncallhwvdetails = function (req, res) {
+hwc.syncallhwcdetails = function (req, res) {
     console.log("Syncing HWC . . . . ");
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(fetchquery, function (error, results, fields) {

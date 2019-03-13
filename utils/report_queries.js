@@ -541,6 +541,10 @@ procedure.get_PUBDB_byprojectwise = function (fromdate, todate) {
     return "select * from publicity where DATE_FORMAT(PB_V_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
 }
 
+procedure.get_COMPDB_byprojectwise = function (fromdate, todate) {
+    return "select * from compensation_details where DATE_FORMAT(COM_METASUBMISSION_DATE, '%Y-%m-%d') between '"+fromdate+"' AND '"+todate+"';";
+}
+
 procedure.get_pub_mapincidents_bydaterange = function (fromdate, todate) {
     return "select concat(ucase(left(PB_C_VILLAGE,1)),substring(PB_C_VILLAGE,2)) as Village, concat(ucase(left(PB_USER_NAME,1)),substring(PB_USER_NAME,2)) as USER_NAME, concat(ucase(left(PB_PARK,1)),substring(PB_PARK,2)) as PARK, concat(ucase(left(PB_TALUK,1)),substring(PB_TALUK,2)) as TALUK, PB_V_DATE,PB_LAT,PB_LONG,PB_ALT,PB_ACC from publicity WHERE PB_V_DATE between '"+fromdate+"' AND '"+todate+"' order by village;";
 }

@@ -171,6 +171,7 @@ app.get("/get_rangeincidents_bycat", dash_chartfunc.report.getrangeincidents_byc
 app.post("/get_HWC_DB", dash_chartfunc.report.get_HWCDB_projectwise);
 app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
 app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
+app.post("/get_COMP_DB", dash_chartfunc.report.get_COMPDB_projectwise);
 
 //New MAP APi's
 app.post("/get_MAP_byanimal", dash_chartfunc.report.get_HWC_mapbyanimal);
@@ -229,7 +230,7 @@ app.get("/syncdata", function (req, res) {
 // setTimeout(hwcSyncfunc.func.syncimg, 1000);
 function syncData() {
     console.log("Syncing.....");
-    setTimeout(hwcSyncfunc.func.syncallhwvdetails, 1000 * 1);
+    setTimeout(hwcSyncfunc.func.syncallhwcdetails, 1000 * 1);
     setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30);
     setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
     setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 90);
