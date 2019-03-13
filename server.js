@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.18) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.19) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -170,6 +170,7 @@ app.get("/get_villageincidents_bycat", dash_chartfunc.report.getvillageincidents
 app.get("/get_rangeincidents_bycat", dash_chartfunc.report.getrangeincidents_bycategory);
 app.post("/get_HWC_DB", dash_chartfunc.report.get_HWCDB_projectwise);
 app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
+app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
 
 //New MAP APi's
 app.post("/get_MAP_byanimal", dash_chartfunc.report.get_HWC_mapbyanimal);

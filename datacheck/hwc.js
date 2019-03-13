@@ -3,7 +3,7 @@ var dbconn = require('../config/sshdbconn');
 var async = require("async");
 var util = require('../utils/helper');
 
-const fetchquery = "SELECT * FROM HWC_Y3_M10_CORE C1 JOIN HWC_Y3_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y3_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
+const fetchquery = "SELECT * FROM HWC_Y4_M6_CORE C1 JOIN HWC_Y4_M6_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M6_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
 const fetchErrorRecordquery = "SELECT * FROM HWC_Y4_M6_CORE C1 JOIN HWC_Y4_M6_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M6_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
