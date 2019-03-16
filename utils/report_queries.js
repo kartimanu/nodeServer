@@ -185,6 +185,14 @@ procedure.getCategoryByYEARnMONTH = function (year) {
     return "select HWC_CASE_CATEGORY, monthname(HWC_CASE_DATE) as MONTH, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) = '"+year+"') group by month(HWC_CASE_DATE),  field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD');";
 }
 
+procedure.getTimeTaken_indays = function (fromdate, todate) {
+    return "SELECT MONTHNAME(hwc_case_date) AS Month_s, hwc_wsid as WSID, concat(ucase(left(hwc_park_name,1)),substring(hwc_park_name,2)) as Park, concat(ucase(left(HWC_TALUK_NAME,1)),substring(hwc_taluk_name,2)) as Taluk, concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(hwc_village_name,2)) as Village, concat(ucase(left(HWC_RANGE,1)),substring(hwc_range,2)) as Ranges, hwc_fd_sub_date as Fd_Sub_Date,hwc_case_date as Case_Date, datediff(hwc_fd_sub_date,hwc_case_date) AS Time_Taken_Days FROM hwc_details WHERE hwc_case_date BETWEEN '" + fromdate + "' AND '" + todate + "' ORDER BY hwc_park_name;";
+}
+
+procedure.getTimeTaken_inall = function (fromdate, todate) {
+    return "select monthname(hwc_case_date) as Month_s,sum(datediff(hwc_fd_sub_date,hwc_case_date)) as Time_Taken_Days from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' group by Month_s order by FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
+}
+
 procedure.getBpNhByRange = function (fromdate, todate) {
     return "SELECT  DATE_FORMAT(DC_CASE_DATE, '%d-%m-%Y') AS CASE_DATE,  sum(DC_NH_CASES) AS NH_CASES, sum(DC_BP_CASES) as BP_CASE  FROM  daily_count WHERE (DATE_FORMAT(DC_CASE_DATE, '%Y-%m-%d') BETWEEN '" + fromdate + "' AND '" + todate + "' ) GROUP BY DC_CASE_DATE ORDER BY DC_CASE_DATE DESC";
 }
@@ -330,6 +338,10 @@ procedure.get_freq_byhwcdate = function (fromdate, todate) {
     return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, COUNT(HWC_CASE_DATE) AS DATE_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE";
 }
 
+procedure.get_FA_bydate_n_category = function (fromdate, todate) {
+    return "SELECT distinct(HWC_CASE_CATEGORY) as CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CASES, HWC_USER_NAME AS FA_NAME FROM hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' group by hwc_case_category,HWC_USER_NAME ORDER BY field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD'),CASES desc;";
+}
+
 procedure.get_freq_byfadate = function (fromdate, todate) {
     return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, COUNT(HWC_FD_SUB_DATE) AS DATE_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE";
 }
@@ -416,6 +428,10 @@ procedure.get_comp_amount_byomsheetdate = function (fromdate, todate) {
 
 procedure.get_comp_amount_byomsheetdate_bycategory = function (fromdate, todate) {
     return "select COM_OM_SHEET_UPLOADED as Om_Sheet_Date, ucase(COM_HWC_CATAGORY) as HWC_Category, count(COM_HWC_CATAGORY) as Freq_HWC_Category, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from com_cases_details, compensation_details where com_om_sheet_uploaded between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by com_om_sheet_uploaded,com_hwc_catagory order by com_om_sheet_uploaded,COM_HWC_CATAGORY;";
+}
+
+procedure.get_com_fdrange = function (fromdate, todate) {
+    return "select CONCAT(UCASE(LEFT(COM_OM_RANGE,1)),SUBSTRING(COM_OM_RANGE,2)) as COM_RANGE, count(COM_OM_RANGE) as Comp_Frequency, round(sum(com_amount),2) as Comp_Amt, round(avg(com_amount),2) as Average_Comp_Amt, round(max(com_amount),2) as Max_Comp_Amt, round(min(com_amount),2) as Min_Comp_Amt from compensation_details, odk.com_cases_details where com_hwc_date between '" + fromdate + "' AND '" + todate + "' and com_metainstance_id=com_parent_id group by COM_OM_RANGE;"
 }
 
 procedure.get_com_omsheet = function () {
@@ -583,6 +599,10 @@ procedure.get_hwc_mapincidents_byHI = function (fromdate, todate) {
 
 procedure.get_hwc_mapincidents_byHD = function (fromdate, todate) {
     return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' and hwc_case_category='HD' order by hwc_case_category,hwc_case_date;"
+}
+
+procedure.get_hwc_mapincidents_byFA = function (fromdate, todate) {
+    return "select concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(HWC_VILLAGE_NAME,2)) as HWC_VILLAGE, concat(ucase(left(HWC_RANGE,1)),substring(HWC_RANGE,2)) as HWC_RANGE, concat(ucase(left(HWC_CASE_CATEGORY,1)),substring(HWC_CASE_CATEGORY,2)) as HWC_CAT, concat(ucase(left(HWC_USER_NAME,1)),substring(HWC_USER_NAME,2)) as HWC_FIELD_ASST, HWC_WSID as WSID, HWC_CASE_DATE AS HWC_DATE, HWC_LATITUDE as HWC_LAT, HWC_LONGITUDE as HWC_LONG, HWC_ACCURACY as HWC_ACC,HWC_ALTITUDE as HWC_ALT from hwc_details where hwc_case_date between '"+fromdate+"' AND '"+todate+"' order by hwc_user_name,hwc_case_date;"    
 }
 
 exports.func = procedure;

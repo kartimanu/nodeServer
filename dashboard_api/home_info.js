@@ -553,6 +553,42 @@ reports.getTotalTimeTakenForCompensationByCategory = function (req, res, next) {
     });
 }
 
+reports.getTimeTaken_btwHWCFD_date = function (req, res, next) {
+    
+    try {
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getTimeTaken_indays(req.body.fromdate, req.body.todate), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getTimeTaken_btwHWCFD_Total = function (req, res, next) {
+    
+    try {
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getTimeTaken_inall(req.body.fromdate, req.body.todate), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
 reports.getCompensationBySheet_ByProjectYear = async function (req, res, next) {
     try {
         // var start_yr = 2015;

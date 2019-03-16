@@ -49,6 +49,21 @@ reports.getcomp_omsheet = function (req, res, next) {
     });
 }
 
+reports.getcomp_byFDdate = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_com_fdrange(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 reports.getcomp_omsheetbydate = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.get_com_omsheet_bydate(req.body.fromdate, req.body.todate), function (error, data, fields) {

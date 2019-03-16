@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.19) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.20) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -143,6 +143,8 @@ app.post("/getCategorybyYear", dash_chart_homefunc.report.getCategoryByYear);
 app.post("/getTotalCasesbyYear", dash_chart_homefunc.report.getTotalCasesByYear);
 app.post("/getcases_byrange", dash_chart_homefunc.report.getRange_all);
 app.post("/getpark_yearmonth", dash_chart_homefunc.report.getPark_ByYearnMonth);
+app.post("/getTimeTaken_HWCdate_FDdate", dash_chart_homefunc.report.getTimeTaken_btwHWCFD_date);
+app.post("/getTimeTaken_HWCdate_FDdate_Total", dash_chart_homefunc.report.getTimeTaken_btwHWCFD_Total);
 
 app.get("/getPark_Previousday", dash_chart_homefunc.report.getPreviousBpNhCount);
 app.get("/getpark_yearwise", dash_chart_homefunc.report.get_park_Yearly);
@@ -172,6 +174,7 @@ app.post("/get_HWC_DB", dash_chartfunc.report.get_HWCDB_projectwise);
 app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
 app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
 app.post("/get_COMP_DB", dash_chartfunc.report.get_COMPDB_projectwise);
+app.post("/get_FA_ByDate_Category", dash_chartfunc.report.get_FA_bydateCategory);
 
 //New MAP APi's
 app.post("/get_MAP_byanimal", dash_chartfunc.report.get_HWC_mapbyanimal);
@@ -182,6 +185,7 @@ app.post("/get_MAP_bycat_PD", dash_chartfunc.report.get_HWC_mapbyPD);
 app.post("/get_MAP_bycat_LP", dash_chartfunc.report.get_HWC_mapbyLP);
 app.post("/get_MAP_bycat_HI", dash_chartfunc.report.get_HWC_mapbyHI);
 app.post("/get_MAP_bycat_HD", dash_chartfunc.report.get_HWC_mapbyHD);
+app.post("/get_MAP_byFA", dash_chartfunc.report.get_HWC_mapbyFA);
 
 //Compensation
 app.get("/gettotalcomp", dash_chart_compfunc.report.get_total_comp);
@@ -194,6 +198,7 @@ app.post("/getcomp_amt_omsheetdate", dash_chart_compfunc.report.getcompamount_by
 app.post("/getcomp_amt_omsheetdate_bycategory", dash_chart_compfunc.report.getcompamount_omsheetdate_bycategory);
 app.post("/getcomp_byomsheet", dash_chart_compfunc.report.getcomp_byomsheet);
 app.post("/getcomp_byomsheetdate", dash_chart_compfunc.report.getcomp_byomsheetdate);
+app.post("/getcomp_byFDrange", dash_chart_compfunc.report.getcomp_byFDdate);
 
 //Daily Count
 app.get("/gettotaldc", dash_chart_dcfunc.report.get_total_dc);

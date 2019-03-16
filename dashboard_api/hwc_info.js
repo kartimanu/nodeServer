@@ -194,6 +194,21 @@ reports.getfreq_block2_byhwcdate = function (req, res, next) {
     });
 }
 
+reports.get_FA_bydateCategory = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_FA_bydate_n_category(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 reports.getfreq_block2_byfadate = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.get_freq_byfadate(req.body.fromdate, req.body.todate), function (error, data, fields) {
@@ -632,6 +647,21 @@ reports.get_HWC_mapbyHI = function (req, res, next) {
 reports.get_HWC_mapbyHD = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.get_hwc_mapincidents_byHD(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+reports.get_HWC_mapbyFA = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_mapincidents_byFA(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
             if (error) {
                 console.log(error);
                 return;
