@@ -209,6 +209,21 @@ reports.get_FA_bydateCategory = function (req, res, next) {
     });
 }
 
+reports.get_FA_AVG_bySubTime = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_FAaverage_bySubTime(req.body.year), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                res.send(JSON.stringify(data));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 reports.getfreq_block2_byfadate = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(procedure.func.get_freq_byfadate(req.body.fromdate, req.body.todate), function (error, data, fields) {

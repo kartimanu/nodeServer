@@ -557,7 +557,7 @@ reports.getTimeTaken_btwHWCFD_date = function (req, res, next) {
     
     try {
         dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(procedure.func.getTimeTaken_indays(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            con_mdb.query(procedure.func.getTimeTaken_indays(req.body.year), function (error, data, fields) {
                 if (error) {
                     res.send({ success: false, data: error });
                 } else {
@@ -576,6 +576,59 @@ reports.getTimeTaken_btwHWCFD_Total = function (req, res, next) {
     try {
         dbconn.mdb.then(function (con_mdb) {
             con_mdb.query(procedure.func.getTimeTaken_inall(req.body.fromdate, req.body.todate), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getcases_dcvshwc = function (req, res, next) {    
+    try {
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getcases_byDCvsHWC(req.body.fromdate, req.body.todate), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getFAcases_dcvshwc = function (req, res, next) {
+    
+    try {
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getFAcases_byDCvsHWC(req.body.fromdate, req.body.todate), function (error, data, fields) {
+                if (error) {
+                    res.send({ success: false, data: error });
+                } else {
+                    res.send({ success: true, data: data });
+                }
+            });
+        });
+    } catch (ex) {
+        res.send({ success: false, data: ex });
+        console.log(ex);
+    }
+}
+
+reports.getAvgTimeTaken_btwHWCFD = function (req, res, next) {
+    
+    try {
+        dbconn.mdb.then(function (con_mdb) {
+            con_mdb.query(procedure.func.getAvgTimeTaken_indays(req.body.fromdate+"-07-01", req.body.todate+"-06-30"), function (error, data, fields) {
                 if (error) {
                     res.send({ success: false, data: error });
                 } else {

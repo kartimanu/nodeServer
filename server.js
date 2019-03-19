@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.20) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.21) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -145,6 +145,9 @@ app.post("/getcases_byrange", dash_chart_homefunc.report.getRange_all);
 app.post("/getpark_yearmonth", dash_chart_homefunc.report.getPark_ByYearnMonth);
 app.post("/getTimeTaken_HWCdate_FDdate", dash_chart_homefunc.report.getTimeTaken_btwHWCFD_date);
 app.post("/getTimeTaken_HWCdate_FDdate_Total", dash_chart_homefunc.report.getTimeTaken_btwHWCFD_Total);
+app.post("/getAvgTimeTaken_HWCdate_FDdate", dash_chart_homefunc.report.getAvgTimeTaken_btwHWCFD);
+app.post("/getcases_DCvsHWC", dash_chart_homefunc.report.getcases_dcvshwc);
+app.post("/getFAcases_DCvsHWC", dash_chart_homefunc.report.getFAcases_dcvshwc);
 
 app.get("/getPark_Previousday", dash_chart_homefunc.report.getPreviousBpNhCount);
 app.get("/getpark_yearwise", dash_chart_homefunc.report.get_park_Yearly);
@@ -175,6 +178,7 @@ app.post("/get_DC_DB", dash_chartfunc.report.get_DCDB_projectwise);
 app.post("/get_PUB_DB", dash_chartfunc.report.get_PUBDB_projectwise);
 app.post("/get_COMP_DB", dash_chartfunc.report.get_COMPDB_projectwise);
 app.post("/get_FA_ByDate_Category", dash_chartfunc.report.get_FA_bydateCategory);
+app.post("/get_AVG_SubTime_ByFA", dash_chartfunc.report.get_FA_AVG_bySubTime);
 
 //New MAP APi's
 app.post("/get_MAP_byanimal", dash_chartfunc.report.get_HWC_mapbyanimal);
@@ -233,6 +237,7 @@ app.get("/syncdata", function (req, res) {
 // setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
 
 // setTimeout(hwcSyncfunc.func.syncimg, 1000);
+
 function syncData() {
     console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwcdetails, 1000 * 1);

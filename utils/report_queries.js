@@ -185,12 +185,24 @@ procedure.getCategoryByYEARnMONTH = function (year) {
     return "select HWC_CASE_CATEGORY, monthname(HWC_CASE_DATE) as MONTH, YEAR(HWC_CASE_DATE) as YEAR, count(HWC_CASE_CATEGORY) as NO_OF_CASES from hwc_details where (year(HWC_CASE_DATE) = '"+year+"') group by month(HWC_CASE_DATE),  field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD');";
 }
 
-procedure.getTimeTaken_indays = function (fromdate, todate) {
-    return "SELECT MONTHNAME(hwc_case_date) AS Month_s, hwc_wsid as WSID, concat(ucase(left(hwc_park_name,1)),substring(hwc_park_name,2)) as Park, concat(ucase(left(HWC_TALUK_NAME,1)),substring(hwc_taluk_name,2)) as Taluk, concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(hwc_village_name,2)) as Village, concat(ucase(left(HWC_RANGE,1)),substring(hwc_range,2)) as Ranges, hwc_fd_sub_date as Fd_Sub_Date,hwc_case_date as Case_Date, datediff(hwc_fd_sub_date,hwc_case_date) AS Time_Taken_Days FROM hwc_details WHERE hwc_case_date BETWEEN '" + fromdate + "' AND '" + todate + "' ORDER BY hwc_park_name;";
+procedure.getTimeTaken_indays = function (year) {
+    return "SELECT MONTHNAME(hwc_case_date) AS Month_s,year(hwc_case_date) as Year_s, hwc_wsid as WSID, concat(ucase(left(hwc_park_name,1)),substring(hwc_park_name,2)) as Park, concat(ucase(left(HWC_TALUK_NAME,1)),substring(hwc_taluk_name,2)) as Taluk, concat(ucase(left(HWC_VILLAGE_NAME,1)),substring(hwc_village_name,2)) as Village, concat(ucase(left(HWC_RANGE,1)),substring(hwc_range,2)) as Ranges, concat(ucase(left(HWC_USER_NAME,1)),substring(HWC_USER_NAME,2)) as Field_Asst, hwc_fd_sub_date as Fd_Sub_Date,hwc_case_date as Case_Date, datediff(hwc_fd_sub_date,hwc_case_date) AS Time_Taken_Days FROM hwc_details WHERE  year(hwc_case_date)='"+year+"' ORDER BY FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December'),hwc_user_name;";
 }
 
 procedure.getTimeTaken_inall = function (fromdate, todate) {
     return "select monthname(hwc_case_date) as Month_s,sum(datediff(hwc_fd_sub_date,hwc_case_date)) as Time_Taken_Days from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' group by Month_s order by FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December');";
+}
+
+procedure.getcases_byDCvsHWC = function (fromdate, todate) {
+    return "select sum(dc_total_cases) as Cases from daily_count where dc_case_date between '" + fromdate + "' AND '" + todate + "' union select count(hwc_case_category) from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' ";
+}
+
+procedure.getFAcases_byDCvsHWC = function (fromdate, todate) {
+    return "select sum(dc_crop) as CR, sum(dc_crop_property) as CRPD, sum(dc_property) as PD, sum(dc_livestock) as LP, sum(dc_human_injury) as HI, sum(dc_human_death) as HD from dc_cases where dc_case_date between '" + fromdate + "' AND '" + todate + "' union select count(if(hwc_case_category='CR', 1, NULL)) 'CR', count(if(hwc_case_category='CRPD', 1, NULL)) 'CRPD', count(if(hwc_case_category='PD',1,NULL)) 'PD', count(if(hwc_case_category='LP',1,NULL)) 'LP', count(if(hwc_case_category='HI',1,NULL)) 'HI', count(if(hwc_case_category='HD',1,NULL)) 'HD' from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "';";
+}
+
+procedure.getAvgTimeTaken_indays = function (fromdate, todate) {
+    return "select distinct concat(ucase(left(hwc_user_name,1)),substring(hwc_user_name,2)) as Field_Asst, count(HWC_USER_NAME) as Total_Cases, sum(datediff(hwc_fd_sub_date,hwc_case_date)) as Total_Time_Taken, round(sum(datediff(hwc_fd_sub_date,hwc_case_date))/count(HWC_USER_NAME),2) as Avg_Time_Taken from hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' group by hwc_user_name order by Avg_Time_Taken desc;";
 }
 
 procedure.getBpNhByRange = function (fromdate, todate) {
@@ -340,6 +352,10 @@ procedure.get_freq_byhwcdate = function (fromdate, todate) {
 
 procedure.get_FA_bydate_n_category = function (fromdate, todate) {
     return "SELECT distinct(HWC_CASE_CATEGORY) as CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CASES, HWC_USER_NAME AS FA_NAME FROM hwc_details where hwc_case_date between '" + fromdate + "' AND '" + todate + "' group by hwc_case_category,HWC_USER_NAME ORDER BY field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD'),CASES desc;";
+}
+
+procedure.get_FAaverage_bySubTime = function (year) {
+    return "select distinct concat(ucase(left(hwc_user_name,1)),substring(hwc_user_name,2)) as Field_Asst, monthname(hwc_case_date) as month_s,count(HWC_USER_NAME) as Total_Cases, sum(datediff(hwc_fd_sub_date,hwc_case_date)) as Total_Time_Taken, round(sum(datediff(hwc_fd_sub_date,hwc_case_date))/count(HWC_USER_NAME),2) as Avg_Time_Taken from hwc_details where year(hwc_case_date)='"+year+"' group by hwc_user_name,month_s order by FIELD(Month_s,'January','February','March','April','May','June','July','August','September','October','November','December'),hwc_user_name;";
 }
 
 procedure.get_freq_byfadate = function (fromdate, todate) {
