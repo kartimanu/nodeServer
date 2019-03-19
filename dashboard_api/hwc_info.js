@@ -65,6 +65,14 @@ reports.getHWC_block1 = function (req, res, next) {
 
 reports.getHWC_block1_byhwcdate = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_category_byhwcdate_sum(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                result_data.push(data);
+            }
+        });
         con_mdb.query(procedure.func.get_hwc_category_byhwcdate(req.body.fromdate, req.body.todate), function (error, data, fields) {
             if (error) {
                 console.log(error);
@@ -123,6 +131,14 @@ reports.getHWC_block1_byhwcdate = function (req, res, next) {
 
 reports.getHWC_block1_byfadate = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(procedure.func.get_hwc_category_byfadate_sum(req.body.fromdate, req.body.todate), function (error, data, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                result_data.push(data);
+            }
+        });
         con_mdb.query(procedure.func.get_hwc_category_byfadate(req.body.fromdate, req.body.todate), function (error, data, fields) {
             if (error) {
                 console.log(error);

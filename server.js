@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.21) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.22) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -237,6 +237,7 @@ app.get("/syncdata", function (req, res) {
 // setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
 
 // setTimeout(hwcSyncfunc.func.syncimg, 1000);
+// setTimeout(hwcSyncfunc.func.runProcedure, 1000);
 
 function syncData() {
     console.log("Syncing.....");

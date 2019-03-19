@@ -307,8 +307,11 @@ procedure.get_hwc_range = function () {
 }
 
 //by HWC_date
-procedure.get_hwc_category_byhwcdate = function (fromdate, todate) {
+procedure.get_hwc_category_byhwcdate_sum = function (fromdate, todate) {
     return "select HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY FIELD(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD');";
+}
+procedure.get_hwc_category_byhwcdate = function (fromdate, todate) {
+    return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, FIELD(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD');";
 }
 procedure.get_hwc_animal_byhwcdate = function (fromdate, todate) {
     return "select DATE_FORMAT(HWC_CASE_DATE, '%d-%m-%Y') AS HWC_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_CASE_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_CASE_DATE, HWC_ANIMAL";
@@ -327,8 +330,11 @@ procedure.get_hwc_range_byhwcdate = function (fromdate, todate) {
 }
 
 //by FA_date
+procedure.get_hwc_category_byfadate_sum = function (fromdate, todate) {
+    return "select HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD')";
+}
 procedure.get_hwc_category_byfadate = function (fromdate, todate) {
-    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_CASE_CATEGORY";
+    return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_CASE_CATEGORY AS CATEGORY, COUNT(HWC_CASE_CATEGORY) AS CAT_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, field(HWC_CASE_CATEGORY,'CR','CRPD','PD','LP','HI','HD')";
 }
 procedure.get_hwc_animal_byfadate = function (fromdate, todate) {
     return "select DATE_FORMAT(HWC_FD_SUB_DATE, '%d-%m-%Y') AS FA_DATE, HWC_ANIMAL AS ANIMAL, COUNT(HWC_ANIMAL) AS ANIMAL_FREQ from hwc_details where HWC_FD_SUB_DATE between '" + fromdate + "' AND '" + todate + "' GROUP BY HWC_FD_SUB_DATE, HWC_ANIMAL";

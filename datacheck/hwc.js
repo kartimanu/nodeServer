@@ -637,5 +637,21 @@ hwc.syncimg = function (req, res) {
 
 }
 
+hwc.runProcedure = function (req, res) {    
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query('call animal()', function (error, result, fields) {
+            if (error) {
+                console.log({ success: false, data: error });
+                return;
+            } else {
+                console.log({ success: true, data: result });
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+
+}
+
 
 exports.func = hwc;
