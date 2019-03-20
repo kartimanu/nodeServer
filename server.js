@@ -9,6 +9,7 @@ var pubSyncfunc = require('./datacheck/publicity');
 var dcSyncfunc = require('./datacheck/dailycount');
 var comSyncfunc = require('./datacheck/compensation');
 var hwcSyncfunc = require('./datacheck/hwc');
+var ImageSyncfunc = require('./datacheck/images');
 var reportDCfunc = require('./reports/dc_reports');
 var reportHWCfunc = require('./reports/hwc_reports');
 var dash_chart_homefunc = require('./dashboard_api/home_info');
@@ -66,7 +67,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.22) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.23) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -103,6 +104,7 @@ app.get("/gethwc/:id", hwcfunctions.caller.get_hwcall_byid);
 app.get("/getcase_users", csfunctions.caller.get_case_users);
 app.get("/img", pubfunctions.caller.getpubImg);
 
+//HWC FLAGGING API's
 app.get("/getDuplicateRecord/:id", errfunctions.caller.get_hwcDuplicateData);
 app.get("/getParentRecord/:id", errfunctions.caller.get_hwcParentData);
 app.get("/getErrorRecords", errfunctions.caller.get_errorRecords);
@@ -237,7 +239,7 @@ app.get("/syncdata", function (req, res) {
 // setInterval(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 60 * 12);
 
 // setTimeout(hwcSyncfunc.func.syncimg, 1000);
-// setTimeout(hwcSyncfunc.func.runProcedure, 1000);
+// setTimeout(ImageSyncfunc.func.getForm, 1000);
 
 function syncData() {
     console.log("Syncing.....");

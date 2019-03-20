@@ -557,7 +557,7 @@ reports.getTimeTaken_btwHWCFD_date = function (req, res, next) {
     
     try {
         dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(procedure.func.getTimeTaken_indays(req.body.year), function (error, data, fields) {
+            con_mdb.query(procedure.func.getTimeTaken_indays(req.body.fromdate+"-07-01", req.body.todate+"-06-30"), function (error, data, fields) {
                 if (error) {
                     res.send({ success: false, data: error });
                 } else {

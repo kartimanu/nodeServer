@@ -227,7 +227,7 @@ reports.get_FA_bydateCategory = function (req, res, next) {
 
 reports.get_FA_AVG_bySubTime = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.get_FAaverage_bySubTime(req.body.year), function (error, data, fields) {
+        con_mdb.query(procedure.func.get_FAaverage_bySubTime(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
             if (error) {
                 console.log(error);
                 return;
