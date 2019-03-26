@@ -58,6 +58,43 @@ myfunctions.get_hwcDuplicateData = function (req, res, next) {
     });
 }
 
+myfunctions.get_markDuplicateData = function (req, res, next) {
+    var allres;
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.getParentData, [req.body.orgid], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
+                allres=results;
+                // res.send(util.methods.setresponse(results));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+    dbconn.rdb.then(function (con_rdb) {
+        con_rdb.query(db_model.sqlquery.getDuplicateData, [req.body.flagid], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
+                // console.log(results[0]);
+                // console.log(allres);
+                res.send(util.methods.setresponse(markHWCdata(results[0], allres[0])));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
 myfunctions.get_hwcParentData = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.getParentData, [req.params.id], function (error, results, fields) {
@@ -110,6 +147,7 @@ function setHWCdata(hwcformdata) {
             HWC_METASUBMISSION_DATE: util.methods.GetFormattedDate(hwcformdata._SUBMISSION_DATE),
             HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
             HWC_FIRST_NAME: hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
+            HWC_LAST_NAME: hwcformdata.EXITINFO2_CONCAT_LASTNAME,
             HWC_FULL_NAME: hwcformdata.EXITINFO2_CONCAT_FULLNAME,
             HWC_PARK_NAME: util.methods.format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
             HWC_TALUK_NAME: util.methods.format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
@@ -146,6 +184,31 @@ function setHWCdata(hwcformdata) {
             HWC_USER_NAME: (!hwcformdata.USERNAME) ? null : hwcformdata.USERNAME.toLowerCase(),
             HWC_CASE_TYPE: (!hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO) ? null : hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO.toLowerCase()
         }
+
+        return inserthwcdataset;
+    }
+    catch (e) {
+        console.log("Some Exception Occured" + e);
+    }
+}
+
+function markHWCdata(flagdata, origindata) {
+    try {
+        // console.log(flagdata.EXITINFO2_CONCAT_WSID.toUpperCase() +'::'+ origindata.HWC_WSID);
+        const inserthwcdataset = {
+            HWC_WSID: flagdata.EXITINFO2_CONCAT_WSID.toUpperCase() === origindata.HWC_WSID ? 1: 0,
+            HWC_FIRST_NAME: flagdata.EXITINFO2_CONCAT_FIRSTNAME === origindata.HWC_FIRST_NAME ? 1: 0,
+            HWC_LAST_NAME: flagdata.EXITINFO2_CONCAT_LASTNAME === origindata.HWC_LAST_NAME ? 1: 0,
+            HWC_FULL_NAME: flagdata.EXITINFO2_CONCAT_FULLNAME === origindata.HWC_FULL_NAME ? 1: 0,
+            HWC_PARK_NAME: util.methods.format_park(flagdata.EXITINFO2_CONCAT_PARK) === origindata.HWC_PARK_NAME ? 1: 0,
+            HWC_TALUK_NAME: util.methods.format_taluk(flagdata.EXITINFO2_CONCAT_TALUK) === origindata.HWC_TALUK_NAME ? 1: 0,
+            HWC_VILLAGE_NAME: (!flagdata.EXITINFO2_CONCAT_VILLAGE) ? 0 : flagdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase() === origindata.HWC_VILLAGE_NAME ? 1: 0,
+            HWC_OLDPHONE_NUMBER: flagdata.EXITINFO2_CONCAT_OLDPHNUM === origindata.HWC_OLDPHONE_NUMBER ? 1: 0,
+            HWC_NEWPHONE_NUMBER: flagdata.EXITINFO2_CONCAT_NEWPHNUM === origindata.HWC_NEWPHONE_NUMBER ? 1: 0,
+            HWC_SURVEY_NUMBER: (flagdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/")) === origindata.HWC_SURVEY_NUMBER ? 1: 0,
+            HWC_RANGE: util.methods.format_range(flagdata.HWCINFO_RANGE) === origindata.HWC_RANGE ? 1: 0,
+            HWC_FD_SUB_RANGE: util.methods.format_range(flagdata.FDSUBMISSION_RANGE_FDSUB) === origindata.HWC_FD_SUB_RANGE ? 1: 0
+           }
 
         return inserthwcdataset;
     }

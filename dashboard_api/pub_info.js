@@ -142,7 +142,7 @@ reports.get_villagevisit_byFA_bydate = function (req, res, next) {
 
 reports.get_mapincidents_byrange = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(procedure.func.get_pub_mapincidents_bydaterange(req.body.fromdate, req.body.todate), function (error, data, fields) {
+        con_mdb.query(procedure.func.get_pub_mapincidents_bydaterange(req.body.fromdate + "-07-01", req.body.todate + "-06-30"), function (error, data, fields) {
             if (error) {
                 console.log(error);
                 return;

@@ -67,7 +67,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.23) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.24) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -112,6 +112,7 @@ app.post("/updateParentRecord", errfunctions.caller.update_hwcParentData);
 app.get("/updateErrorRecord/:id", errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id", hwcSyncfunc.func.setDupRecordDetails);
 app.get("/getImage/:metaid", hwcSyncfunc.func.getRawImage);
+app.post("/getMarked", errfunctions.caller.get_markDuplicateData);
 
 //Home API's
 app.post("/getBpNhByRange", dash_chart_homefunc.report.getBpNhByRange);
@@ -192,6 +193,7 @@ app.post("/get_MAP_bycat_LP", dash_chartfunc.report.get_HWC_mapbyLP);
 app.post("/get_MAP_bycat_HI", dash_chartfunc.report.get_HWC_mapbyHI);
 app.post("/get_MAP_bycat_HD", dash_chartfunc.report.get_HWC_mapbyHD);
 app.post("/get_MAP_byFA", dash_chartfunc.report.get_HWC_mapbyFA);
+app.post("/getpublicity_mapincidents_bydate", dash_chart_pubfunc.report.get_mapincidents_byrange);
 
 //Compensation
 app.get("/gettotalcomp", dash_chart_compfunc.report.get_total_comp);
@@ -220,7 +222,6 @@ app.post("/getpublicity_village_freq_bydate", dash_chart_pubfunc.report.get_vill
 app.post("/getpublicity_village_FA_bydate", dash_chart_pubfunc.report.get_villagevisit_byFA_bydate);
 //-- end --
 app.post("/getpublicity_bydate", dash_chart_pubfunc.report.get_pub_bydate);
-app.post("/getpublicity_mapincidents_bydate", dash_chart_pubfunc.report.get_mapincidents_byrange);
 app.get("/getpublicity_mapincidents", dash_chart_pubfunc.report.get_mapincidents);
 
 //Data Sync
