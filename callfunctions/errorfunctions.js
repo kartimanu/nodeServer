@@ -60,6 +60,23 @@ myfunctions.get_hwcDuplicateData = function (req, res, next) {
 
 myfunctions.get_markDuplicateData = function (req, res, next) {
     var allres;
+    dbconn.rdb.then(function (con_rdb) {
+        con_rdb.query(db_model.sqlquery.getDuplicateData, [req.body.flagid], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {                
+                allres=results;
+                // console.log(results[0]);
+                // console.log(allres);
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.getParentData, [req.body.orgid], function (error, results, fields) {
             if (error) {
@@ -67,8 +84,11 @@ myfunctions.get_markDuplicateData = function (req, res, next) {
                 res.send(util.methods.seterror(error));
                 return;
             } else {
-                allres=results;
                 // res.send(util.methods.setresponse(results));
+                if(allres !== null && allres !== ' ' )
+                res.send(util.methods.setresponse(markHWCdata(allres[0], results[0])));
+                else
+                res.send(util.methods.setresponse("RETRY"));
             }
         });
     }).catch(err => {
@@ -76,23 +96,7 @@ myfunctions.get_markDuplicateData = function (req, res, next) {
         res.send(util.methods.seterror(error));
         return;
     });
-    dbconn.rdb.then(function (con_rdb) {
-        con_rdb.query(db_model.sqlquery.getDuplicateData, [req.body.flagid], function (error, results, fields) {
-            if (error) {
-                console.log(error);
-                res.send(util.methods.seterror(error));
-                return;
-            } else {
-                // console.log(results[0]);
-                // console.log(allres);
-                res.send(util.methods.setresponse(markHWCdata(results[0], allres[0])));
-            }
-        });
-    }).catch(err => {
-        console.log(err);
-        res.send(util.methods.seterror(error));
-        return;
-    });
+    
 }
 
 myfunctions.get_hwcParentData = function (req, res, next) {
