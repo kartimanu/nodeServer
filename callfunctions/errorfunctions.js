@@ -1,6 +1,7 @@
 const db_model = require('../utils/query_model');
 const dbconn = require('../config/sshdbconn');
 const util = require('../utils/helper');
+var async = require("async");
 const myfunctions = {};
 
 myfunctions.get_errorRecords = function (req, res, next) {
@@ -58,7 +59,7 @@ myfunctions.get_hwcDuplicateData = function (req, res, next) {
     });
 }
 
-myfunctions.get_markDuplicateData = function (req, res, next) {
+myfunctions.get_markDuplicateData = async function (req, res, next) {
     var allres;
     dbconn.rdb.then(function (con_rdb) {
         con_rdb.query(db_model.sqlquery.getDuplicateData, [req.body.flagid], function (error, results, fields) {
@@ -72,12 +73,6 @@ myfunctions.get_markDuplicateData = function (req, res, next) {
                 // console.log(allres);
             }
         });
-    }).catch(err => {
-        console.log(err);
-        res.send(util.methods.seterror(error));
-        return;
-    });
-    dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.getParentData, [req.body.orgid], function (error, results, fields) {
             if (error) {
                 console.log(error);
@@ -96,6 +91,25 @@ myfunctions.get_markDuplicateData = function (req, res, next) {
         res.send(util.methods.seterror(error));
         return;
     });
+    // dbconn.mdb.then(function (con_mdb) {
+    //     con_mdb.query(db_model.sqlquery.getParentData, [req.body.orgid], function (error, results, fields) {
+    //         if (error) {
+    //             console.log(error);
+    //             res.send(util.methods.seterror(error));
+    //             return;
+    //         } else {
+    //             // res.send(util.methods.setresponse(results));
+    //             if(allres !== null && allres !== ' ' )
+    //             res.send(util.methods.setresponse(markHWCdata(allres[0], results[0])));
+    //             else
+    //             res.send(util.methods.setresponse("RETRY"));
+    //         }
+    //     });
+    // }).catch(err => {
+    //     console.log(err);
+    //     res.send(util.methods.seterror(error));
+    //     return;
+    // });
     
 }
 
@@ -150,9 +164,9 @@ function setHWCdata(hwcformdata) {
             HWC_METAUI_VERSION: hwcformdata._UI_VERSION,
             HWC_METASUBMISSION_DATE: util.methods.GetFormattedDate(hwcformdata._SUBMISSION_DATE),
             HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-            HWC_FIRST_NAME: hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
-            HWC_LAST_NAME: hwcformdata.EXITINFO2_CONCAT_LASTNAME,
-            HWC_FULL_NAME: hwcformdata.EXITINFO2_CONCAT_FULLNAME,
+            HWC_FIRST_NAME: (!hwcformdata.EXITINFO2_CONCAT_FIRSTNAME)?"":hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
+            HWC_LAST_NAME: (!hwcformdata.EXITINFO2_CONCAT_LASTNAME)?"":hwcformdata.EXITINFO2_CONCAT_LASTNAME,
+            HWC_FULL_NAME: (!hwcformdata.EXITINFO2_CONCAT_FULLNAME)?"":hwcformdata.EXITINFO2_CONCAT_FULLNAME,
             HWC_PARK_NAME: util.methods.format_park(hwcformdata.EXITINFO2_CONCAT_PARK),
             HWC_TALUK_NAME: util.methods.format_taluk(hwcformdata.EXITINFO2_CONCAT_TALUK),
             HWC_VILLAGE_NAME: (!hwcformdata.EXITINFO2_CONCAT_VILLAGE) ? null : hwcformdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
