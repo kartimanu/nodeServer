@@ -227,7 +227,6 @@ function markHWCdata(flagdata, origindata) {
             HWC_RANGE: util.methods.format_range(flagdata.HWCINFO_RANGE) === origindata.HWC_RANGE ? 1: 0,
             HWC_FD_SUB_RANGE: util.methods.format_range(flagdata.FDSUBMISSION_RANGE_FDSUB) === origindata.HWC_FD_SUB_RANGE ? 1: 0
            }
-
         return inserthwcdataset;
     }
     catch (e) {
