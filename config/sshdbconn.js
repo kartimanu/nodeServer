@@ -6,7 +6,7 @@ var ssh = new Client();
 // const myUsername = 'odkuser';
 // const myPassword = 'Wildlife@123';
 
-const myHost = 'server.wildseveodk.com'
+const myHost = '35.200.46.229';//'server.wildseveodk.com'
 const myUsername = 'odkserver';
 const myPassword = 'Admin@odk123';
 
