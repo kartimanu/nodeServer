@@ -6,9 +6,9 @@ var ssh = new Client();
 // const myUsername = 'odkuser';
 // const myPassword = 'Wildlife@123';
 
-const myHost = '35.244.40.151';//'35.200.46.229';//'server.wildseveodk.com'
-const myUsername = 'odkserver';
-const myPassword = 'Admin@odk123';
+const myHost = 'odkserver.eastus.cloudapp.azure.com';//'35.244.40.151';//'35.200.46.229';//'server.wildseveodk.com'
+const myUsername = 'WildseveOdk';//'odkserver';
+const myPassword = 'WildseveOdk@123';//'Admin@odk123';
 
 // odk_prod
 var rdb = new Promise(function (resolve, reject) {
@@ -29,8 +29,8 @@ var rdb = new Promise(function (resolve, reject) {
                     host: '127.0.0.1',
                     user: 'root',
                    // password: 'admin@123',
-                    password: 'Admin@odk123',
-                    database: 'odk_prod',
+                    password: 'Admin@123',
+                    database: 'odkproddb',//'odk_prod',
                     stream: stream
                 });
 
@@ -72,7 +72,7 @@ var mdb = new Promise(function (resolve, reject) {
                     host: '127.0.0.1',
                     user: 'root',
                     //password: 'admin@123',
-                    password: 'Admin@odk123',                    
+                    password: 'Admin@123',                    
                     database: 'odk',
                     stream: stream
                 });
