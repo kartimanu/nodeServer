@@ -1,7 +1,7 @@
 const dbconn = require('../config/sshdbconn');
 const helper = require('../utils/helper');
 
-const fetchQuery = "SELECT * FROM DAILY_COUNT_Y3_M10_CORE";
+const fetchQuery = "SELECT * FROM DAILY_COUNT_Y4_M10_CORE";
 const insertQuery = "INSERT IGNORE INTO daily_count set ? ";
 const insertFAQuery = "INSERT IGNORE INTO dc_cases set ? ";
 

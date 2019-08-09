@@ -245,9 +245,9 @@ app.get("/syncdata", function (req, res) {
 function syncData() {
     console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwcdetails, 1000 * 1);
-    setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30);
-    setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
-    setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 90);
+    // setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30);
+    // setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
+    // setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 90);
 }
 
 app.listen(port, () => console.log("Server running on port %d", port));

@@ -3,8 +3,8 @@ var dbconn = require('../config/sshdbconn');
 var async = require("async");
 var util = require('../utils/helper');
 
-const fetchquery = "SELECT * FROM HWC_Y4_M6_CORE C1 JOIN HWC_Y4_M6_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M6_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
-const fetchErrorRecordquery = "SELECT * FROM HWC_Y4_M6_CORE C1 JOIN HWC_Y4_M6_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M6_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
+const fetchquery = "SELECT * FROM HWC_Y4_M10_CORE C1 JOIN HWC_Y4_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
+const fetchErrorRecordquery = "SELECT * FROM HWC_Y4_M10_CORE C1 JOIN HWC_Y4_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
@@ -13,20 +13,20 @@ const hwc_checkexistQuery = "SELECT *, CASE WHEN HWC_WSID = ? THEN 1 WHEN HWC_WS
 const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
 const hwc = {};
 var img1, img2, img3, img4, img5, img6, img7, vid1, res_photo, res_sign, ackImg, fdimg1, fdimg2, fdimg3;
-const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ?";
-const hwc_image2query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE2_BLB where _TOP_LEVEL_AURI = ";
-const hwc_image3query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE3_BLB where _TOP_LEVEL_AURI = ";
-const hwc_image4query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE4_BLB where _TOP_LEVEL_AURI = ";
-const hwc_image5query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE5_BLB where _TOP_LEVEL_AURI = ";
-const hwc_image6query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE6_BLB where _TOP_LEVEL_AURI = ";
-const hwc_image7query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCIMAGE7_BLB where _TOP_LEVEL_AURI = ";
-const hwc_video1query = "SELECT VALUE FROM HWC_Y4_M6_MEDIA_HWCVIDEO_BLB where _TOP_LEVEL_AURI = ";
-const hwc_resPhotoquery = "SELECT VALUE FROM HWC_Y4_M6_EXITINFO_RESPPHOTO_BLB where _TOP_LEVEL_AURI = ";
-const hwc_resSignquery = "SELECT VALUE FROM HWC_Y4_M6_EXITINFO_RESPSIGN_BLB where _TOP_LEVEL_AURI = ";
-const hwc_ackimagequery = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_ACK_IMAGE_BLB where _TOP_LEVEL_AURI = ";
-const hwc_fdsub_img1query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE1_BLB where _TOP_LEVEL_AURI = ";
-const hwc_fdsub_img2query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE2_BLB where _TOP_LEVEL_AURI = ";
-const hwc_fdsub_img3query = "SELECT VALUE FROM HWC_Y4_M6_FDSUBMISSION_SUBIMAGE3_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ?";
+const hwc_image2query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE2_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image3query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE3_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image4query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE4_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image5query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE5_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image6query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE6_BLB where _TOP_LEVEL_AURI = ";
+const hwc_image7query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE7_BLB where _TOP_LEVEL_AURI = ";
+const hwc_video1query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCVIDEO_BLB where _TOP_LEVEL_AURI = ";
+const hwc_resPhotoquery = "SELECT VALUE FROM HWC_Y4_M10_EXITINFO_RESPPHOTO_BLB where _TOP_LEVEL_AURI = ";
+const hwc_resSignquery = "SELECT VALUE FROM HWC_Y4_M10_EXITINFO_RESPSIGN_BLB where _TOP_LEVEL_AURI = ";
+const hwc_ackimagequery = "SELECT VALUE FROM HWC_Y4_M10_FDSUBMISSION_ACK_IMAGE_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img1query = "SELECT VALUE FROM HWC_Y4_M10_FDSUBMISSION_SUBIMAGE1_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img2query = "SELECT VALUE FROM HWC_Y4_M10_FDSUBMISSION_SUBIMAGE2_BLB where _TOP_LEVEL_AURI = ";
+const hwc_fdsub_img3query = "SELECT VALUE FROM HWC_Y4_M10_FDSUBMISSION_SUBIMAGE3_BLB where _TOP_LEVEL_AURI = ";
 
 const hwc_media_insertQuery = "INSERT IGNORE INTO hwc_case_image set ? ";
 const hwc_media_fdinsertQuery = "INSERT IGNORE INTO hwc_fd_image set ? ";
@@ -79,7 +79,7 @@ function insertionset(ucdata) {
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM)? null :ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -97,7 +97,7 @@ function insertionset(ucdata) {
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM)?null:ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -341,7 +341,7 @@ function setHWCdata(hwcformdata) {
         HWC_VILLAGE_NAME: (!hwcformdata.EXITINFO2_CONCAT_VILLAGE) ? null : hwcformdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         HWC_OLDPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_OLDPHNUM,
         HWC_NEWPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_NEWPHNUM,
-        HWC_SURVEY_NUMBER: hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        HWC_SURVEY_NUMBER: (!hwcformdata.EXITINFO2_CONCAT_SURVEYNUM)?null:hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         HWC_RANGE: (!hwcformdata.HWCINFO_RANGE) ? null : util.methods.format_range(hwcformdata.HWCINFO_RANGE),
         HWC_LATITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LAT,
         HWC_LONGITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LNG,

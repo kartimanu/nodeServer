@@ -1,7 +1,7 @@
 var dbconn = require('../config/sshdbconn');
 const helper = require('../utils/helper');
 
-const fetchquery = "SELECT * FROM COMP_Y3_M8_CORE c1 JOIN COMP_Y3_M8_CORE2 c2 ON c1._URI = c2._PARENT_AURI JOIN COMP_Y3_M8_CORE3 c3 ON c1._URI = c3._PARENT_AURI";
+const fetchquery = "SELECT * FROM COMP_Y4_M10_CORE c1 JOIN COMP_Y4_M10_CORE2 c2 ON c1._URI = c2._PARENT_AURI JOIN COMP_Y4_M10_CORE3 c3 ON c1._URI = c3._PARENT_AURI";
 const com_insertQuery = "INSERT IGNORE INTO compensation_details set ? ";
 const om_cases_insertQuery = "INSERT IGNORE INTO com_cases_details set ? ";
 const Taluk_Query = "SELECT * FROM wls_taluk";// WHERE OLD_T_NAME = ";
