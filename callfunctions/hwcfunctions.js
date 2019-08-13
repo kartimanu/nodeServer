@@ -28,7 +28,55 @@ myfunctions.get_hwcall_byid = function (req, res, next) {
                 res.send(util.methods.seterror(error));
                 return;
             } else
-                res.send(util.methods.setresponse(results));
+                res.send(JSON.stringify(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+//New Function to fetch individual HWC Record
+myfunctions.get_hwcrecord_byid = function (req, res, next) {
+    var ResultSet = [];
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.getHWCrecord, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+            ResultSet.push(results);
+                // res.send(JSON.stringify(results));
+        });
+        con_mdb.query(db_model.sqlquery.getCROPdetails, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+            ResultSet.push(results);
+                // res.send(JSON.stringify(results));
+        });
+        con_mdb.query(db_model.sqlquery.getPROPERTYdetails, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+            ResultSet.push(results);
+                // res.send(JSON.stringify(results));
+        });
+        con_mdb.query(db_model.sqlquery.getLIVESTOCKdetails, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else{                
+                ResultSet.push(results);
+                res.send(util.methods.setresponse(ResultSet));
+            }
         });
     }).catch(err => {
         console.log(err);

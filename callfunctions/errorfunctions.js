@@ -41,8 +41,11 @@ myfunctions.update_errorRecord = function (req, res, next) {
 }
 
 myfunctions.get_hwcDuplicateData = function (req, res, next) {
+
+    var getDuplicateData = "SELECT * FROM HWC"+[req.params.form]+"CORE C1 JOIN HWC"+[req.params.form]+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+[req.params.form]+"CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
+
     dbconn.rdb.then(function (con_rdb) {
-        con_rdb.query(db_model.sqlquery.getDuplicateData, [req.params.id], function (error, results, fields) {
+        con_rdb.query(getDuplicateData, [req.params.id], function (error, results, fields) {
             if (error) {
                 console.log(error);
                 res.send(util.methods.seterror(error));
@@ -135,6 +138,62 @@ myfunctions.update_hwcParentData = function (req, res, next) {
     console.log("ID: " + req.body.HWC_METAINSTANCE_ID);
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.updateParentData, [req.body, req.body.HWC_METAINSTANCE_ID], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+                res.send(util.methods.setresponse(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+
+myfunctions.update_hwcCropData = function (req, res, next) {
+    console.log("ID: " + req.body.HWC_META_ID);
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.updateCropData, [req.body, req.body.HWC_META_ID], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+                res.send(util.methods.setresponse(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+
+myfunctions.update_hwcLivestockData = function (req, res, next) {
+    console.log("ID: " + req.body.HWC_META_ID);
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.updateLivestockData, [req.body, req.body.HWC_META_ID], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+                res.send(util.methods.setresponse(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+myfunctions.update_hwcPropertyData = function (req, res, next) {
+    console.log("ID: " + req.body.HWC_META_ID);
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.updatePropertyData, [req.body, req.body.HWC_META_ID], function (error, results, fields) {
             if (error) {
                 console.log(error);
                 res.send(util.methods.seterror(error));

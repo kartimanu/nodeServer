@@ -2,15 +2,17 @@
 var dbconn = require('../config/sshdbconn');
 var async = require("async");
 var util = require('../utils/helper');
+const global_const = require('../utils/global');
 
-const fetchquery = "SELECT * FROM HWC_Y4_M10_CORE C1 JOIN HWC_Y4_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI";
-const fetchErrorRecordquery = "SELECT * FROM HWC_Y4_M10_CORE C1 JOIN HWC_Y4_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M10_CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
+const fetchquery = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C1._URI = C3._PARENT_AURI";
+const fetchErrorRecordquery = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
 const hwc_livestock_insertQuery = "INSERT IGNORE INTO hwc_case_livestock set ? ";
 const hwc_checkexistQuery = "SELECT *, CASE WHEN HWC_WSID = ? THEN 1 WHEN HWC_WSID = ? AND HWC_FULL_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_TALUK_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_VILLAGE_NAME = ? THEN 1 WHEN HWC_WSID = ? AND HWC_OLDPHONE_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_NEWPHONE_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_SURVEY_NUMBER = ? THEN 1 WHEN HWC_WSID = ? AND HWC_RANGE = ? THEN 1 WHEN HWC_WSID = ? AND HWC_FD_SUB_RANGE = ? THEN 1 ELSE 0 END AS \'PRESENT\' FROM (SELECT * FROM hwc_details WHERE HWC_WSID = ? || HWC_WSID = ? AND HWC_FULL_NAME = ? || HWC_WSID = ? AND HWC_TALUK_NAME = ? || HWC_WSID = ? AND HWC_VILLAGE_NAME = ? || HWC_WSID = ? AND HWC_OLDPHONE_NUMBER = ? || HWC_WSID = ? AND HWC_NEWPHONE_NUMBER = ? || HWC_WSID = ? AND HWC_SURVEY_NUMBER = ? || HWC_WSID = ? AND HWC_RANGE = ? || HWC_WSID = ? AND HWC_FD_SUB_RANGE = ?) AS RESULTSET";
 const hwc_insert_dupQuery = "INSERT IGNORE INTO dup_hwc set ? ";
+const hwc_check_recordExist = "SELECT count(*) as ISEXIST FROM odk.hwc_details where HWC_METAINSTANCE_ID = ? ";
 const hwc = {};
 var img1, img2, img3, img4, img5, img6, img7, vid1, res_photo, res_sign, ackImg, fdimg1, fdimg2, fdimg3;
 const hwc_image1query = "SELECT VALUE FROM HWC_Y4_M10_MEDIA_HWCIMAGE1_BLB where _TOP_LEVEL_AURI = ?";
@@ -66,6 +68,7 @@ hwc.setDupRecordDetails = function (req, res) {
 }
 
 function insertionset(ucdata) {
+
     const ins_set = [
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -107,34 +110,58 @@ function insertionset(ucdata) {
 }
 
 function checkhwcusercase(res) {
+    
+    console.log("NO Of Records to Sync - "+res.length);
     Array.from(res).forEach(ucdata => {
-        dbconn.mdb.then(function (con_mdb) {
-            con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
-                if (error) {
+        if(ucdata.EXITINFO2_CONCAT_WSID){
+            dbconn.mdb.then(function (con_mdb) {
+                con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
+                    if (error) {
                     console.log(error);
                     return;
-                } else {
+                    } else {
                     var resp = JSON.parse(JSON.stringify(ext_result));
                     if (resp.length > 0) {
                         var exist = resp[0].PRESENT;
-                        // console.log(ucdata.EXITINFO2_CONCAT_WSID.toUpperCase());
                         if (exist == 0)
                             inserthwcusercase(ucdata);
                         else {
-                            // console.log(resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
                             var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
-                            if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1])
-                                insert_duplicates(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                            if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1]){
+                                // console.log(exist+"::"+resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
+                                checkIfAlreadyInserted(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                            }
                         }
                     }
                     else {
                         inserthwcusercase(ucdata);
                     }
-                }
-            });
-        }).catch(err => {
+                    }
+                });
+            }).catch(err => {
             console.log(err);
+            });
+        }
+    });
+}
+
+function checkIfAlreadyInserted(org_id, dup_id) {
+    var cleanID = dup_id.split(":");
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_check_recordExist, cleanID[1], function (error, isExist, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {                  
+                var data = JSON.parse(JSON.stringify(isExist));                
+                // console.log(data[0].ISEXIST);
+                if(data[0].ISEXIST == 0)
+                insert_duplicates(org_id, dup_id);
+
+            }
         });
+    }).catch(err => {
+        console.log(err);
     });
 }
 
@@ -142,7 +169,8 @@ function insert_duplicates(org_id, dup_id) {
 
     const inserthwc_dupdataset = {
         HWC_ORG_METAID: org_id,
-        HWC_DUP_METAID: dup_id
+        HWC_DUP_METAID: dup_id,
+        HWC_FORM_NAME: global_const.CONST.HWC_FORM
     }
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(hwc_insert_dupQuery, inserthwc_dupdataset, function (error, dup_result, fields) {
@@ -274,7 +302,7 @@ function setHWC_cropdata(hwcformdata, pos) {
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
     const inserthwc_cropdataset = {
         HWC_META_ID: MIN_ID[1] + "_" + pos,
-        HWC_CASE_DATE: hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE,
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE),
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID,
         HWC_CROP_NAME: hwcformdata['HWCINFO_CR_GROUP_CR_GROUP' + pos + '_CROP_NAME' + pos],
         HWC_OTHER_CROP_NAME: hwcformdata['HWCINFO_CR_GROUP_CR_GROUP' + pos + '_OTHERCROP' + pos],
@@ -293,7 +321,7 @@ function setHWC_propertydata(hwcformdata, pos) {
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
     const inserthwc_property_dataset = {
         HWC_META_ID: MIN_ID[1] + "_" + pos,
-        HWC_CASE_DATE: hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE,
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE),
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID,
         HWC_PROPERY_NAME: hwcformdata['HWCINFO_PD_GROUP_PD_GROUP' + pos + '_PROPERTY_NAME' + pos],
         HWC_OTHER_PROPERTY_NAME: hwcformdata['HWCINFO_PD_GROUP_PD_GROUP' + pos + '_OTHERPROPERTY' + pos],
@@ -309,7 +337,7 @@ function setHWC_livestockdata(hwcformdata, pos) {
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
     const inserthwc_livestock_dataset = {
         HWC_META_ID: MIN_ID[1] + "_" + pos,
-        HWC_CASE_DATE: hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE,
+        HWC_CASE_DATE: util.methods.GetFormattedDate(hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE),
         HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID,
         HWC_LIVE_STOCK_NAME: hwcformdata['HWCINFO_LP_GROUP_LP_GROUP' + pos + '_LIVESTOCK_NAME' + pos],
         HWC_OTHER_LIVE_STOCK_NAME: hwcformdata['HWCINFO_LP_GROUP_LP_GROUP' + pos + '_OTHERLIVESTOCK' + pos],

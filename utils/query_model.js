@@ -1,5 +1,6 @@
 
 const helper = require('./helper');
+const global_const = require('./global');
 const qmodels = {};
 const queryscript = {};
 
@@ -38,6 +39,16 @@ queryscript.select_hwc = "SELECT * FROM hwc_details";
 queryscript.selectall_hwc = line1+line2+line3+line4+line5+line6;
 queryscript.selecthwc_user_byid = line1+line2+line3+line4+line5+line6+line7;
 
+queryscript.getHWCrecord = "SELECT * FROM hwc_details WHERE HWC_METAINSTANCE_ID = ?";
+queryscript.getCROPdetails = "SELECT * FROM hwc_case_crop WHERE HWC_PARENT_ID = ?";
+queryscript.getLIVESTOCKdetails = "SELECT * FROM hwc_case_livestock WHERE HWC_PARENT_ID = ?";
+queryscript.getPROPERTYdetails = "SELECT * FROM hwc_case_property WHERE HWC_PARENT_ID = ?";
+
+queryscript.updateParentHWC = "UPDATE hwc_details SET ? WHERE HWC_METAINSTANCE_ID = ? ";
+queryscript.updateCropData = "UPDATE hwc_case_crop SET ? WHERE HWC_META_ID = ? ";
+queryscript.updateLivestockData = "UPDATE hwc_case_livestock SET ? WHERE HWC_META_ID = ? ";
+queryscript.updatePropertyData = "UPDATE hwc_case_property SET ? WHERE HWC_META_ID = ? ";
+
 queryscript.get_case_users = "SELECT * FROM wildseve_users";
 
 //PROD RDB QUERY
@@ -48,7 +59,7 @@ queryscript.selectallFormDC = "SELECT * FROM wsodk_dailycount_apr_18_results";
 
 //Duplicate Data Query
 queryscript.getErrorRecordIDs = "SELECT * FROM dup_hwc WHERE HWC_VERIFIED = 'N'";
-queryscript.getDuplicateData = "SELECT * FROM HWC_Y4_M10_CORE C1 JOIN HWC_Y4_M10_CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC_Y4_M10_CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
+queryscript.getDuplicateData = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
 queryscript.getParentData = "SELECT * FROM hwc_details WHERE HWC_METAINSTANCE_ID = ? ";
 queryscript.updateParentData = "UPDATE hwc_details SET ? WHERE HWC_METAINSTANCE_ID = ? ";
 queryscript.updateErrorRecord = "UPDATE dup_hwc SET HWC_VERIFIED = 'Y' WHERE HWC_DUP_METAID = ? ";

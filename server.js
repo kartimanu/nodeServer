@@ -67,7 +67,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.24.0) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.25) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -99,16 +99,19 @@ app.get("/getpublicity", pubfunctions.caller.getpubdata);
 
 app.get("/getallhwc", hwcfunctions.caller.get_all_hwc);
 app.get("/gethwc", hwcfunctions.caller.get_hwc);
-app.get("/gethwc/:id", hwcfunctions.caller.get_hwcall_byid);
+app.get("/gethwc/:id", hwcfunctions.caller.get_hwcrecord_byid);
 
 app.get("/getcase_users", csfunctions.caller.get_case_users);
 app.get("/img", pubfunctions.caller.getpubImg);
 
 //HWC FLAGGING API's
-app.get("/getDuplicateRecord/:id", errfunctions.caller.get_hwcDuplicateData);
+app.get("/getDuplicateRecord/:id/:form", errfunctions.caller.get_hwcDuplicateData);
 app.get("/getParentRecord/:id", errfunctions.caller.get_hwcParentData);
 app.get("/getErrorRecords", errfunctions.caller.get_errorRecords);
 app.post("/updateParentRecord", errfunctions.caller.update_hwcParentData);
+app.post("/updateCropRecord", errfunctions.caller.update_hwcCropData);
+app.post("/updatePropertyRecord", errfunctions.caller.update_hwcPropertyData);
+app.post("/updateLivestockRecord", errfunctions.caller.update_hwcLivestockData);
 app.get("/updateErrorRecord/:id", errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id", hwcSyncfunc.func.setDupRecordDetails);
 app.get("/getImage/:metaid", hwcSyncfunc.func.getRawImage);
