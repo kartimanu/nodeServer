@@ -67,7 +67,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.25) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.25.1) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);

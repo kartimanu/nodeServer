@@ -4,8 +4,8 @@ var async = require("async");
 var util = require('../utils/helper');
 const global_const = require('../utils/global');
 
-const fetchquery = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C1._URI = C3._PARENT_AURI";
-const fetchErrorRecordquery = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
+const fetchquery = "SELECT * FROM HWC" + global_const.CONST.HWC_FORM + "CORE C1 JOIN HWC" + global_const.CONST.HWC_FORM + "CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC" + global_const.CONST.HWC_FORM + "CORE3 C3 ON C1._URI = C3._PARENT_AURI";
+const fetchErrorRecordquery = "SELECT * FROM HWC" + global_const.CONST.HWC_FORM + "CORE C1 JOIN HWC" + global_const.CONST.HWC_FORM + "CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC" + global_const.CONST.HWC_FORM + "CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
@@ -82,7 +82,7 @@ function insertionset(ucdata) {
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM)? null :ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM) ? null : ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -100,7 +100,7 @@ function insertionset(ucdata) {
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM)?null:ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        (!ucdata.EXITINFO2_CONCAT_SURVEYNUM) ? null : ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
         ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -110,36 +110,36 @@ function insertionset(ucdata) {
 }
 
 function checkhwcusercase(res) {
-    
-    console.log("NO Of Records to Sync - "+res.length);
+
+    console.log("NO Of Records to Sync - " + res.length);
     Array.from(res).forEach(ucdata => {
-        if(ucdata.EXITINFO2_CONCAT_WSID){
+        if (ucdata.EXITINFO2_CONCAT_WSID) {
             dbconn.mdb.then(function (con_mdb) {
                 con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
                     if (error) {
-                    console.log(error);
-                    return;
+                        console.log(error);
+                        return;
                     } else {
-                    var resp = JSON.parse(JSON.stringify(ext_result));
-                    if (resp.length > 0) {
-                        var exist = resp[0].PRESENT;
-                        if (exist == 0)
-                            inserthwcusercase(ucdata);
-                        else {
-                            var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
-                            if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1]){
-                                // console.log(exist+"::"+resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
-                                checkIfAlreadyInserted(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                        var resp = JSON.parse(JSON.stringify(ext_result));
+                        if (resp.length > 0) {
+                            var exist = resp[0].PRESENT;
+                            if (exist == 0)
+                                inserthwcusercase(ucdata);
+                            else {
+                                var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
+                                if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1]) {
+                                    // console.log(exist+"::"+resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
+                                    checkIfAlreadyInserted(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                                }
                             }
                         }
-                    }
-                    else {
-                        inserthwcusercase(ucdata);
-                    }
+                        else {
+                            inserthwcusercase(ucdata);
+                        }
                     }
                 });
             }).catch(err => {
-            console.log(err);
+                console.log(err);
             });
         }
     });
@@ -152,11 +152,11 @@ function checkIfAlreadyInserted(org_id, dup_id) {
             if (error) {
                 console.log(error);
                 return;
-            } else {                  
-                var data = JSON.parse(JSON.stringify(isExist));                
+            } else {
+                var data = JSON.parse(JSON.stringify(isExist));
                 // console.log(data[0].ISEXIST);
-                if(data[0].ISEXIST == 0)
-                insert_duplicates(org_id, dup_id);
+                if (data[0].ISEXIST == 0)
+                    insert_duplicates(org_id, dup_id);
 
             }
         });
@@ -369,7 +369,7 @@ function setHWCdata(hwcformdata) {
         HWC_VILLAGE_NAME: (!hwcformdata.EXITINFO2_CONCAT_VILLAGE) ? null : hwcformdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
         HWC_OLDPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_OLDPHNUM,
         HWC_NEWPHONE_NUMBER: hwcformdata.EXITINFO2_CONCAT_NEWPHNUM,
-        HWC_SURVEY_NUMBER: (!hwcformdata.EXITINFO2_CONCAT_SURVEYNUM)?null:hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
+        HWC_SURVEY_NUMBER: (!hwcformdata.EXITINFO2_CONCAT_SURVEYNUM) ? null : hwcformdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
         HWC_RANGE: (!hwcformdata.HWCINFO_RANGE) ? null : util.methods.format_range(hwcformdata.HWCINFO_RANGE),
         HWC_LATITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LAT,
         HWC_LONGITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_LNG,
@@ -409,12 +409,12 @@ hwc.getRawImage = function (req, res) {
             if (error) {
                 console.log(error);
                 return;
-            }else{        
-                if(results.length>0){        
+            } else {
+                if (results.length > 0) {
                     var img_buf = JSON.parse(JSON.stringify(results[0].VALUE));
                     img1 = !img_buf ? null : new Buffer(img_buf.data, 'binary').toString('base64');
                     res.send({ success: true, data: img1 });
-                }else{
+                } else {
                     res.send({ success: false, data: JSON.stringify("No Image Available") });
                 }
             }
@@ -665,7 +665,7 @@ hwc.syncimg = function (req, res) {
 
 }
 
-hwc.runProcedure = function (req, res) {    
+hwc.runProcedure = function (req, res) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query('call animal()', function (error, result, fields) {
             if (error) {
