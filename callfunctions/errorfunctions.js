@@ -51,7 +51,7 @@ myfunctions.get_hwcDuplicateData = function (req, res, next) {
                 res.send(util.methods.seterror(error));
                 return;
             } else {
-                console.log(results[0]);
+                // console.log(results[0]);
                 res.send(util.methods.setresponse(setHWCdata(results[0])));
             }
         });
@@ -193,7 +193,8 @@ function setHWCdata(hwcformdata) {
     try {
         var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
 
-        if (hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase() == 'otheranimal')
+        var animal = (!hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME) ? null : hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase();
+        if ( (!animal) && animal == 'otheranimal')
             hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME = (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase();
 
 
@@ -202,7 +203,7 @@ function setHWCdata(hwcformdata) {
             HWC_METAMODEL_VERSION: hwcformdata._MODEL_VERSION,
             HWC_METAUI_VERSION: hwcformdata._UI_VERSION,
             HWC_METASUBMISSION_DATE: util.methods.GetFormattedDate(hwcformdata._SUBMISSION_DATE),
-            HWC_WSID: hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+            HWC_WSID: (!hwcformdata.EXITINFO2_CONCAT_WSID)?null:hwcformdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
             HWC_FIRST_NAME: (!hwcformdata.EXITINFO2_CONCAT_FIRSTNAME)?"":hwcformdata.EXITINFO2_CONCAT_FIRSTNAME,
             HWC_LAST_NAME: (!hwcformdata.EXITINFO2_CONCAT_LASTNAME)?"":hwcformdata.EXITINFO2_CONCAT_LASTNAME,
             HWC_FULL_NAME: (!hwcformdata.EXITINFO2_CONCAT_FULLNAME)?"":hwcformdata.EXITINFO2_CONCAT_FULLNAME,
@@ -218,7 +219,7 @@ function setHWCdata(hwcformdata) {
             HWC_ALTITUDE: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ALT,
             HWC_ACCURACY: hwcformdata.HWCINFO_SPATIALINFO_GPS_POINT_ACC,
             HWC_CASE_DATE: util.methods.GetFormattedDate(hwcformdata.HWCINFO_INCIDENTINFO_HWCDATE),
-            HWC_CASE_CATEGORY: hwcformdata.HWCINFO_INCIDENTINFO_HWC_CAT.toUpperCase(),
+            HWC_CASE_CATEGORY: (!hwcformdata.HWCINFO_INCIDENTINFO_HWC_CAT)?null:hwcformdata.HWCINFO_INCIDENTINFO_HWC_CAT.toUpperCase(),
             HWC_ANIMAL: (!hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME) ? null : hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase(),
             // HWC_OTHER_ANIMAL: (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase(),
             HWC_HI_NAME: (!hwcformdata.HWCINFO_HIINFO_HINAME) ? null : hwcformdata.HWCINFO_HIINFO_HINAME.toLowerCase(),
