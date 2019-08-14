@@ -70,7 +70,7 @@ utils.format_park = function (park_name) {
         "bandipurprk": "Bandipur",
         "nagaraholeprk": "Nagarahole"
     }
-    return (park_name === null ) ? null : park_name.allReplace(park_list).toLowerCase();
+    return (park_name === null ) ? "" : park_name.allReplace(park_list).toLowerCase();
 }
 
 String.prototype.allReplace = function (obj) {
@@ -94,7 +94,7 @@ utils.format_taluk = function (taluk_name) {
         "chamrajnagartlk": "chamrajnagar"
     }
 
-    return (taluk_name === null) ? null : taluk_name.allReplace(taluk_list).toLowerCase();
+    return (taluk_name === null) ? "" : taluk_name.allReplace(taluk_list).toLowerCase();
 }
 
 utils.format_range = function (range_name) {
@@ -121,8 +121,7 @@ utils.format_range = function (range_name) {
         "veeranahosahallirng": "Veeranahosahalli"
     }
 
-    return (range_name === null) ? null : range_name.allReplace(range_list).toLowerCase();
-
+    return (range_name === null) ? "" : range_name.allReplace(range_list).toLowerCase();
 }
 
 exports.methods = utils;

@@ -93,27 +93,7 @@ myfunctions.get_markDuplicateData = async function (req, res, next) {
         console.log(err);
         res.send(util.methods.seterror(error));
         return;
-    });
-    // dbconn.mdb.then(function (con_mdb) {
-    //     con_mdb.query(db_model.sqlquery.getParentData, [req.body.orgid], function (error, results, fields) {
-    //         if (error) {
-    //             console.log(error);
-    //             res.send(util.methods.seterror(error));
-    //             return;
-    //         } else {
-    //             // res.send(util.methods.setresponse(results));
-    //             if(allres !== null && allres !== ' ' )
-    //             res.send(util.methods.setresponse(markHWCdata(allres[0], results[0])));
-    //             else
-    //             res.send(util.methods.setresponse("RETRY"));
-    //         }
-    //     });
-    // }).catch(err => {
-    //     console.log(err);
-    //     res.send(util.methods.seterror(error));
-    //     return;
-    // });
-    
+    });    
 }
 
 myfunctions.get_hwcParentData = function (req, res, next) {
