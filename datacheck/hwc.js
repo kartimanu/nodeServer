@@ -70,47 +70,48 @@ hwc.setDupRecordDetails = function (req, res) {
 function insertionset(ucdata) {
 
     const ins_set = [
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_FULLNAME,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_TALUK) ? null : util.methods.format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_OLDPHNUM,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_SURVEYNUM) ? null : ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.FDSUBMISSION_RANGE_FDSUB) ? null : util.methods.format_range(ucdata.FDSUBMISSION_RANGE_FDSUB),
         //WHERE CLAUSE
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_FULLNAME,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_TALUK) ? null : util.methods.format_taluk(ucdata.EXITINFO2_CONCAT_TALUK),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_VILLAGE) ? null : ucdata.EXITINFO2_CONCAT_VILLAGE.toLowerCase(),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_OLDPHNUM,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         ucdata.EXITINFO2_CONCAT_NEWPHNUM,
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.EXITINFO2_CONCAT_SURVEYNUM) ? null : ucdata.EXITINFO2_CONCAT_SURVEYNUM.replace("-", "/"),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.HWCINFO_RANGE) ? null : util.methods.format_range(ucdata.HWCINFO_RANGE),
-        ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
+        (!ucdata.EXITINFO2_CONCAT_WSID.toUpperCase()) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
         (!ucdata.FDSUBMISSION_RANGE_FDSUB) ? null : util.methods.format_range(ucdata.FDSUBMISSION_RANGE_FDSUB)
     ];
+    if (!ucdata.EXITINFO2_CONCAT_WSID) console.log("INPUT :: " + JSON.stringify(ins_set))
     return ins_set;
 }
 
 function checkhwcusercase(res) {
-
+    var Fcounter = 1, NFcounter = 1;
     console.log("NO Of Records to Sync - " + res.length);
     Array.from(res).forEach(ucdata => {
         if (ucdata.EXITINFO2_CONCAT_WSID) {
@@ -123,9 +124,12 @@ function checkhwcusercase(res) {
                         var resp = JSON.parse(JSON.stringify(ext_result));
                         if (resp.length > 0) {
                             var exist = resp[0].PRESENT;
-                            if (exist == 0)
+                            if (exist == 0){
+                                console.log("Non-Flagged Record Insertion :: "+NFcounter++);
                                 inserthwcusercase(ucdata);
+                            }
                             else {
+                                console.log("Flagged Record Insertion :: "+Fcounter++);
                                 var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
                                 if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1]) {
                                     // console.log(exist+"::"+resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
@@ -157,6 +161,7 @@ function checkIfAlreadyInserted(org_id, dup_id) {
                 // console.log(data[0].ISEXIST);
                 if (data[0].ISEXIST == 0)
                     insert_duplicates(org_id, dup_id);
+                else console.log("Record doesnt Exist in RDB");
 
             }
         });
@@ -167,6 +172,7 @@ function checkIfAlreadyInserted(org_id, dup_id) {
 
 function insert_duplicates(org_id, dup_id) {
 
+    console.log("HWC Record :: Flagged :: " + dup_id);
     const inserthwc_dupdataset = {
         HWC_ORG_METAID: org_id,
         HWC_DUP_METAID: dup_id,
@@ -188,7 +194,7 @@ function insert_duplicates(org_id, dup_id) {
 }
 
 function inserthwcusercase(ucdata) {
-    // Array.from(res).forEach(ucdata => {
+    console.log("HWC Record :: Not Flagged :: " + ucdata.META_INSTANCE_ID);
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(hwc_insertQuery, setHWCdata(ucdata), function (error, uc_result, fields) {
             if (error) {
