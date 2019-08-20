@@ -67,7 +67,7 @@ app.use(function (req, res, next) {
 //     }
 // })
 
-app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.25.2) ]") });
+app.get("/", function (req, res) { res.send("[ Home - Page of API's (V1.1.26) ]") });
 
 //Report API's - Daily Count
 app.get("/getDCreportbyMonth", reportDCfunc.report.getdailycount);
@@ -114,7 +114,7 @@ app.post("/updatePropertyRecord", errfunctions.caller.update_hwcPropertyData);
 app.post("/updateLivestockRecord", errfunctions.caller.update_hwcLivestockData);
 app.get("/updateErrorRecord/:id", errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id", hwcSyncfunc.func.setDupRecordDetails);
-app.get("/getImage/:metaid", hwcSyncfunc.func.getRawImage);
+app.get("/getImage/:metaid/:form/:index", hwcSyncfunc.func.getRawImage);
 app.post("/getMarked", errfunctions.caller.get_markDuplicateData);
 
 //Home API's
@@ -248,9 +248,9 @@ app.get("/syncdata", function (req, res) {
 function syncData() {
     console.log("Syncing.....");
     setTimeout(hwcSyncfunc.func.syncallhwcdetails, 1000 * 1);
-    // setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 30);
-    // setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60);
-    // setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 90);
+    setTimeout(dcSyncfunc.func.syncformdailyusers, 1000 * 60 * 10);
+    setTimeout(comSyncfunc.func.syncallcompensationdetails, 1000 * 60 * 20);
+    setTimeout(pubSyncfunc.func.syncallformpublicitydata, 1000 * 60 * 30);
 }
 
 app.listen(port, () => console.log("Server running on port %d", port));
