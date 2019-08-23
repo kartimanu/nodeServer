@@ -32,6 +32,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(function (req, res, next) {
+    
+    // res.setHeader("Content-Type", "application/json");
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
     // Request methods you wish to allow

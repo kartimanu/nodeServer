@@ -114,22 +114,23 @@ myfunctions.get_hwcParentData = function (req, res, next) {
     });
 }
 
-myfunctions.update_hwcParentData = function (req, res, next) {
-    console.log("ID: " + req.body.HWC_METAINSTANCE_ID);
-    dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(db_model.sqlquery.updateParentData, [req.body, req.body.HWC_METAINSTANCE_ID], function (error, results, fields) {
-            if (error) {
-                console.log(error);
-                res.send(util.methods.seterror(error));
-                return;
-            } else
-                res.send(util.methods.setresponse(results));
-        });
-    }).catch(err => {
-        console.log(err);
-        res.send(util.methods.seterror(error));
-        return;
-    });
+myfunctions.update_hwcParentData = function (request, response, next) {
+    console.log("ID: " +  JSON.stringify(request.body));
+    response.send(util.methods.setresponse(request.body));
+    // dbconn.mdb.then(function (con_mdb) {
+    //     con_mdb.query(db_model.sqlquery.updateParentData, [req.body, req.body.HWC_METAINSTANCE_ID], function (error, results, fields) {
+    //         if (error) {
+    //             console.log(error);
+    //             res.send(util.methods.seterror(error));
+    //             return;
+    //         } else
+    //             res.send(util.methods.setresponse(results));
+    //     });
+    // }).catch(err => {
+    //     console.log(err);
+    //     res.send(util.methods.seterror(error));
+    //     return;
+    // });
 }
 
 

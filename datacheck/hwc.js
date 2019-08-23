@@ -64,7 +64,7 @@ hwc.setDupRecordDetails = function (req, res) {
     });
 }
 
-function insertionset(ucdata) {
+function insertionset(ucdata, dataCounter) {
     try {
         const ins_set = [
             (!ucdata.EXITINFO2_CONCAT_WSID) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
@@ -114,10 +114,11 @@ function insertionset(ucdata) {
 
 function checkhwcusercase(res) {
     console.log("NO Of Records to Sync - " + res.length);
+    var datacounter = 1;
     Array.from(res).forEach(ucdata => {
         if (ucdata.EXITINFO2_CONCAT_WSID) {
             dbconn.mdb.then(function (con_mdb) {
-                con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
+                con_mdb.query(hwc_checkexistQuery, insertionset(ucdata, datacounter), function (error, ext_result, fields) {
                     if (error) {
                         console.log(error);
                         return;
@@ -401,7 +402,8 @@ function setHWCdata(hwcformdata) {
         HWC_SIMCARD_ID: hwcformdata.SIMSERIAL,
         HWC_FA_PHONE_NUMBER: hwcformdata.PHONENUMBER,
         HWC_USER_NAME: (!hwcformdata.USERNAME) ? null : hwcformdata.USERNAME.toLowerCase(),
-        HWC_CASE_TYPE: (!hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO) ? null : hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO.toLowerCase()
+        HWC_CASE_TYPE: (!hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO) ? null : hwcformdata.WILDSEVEIDDETAILS_CASE_WSIDINFO.toLowerCase(),
+        HWC_FORM_NAME: global_const.CONST.HWC_FORM
     }
 
     return inserthwcdataset;
