@@ -25,7 +25,7 @@ myfunctions.get_errorRecords = function (req, res, next) {
 
 myfunctions.update_errorRecord = function (req, res, next) {
     dbconn.mdb.then(function (con_mdb) {
-        con_mdb.query(db_model.sqlquery.updateErrorRecord, [req.params.id], function (error, results, fields) {
+        con_mdb.query(db_model.sqlquery.updateErrorRecord, [req.params.status,req.params.id], function (error, results, fields) {
             if (error) {
                 console.log(error);
                 res.send(util.methods.seterror(error));

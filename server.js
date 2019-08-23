@@ -114,7 +114,7 @@ app.post("/updateParentRecord", errfunctions.caller.update_hwcParentData);
 app.post("/updateCropRecord", errfunctions.caller.update_hwcCropData);
 app.post("/updatePropertyRecord", errfunctions.caller.update_hwcPropertyData);
 app.post("/updateLivestockRecord", errfunctions.caller.update_hwcLivestockData);
-app.get("/updateErrorRecord/:id", errfunctions.caller.update_errorRecord);
+app.get("/updateErrorRecord/:id/:status", errfunctions.caller.update_errorRecord);
 app.get("/insertErrorRecord/:id", hwcSyncfunc.func.setDupRecordDetails);
 app.get("/getImage/:metaid/:form/:index", hwcSyncfunc.func.getRawImage);
 app.post("/getMarked", errfunctions.caller.get_markDuplicateData);

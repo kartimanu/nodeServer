@@ -62,7 +62,7 @@ queryscript.getErrorRecordIDs = "SELECT * FROM dup_hwc WHERE HWC_VERIFIED = 'N'"
 queryscript.getDuplicateData = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
 queryscript.getParentData = "SELECT * FROM hwc_details WHERE HWC_METAINSTANCE_ID = ? ";
 queryscript.updateParentData = "UPDATE hwc_details SET ? WHERE HWC_METAINSTANCE_ID = ? ";
-queryscript.updateErrorRecord = "UPDATE dup_hwc SET HWC_VERIFIED = 'Y' WHERE HWC_DUP_METAID = ? ";
+queryscript.updateErrorRecord = "UPDATE dup_hwc SET HWC_VERIFIED = ? WHERE HWC_DUP_METAID = ? ";
 
 qmodels.get_dcofficers = function (data) {
     var MIN_ID = data['meta:instanceID'].split(":");
