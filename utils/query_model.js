@@ -61,8 +61,11 @@ queryscript.selectallFormDC = "SELECT * FROM wsodk_dailycount_apr_18_results";
 queryscript.getErrorRecordIDs = "SELECT * FROM dup_hwc WHERE HWC_VERIFIED = 'N'";
 queryscript.getDuplicateData = "SELECT * FROM HWC"+global_const.CONST.HWC_FORM+"CORE C1 JOIN HWC"+global_const.CONST.HWC_FORM+"CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC"+global_const.CONST.HWC_FORM+"CORE3 C3 ON C3._PARENT_AURI = C1._URI WHERE C1._URI = ? ";
 queryscript.getParentData = "SELECT * FROM hwc_details WHERE HWC_METAINSTANCE_ID = ? ";
+queryscript.getFlaggedData = "SELECT * FROM hwc_details_flagged WHERE HWC_METAINSTANCE_ID = ? ";
 queryscript.updateParentData = "UPDATE hwc_details SET ? WHERE HWC_METAINSTANCE_ID = ? ";
+queryscript.updateFlaggedData = "UPDATE hwc_details_flagged SET ? WHERE HWC_METAINSTANCE_ID = ? ";
 queryscript.updateErrorRecord = "UPDATE dup_hwc SET HWC_VERIFIED = ? WHERE HWC_DUP_METAID = ? ";
+queryscript.transferFlaggedRecord = "INSERT INTO hwc_details SELECT * FROM hwc_details_flagged WHERE HWC_METAINSTANCE_ID = ?";
 
 qmodels.get_dcofficers = function (data) {
     var MIN_ID = data['meta:instanceID'].split(":");

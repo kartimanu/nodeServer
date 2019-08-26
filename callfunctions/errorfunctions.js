@@ -114,6 +114,43 @@ myfunctions.get_hwcParentData = function (req, res, next) {
     });
 }
 
+myfunctions.get_hwcFlaggedData = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.getFlaggedData, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
+                res.send(util.methods.setresponse(results));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+myfunctions.insert_hwcFlaggedData = function (req, res, next) {
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.transferFlaggedRecord, [req.params.id], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else {
+                res.send(util.methods.setresponse(results));
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
+
+
 myfunctions.update_hwcParentData = function (req, res, next) {
     console.log("ID: " +  req.body.HWC_METAINSTANCE_ID);
     dbconn.mdb.then(function (con_mdb) {
@@ -132,6 +169,23 @@ myfunctions.update_hwcParentData = function (req, res, next) {
     });
 }
 
+myfunctions.update_hwcFlaggedData = function (req, res, next) {
+    console.log("ID: " +  req.body.HWC_METAINSTANCE_ID);
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(db_model.sqlquery.updateFlaggedData, [req.body, req.body.HWC_METAINSTANCE_ID], function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                res.send(util.methods.seterror(error));
+                return;
+            } else
+                res.send(util.methods.setresponse(results));
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send(util.methods.seterror(error));
+        return;
+    });
+}
 
 myfunctions.update_hwcCropData = function (req, res, next) {
     console.log("ID: " + req.body.HWC_META_ID);

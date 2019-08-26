@@ -7,6 +7,7 @@ const global_const = require('../utils/global');
 const fetchquery = "SELECT * FROM HWC" + global_const.CONST.HWC_FORM + "CORE C1 JOIN HWC" + global_const.CONST.HWC_FORM + "CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC" + global_const.CONST.HWC_FORM + "CORE3 C3 ON C1._URI = C3._PARENT_AURI";
 const fetchErrorRecordquery = "SELECT * FROM HWC" + global_const.CONST.HWC_FORM + "CORE C1 JOIN HWC" + global_const.CONST.HWC_FORM + "CORE2 C2 ON C1._URI = C2._PARENT_AURI JOIN HWC" + global_const.CONST.HWC_FORM + "CORE3 C3 ON C1._URI = C3._PARENT_AURI WHERE C1._URI = ?";
 const hwc_insertQuery = "INSERT IGNORE INTO hwc_details set ? ";
+const hwc_insertFlaggedQuery = "INSERT IGNORE INTO hwc_details_flagged set ? ";
 const hwc_crop_insertQuery = "INSERT IGNORE INTO hwc_case_crop set ? ";
 const hwc_property_insertQuery = "INSERT IGNORE INTO hwc_case_property set ? ";
 const hwc_livestock_insertQuery = "INSERT IGNORE INTO hwc_case_livestock set ? ";
@@ -103,8 +104,6 @@ function insertionset(ucdata, dataCounter) {
             (!ucdata.EXITINFO2_CONCAT_WSID) ? "" : ucdata.EXITINFO2_CONCAT_WSID.toUpperCase(),
             (!ucdata.FDSUBMISSION_RANGE_FDSUB) ? null : util.methods.format_range(ucdata.FDSUBMISSION_RANGE_FDSUB)
         ];
-
-        console.log("INPUT :: " + dataCounter++);
         return ins_set;
     }
     catch (e) {
@@ -118,7 +117,7 @@ function checkhwcusercase(res) {
     Array.from(res).forEach(ucdata => {
         if (ucdata.EXITINFO2_CONCAT_WSID) {
             dbconn.mdb.then(function (con_mdb) {
-                con_mdb.query(hwc_checkexistQuery, insertionset(ucdata, datacounter), function (error, ext_result, fields) {
+                con_mdb.query(hwc_checkexistQuery, insertionset(ucdata), function (error, ext_result, fields) {
                     if (error) {
                         console.log(error);
                         return;
@@ -127,18 +126,18 @@ function checkhwcusercase(res) {
                         if (resp.length > 0) {
                             var exist = resp[0].PRESENT;
                             if (exist == 0) {
-                                inserthwcusercase(ucdata);
+                                inserthwcusercase(ucdata, datacounter++);
                             }
                             else {
                                 var MIN_ID = ucdata.META_INSTANCE_ID.split(":");
                                 if (resp[0].HWC_METAINSTANCE_ID != MIN_ID[1]) {
                                     // console.log(exist+"::"+resp[0].HWC_METAINSTANCE_ID + "::" + ucdata.META_INSTANCE_ID);
-                                    checkIfAlreadyInserted(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID);
+                                    checkIfAlreadyInserted(resp[0].HWC_METAINSTANCE_ID, ucdata.META_INSTANCE_ID, ucdata);
                                 }
                             }
                         }
                         else {
-                            inserthwcusercase(ucdata);
+                            inserthwcusercase(ucdata,datacounter++);
                         }
                     }
                 });
@@ -149,7 +148,7 @@ function checkhwcusercase(res) {
     });
 }
 
-function checkIfAlreadyInserted(org_id, dup_id) {
+function checkIfAlreadyInserted(org_id, dup_id, flagModel) {
     var cleanID = dup_id.split(":");
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(hwc_check_recordExist, cleanID[1], function (error, isExist, fields) {
@@ -159,8 +158,10 @@ function checkIfAlreadyInserted(org_id, dup_id) {
             } else {
                 var data = JSON.parse(JSON.stringify(isExist));
                 // console.log(data[0].ISEXIST);
-                if (data[0].ISEXIST == 0)
+                if (data[0].ISEXIST == 0){
                     insert_duplicates(org_id, dup_id);
+                    insertflaggedhwcusercase(flagModel)
+                }
                 else console.log(dup_id + " Record Already Exist in RDB");
 
             }
@@ -192,8 +193,7 @@ function insert_duplicates(org_id, dup_id) {
     });
 }
 
-function inserthwcusercase(ucdata) {
-    var counter = 1;
+function inserthwcusercase(ucdata, dataInserted) {
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(hwc_insertQuery, setHWCdata(ucdata), function (error, uc_result, fields) {
             if (error) {
@@ -204,15 +204,32 @@ function inserthwcusercase(ucdata) {
                 insert_hwc_property(ucdata);
                 insert_hwc_livestock(ucdata);
                 if (uc_result.affectedRows > 0)
-                    console.log("HWC Record inserted : " + JSON.stringify(uc_result.affectedRows)) + " :: " + counter++;
-                // else
-                //     console.log("HWC : No new records inserted.");
+                    console.log("HWC Record inserted : " + JSON.stringify(uc_result.affectedRows)) + " :: " + dataInserted;
+                }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+function insertflaggedhwcusercase(ucdata) {
+    var counter = 1;
+    dbconn.mdb.then(function (con_mdb) {
+        con_mdb.query(hwc_insertFlaggedQuery, setHWCdata(ucdata), function (error, uc_result, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            } else {
+                insert_hwc_crop(ucdata);
+                insert_hwc_property(ucdata);
+                insert_hwc_livestock(ucdata);
+                if (uc_result.affectedRows > 0)
+                    console.log("Flagged HWC Record inserted : " + JSON.stringify(uc_result.affectedRows)) + " :: " + counter++;                
             }
         });
     }).catch(err => {
         console.log(err);
     });
-    // });
 }
 
 function insert_hwc_crop(cropdata) {
@@ -356,8 +373,9 @@ function setHWC_livestockdata(hwcformdata, pos) {
 function setHWCdata(hwcformdata) {
 
     var MIN_ID = hwcformdata.META_INSTANCE_ID.split(":");
-
-    if (hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase() == 'otheranimal')
+    var animal = (!hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME) ? null : hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME.toLowerCase();
+        
+    if ((!animal) && animal == 'otheranimal')
         hwcformdata.HWCINFO_INCIDENTINFO_ANI_NAME = (!hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL) ? null : hwcformdata.HWCINFO_INCIDENTINFO_OTHERANIMAL.toLowerCase();
 
 
