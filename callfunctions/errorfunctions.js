@@ -115,7 +115,7 @@ myfunctions.get_hwcParentData = function (req, res, next) {
 }
 
 myfunctions.update_hwcParentData = function (req, res, next) {
-    console.log("ID: " +  JSON.stringify(request.body));
+    console.log("ID: " +  req.body.HWC_METAINSTANCE_ID);
     dbconn.mdb.then(function (con_mdb) {
         con_mdb.query(db_model.sqlquery.updateParentData, [req.body, req.body.HWC_METAINSTANCE_ID], function (error, results, fields) {
             if (error) {
